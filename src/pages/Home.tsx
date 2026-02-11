@@ -74,13 +74,14 @@ const marketConfigs: Record<string, AlertFormConfig> = {
   },
 };
 
-// const ingredients = [
-//   'Real-time breakout alerts',
-//   'Smart money flow tracking',
-//   'Narrative shifts before they trend',
-//   '5-minute daily market briefings',
-//   'Clear entries, risk levels, invalidation',
-// ];
+const popularRecipes = [
+  { name: 'Morning Crypto Briefing', description: 'Start day with overnight developments, top news, prices, portfolio summary' },
+  { name: 'Evening Market Recap', description: 'End-of-day summary of price action, news, social sentiment' },
+  { name: 'Weekend Deep Dive', description: 'Weekly long-form analysis, research reports, portfolio performance' },
+  { name: 'Commute Briefing', description: 'Timed podcast-style updates for commute times' },
+  { name: 'Lunch Break Check', description: 'Mid-day quick update on what happened while at work' },
+  { name: 'Curated Twitter Digest', description: 'Best tweets from followed accounts' },
+];
 
 const notList = [
   'Not another noisy signal group.',
@@ -175,6 +176,29 @@ export function Home() {
             />
           </div>
           <AlertForm key={activeTab} config={marketConfigs[activeTab]} />
+        </div>
+      </section>
+
+      {/* Popular Recipes */}
+      <section className="py-16 px-4">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4">
+            Popular Recipes
+          </h2>
+          <p className="text-text-muted text-center mb-8 max-w-xl mx-auto">
+            Pre-built alerts loved by the community. One click to subscribe.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {popularRecipes.map((recipe) => (
+              <div
+                key={recipe.name}
+                className="p-5 bg-surface border border-surface-border rounded-xl hover:border-primary transition-colors cursor-pointer"
+              >
+                <h3 className="text-base font-semibold mb-2">{recipe.name}</h3>
+                <p className="text-sm text-text-muted">{recipe.description}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
