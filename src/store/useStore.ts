@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import seedAlerts from '../mocks/alerts.json';
 
 export type AlertType =
@@ -57,12 +58,27 @@ export interface Toast {
   type: 'success' | 'error' | 'info';
 }
 
+export type AuthStatus =
+  | 'guest'
+  | 'selecting-method'
+  | 'signing-in'
+  | 'verifying-email'
+  | 'verified';
+
+export type AuthMethod = 'email' | 'google' | 'apple';
+
 interface AppState {
   // Auth
-  isAuthenticated: boolean;
-  user: { email: string } | null;
-  login: (email: string) => void;
-  logout: () => void;
+  authToken: { value: string } | null;
+  authStatus: AuthStatus;
+  authMethod: AuthMethod | null;
+  authEmail: string | null;
+
+  setAuthToken: (token: { value: string } | null) => void;
+  setAuthStatus: (status: AuthStatus) => void;
+  setAuthMethod: (method: AuthMethod | null) => void;
+  setAuthEmail: (email: string | null) => void;
+  resetAuthState: () => void;
 
   // Alerts
   alerts: Alert[];
@@ -79,50 +95,83 @@ interface AppState {
 
 let toastCounter = 0;
 
-export const useStore = create<AppState>((set) => ({
-  // Auth
-  isAuthenticated: false,
-  user: null,
-  login: (email) => set({ isAuthenticated: true, user: { email } }),
-  logout: () => set({ isAuthenticated: false, user: null }),
+export const useStore = create<AppState>()(
+  persist(
+    (set) => ({
+      // Auth
+      authToken: null,
+      authStatus: 'guest',
+      authMethod: null,
+      authEmail: null,
 
-  // Alerts
-  alerts: seedAlerts as Alert[],
-  addAlert: (alert) =>
-    set((state) => ({
-      alerts: [
-        ...state.alerts,
-        {
-          ...alert,
-          id: `alert-${Date.now()}`,
-          createdAt: new Date().toISOString(),
-        },
-      ],
-    })),
-  updateAlert: (id, patch) =>
-    set((state) => ({
-      alerts: state.alerts.map((a) => (a.id === id ? { ...a, ...patch } : a)),
-    })),
-  deleteAlert: (id) =>
-    set((state) => ({
-      alerts: state.alerts.filter((a) => a.id !== id),
-    })),
-  toggleAlert: (id) =>
-    set((state) => ({
-      alerts: state.alerts.map((a) =>
-        a.id === id ? { ...a, isActive: !a.isActive } : a
-      ),
-    })),
+      setAuthToken: (token) => set({ authToken: token }),
+      setAuthStatus: (status) => set({ authStatus: status }),
+      setAuthMethod: (method) => set({ authMethod: method }),
+      setAuthEmail: (email) => set({ authEmail: email }),
+      resetAuthState: () =>
+        set({
+          authToken: null,
+          authStatus: 'guest',
+          authMethod: null,
+          authEmail: null,
+        }),
 
-  // Toasts
-  toasts: [],
-  addToast: (message, type = 'success') => {
-    const id = `toast-${++toastCounter}`;
-    set((state) => ({ toasts: [...state.toasts, { id, message, type }] }));
-    setTimeout(() => {
-      set((state) => ({ toasts: state.toasts.filter((t) => t.id !== id) }));
-    }, 3000);
-  },
-  removeToast: (id) =>
-    set((state) => ({ toasts: state.toasts.filter((t) => t.id !== id) })),
-}));
+      // Alerts
+      alerts: seedAlerts as Alert[],
+      addAlert: (alert) =>
+        set((state) => ({
+          alerts: [
+            ...state.alerts,
+            {
+              ...alert,
+              id: `alert-${Date.now()}`,
+              createdAt: new Date().toISOString(),
+            },
+          ],
+        })),
+      updateAlert: (id, patch) =>
+        set((state) => ({
+          alerts: state.alerts.map((a) =>
+            a.id === id ? { ...a, ...patch } : a
+          ),
+        })),
+      deleteAlert: (id) =>
+        set((state) => ({
+          alerts: state.alerts.filter((a) => a.id !== id),
+        })),
+      toggleAlert: (id) =>
+        set((state) => ({
+          alerts: state.alerts.map((a) =>
+            a.id === id ? { ...a, isActive: !a.isActive } : a
+          ),
+        })),
+
+      // Toasts
+      toasts: [],
+      addToast: (message, type = 'success') => {
+        const id = `toast-${++toastCounter}`;
+        set((state) => ({ toasts: [...state.toasts, { id, message, type }] }));
+        setTimeout(() => {
+          set((state) => ({
+            toasts: state.toasts.filter((t) => t.id !== id),
+          }));
+        }, 3000);
+      },
+      removeToast: (id) =>
+        set((state) => ({ toasts: state.toasts.filter((t) => t.id !== id) })),
+    }),
+    {
+      name: 'cryptoalerts-auth',
+      partialize: (state) => ({
+        authToken: state.authToken,
+        authStatus: state.authStatus,
+        authEmail: state.authEmail,
+      }),
+      onRehydrateStorage: () => (state) => {
+        if (state && state.authStatus !== 'verified' && state.authStatus !== 'guest') {
+          useStore.setState({ authStatus: 'guest' });
+        }
+      },
+    }
+  )
+);

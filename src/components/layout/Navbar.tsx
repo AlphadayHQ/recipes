@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useStore } from '../../store/useStore';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 import Logo from './Logo';
 
 const navGroups = [
@@ -38,8 +38,7 @@ const navGroups = [
 ];
 
 export function Navbar() {
-  const { isAuthenticated, logout } = useStore();
-  const navigate = useNavigate();
+  const { isAuthenticated, authEmail, logout, openAuthModal } = useAuth();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -109,11 +108,13 @@ export function Navbar() {
                 >
                   Dashboard
                 </Link>
+                {authEmail && (
+                  <span className="text-xs text-text-muted truncate max-w-[140px]">
+                    {authEmail}
+                  </span>
+                )}
                 <button
-                  onClick={() => {
-                    logout();
-                    navigate('/');
-                  }}
+                  onClick={logout}
                   className="px-4 py-2 text-sm bg-surface-light text-text-muted hover:text-text rounded-lg border border-surface-border transition-colors"
                 >
                   Log Out
@@ -121,18 +122,18 @@ export function Navbar() {
               </>
             ) : (
               <>
-                <Link
-                  to="/login"
-                  className="px-4 py-2 text-sm text-text-muted hover:text-text no-underline"
+                <button
+                  onClick={openAuthModal}
+                  className="px-4 py-2 text-sm text-text-muted hover:text-text"
                 >
                   Log In
-                </Link>
-                <Link
-                  to="/signup"
-                  className="px-4 py-2 text-sm bg-primary hover:bg-primary-hover text-white rounded-lg no-underline transition-colors"
+                </button>
+                <button
+                  onClick={openAuthModal}
+                  className="px-4 py-2 text-sm bg-primary hover:bg-primary-hover text-white rounded-lg transition-colors"
                 >
                   Sign Up
-                </Link>
+                </button>
               </>
             )}
           </div>
@@ -186,22 +187,15 @@ export function Navbar() {
                 Log Out
               </button>
             ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="flex-1 py-2 text-sm text-center text-text-muted no-underline"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Log In
-                </Link>
-                <Link
-                  to="/signup"
-                  className="flex-1 py-2 text-sm text-center bg-primary text-white rounded-lg no-underline"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Sign Up
-                </Link>
-              </>
+              <button
+                onClick={() => {
+                  openAuthModal();
+                  setMobileOpen(false);
+                }}
+                className="w-full py-2 text-sm bg-primary text-white rounded-lg"
+              >
+                Sign In / Sign Up
+              </button>
             )}
           </div>
         </div>
