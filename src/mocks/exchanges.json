@@ -1,0 +1,12 @@
+[
+  { "id": "binance", "name": "Binance", "slug": "binance", "coinCount": 395, "volume24h": 18500000000 },
+  { "id": "coinbase", "name": "Coinbase", "slug": "coinbase", "coinCount": 252, "volume24h": 2800000000 },
+  { "id": "kraken", "name": "Kraken", "slug": "kraken", "coinCount": 221, "volume24h": 1200000000 },
+  { "id": "bybit", "name": "Bybit", "slug": "bybit", "coinCount": 338, "volume24h": 4500000000 },
+  { "id": "okx", "name": "OKX", "slug": "okx", "coinCount": 312, "volume24h": 3200000000 },
+  { "id": "kucoin", "name": "KuCoin", "slug": "kucoin", "coinCount": 789, "volume24h": 1100000000 },
+  { "id": "gate-io", "name": "Gate.io", "slug": "gate-io", "coinCount": 1456, "volume24h": 900000000 },
+  { "id": "bitfinex", "name": "Bitfinex", "slug": "bitfinex", "coinCount": 178, "volume24h": 450000000 },
+  { "id": "huobi", "name": "HTX", "slug": "htx", "coinCount": 623, "volume24h": 780000000 },
+  { "id": "gemini", "name": "Gemini", "slug": "gemini", "coinCount": 98, "volume24h": 230000000 }
+]

@@ -1,0 +1,79 @@
+[
+  {
+    "id": "alert-1",
+    "type": "price",
+    "coin": "BTC",
+    "exchange": "binance",
+    "condition": "above",
+    "threshold": 70000,
+    "currency": "USD",
+    "notificationMethods": ["email", "telegram"],
+    "cooldown": "1h",
+    "note": "BTC breakout alert",
+    "oneTime": false,
+    "isActive": true,
+    "createdAt": "2024-12-01T10:00:00Z"
+  },
+  {
+    "id": "alert-2",
+    "type": "price",
+    "coin": "ETH",
+    "exchange": "coinbase",
+    "condition": "below",
+    "threshold": 3000,
+    "currency": "USD",
+    "notificationMethods": ["email"],
+    "cooldown": "4h",
+    "note": "ETH buy zone",
+    "oneTime": true,
+    "isActive": true,
+    "createdAt": "2024-12-02T14:30:00Z"
+  },
+  {
+    "id": "alert-3",
+    "type": "percent",
+    "coin": "SOL",
+    "exchange": "binance",
+    "condition": "rises",
+    "threshold": 10,
+    "notificationMethods": ["push", "discord"],
+    "cooldown": "24h",
+    "isActive": true,
+    "createdAt": "2024-12-03T09:15:00Z"
+  },
+  {
+    "id": "alert-4",
+    "type": "volume",
+    "coin": "DOGE",
+    "exchange": "binance",
+    "condition": "above",
+    "threshold": 5000000000,
+    "currency": "USD",
+    "notificationMethods": ["email", "webhook"],
+    "cooldown": "12h",
+    "isActive": false,
+    "createdAt": "2024-12-04T16:00:00Z"
+  },
+  {
+    "id": "alert-5",
+    "type": "funding-rate",
+    "coin": "BTC",
+    "exchange": "bybit",
+    "condition": "above",
+    "threshold": 0.1,
+    "notificationMethods": ["telegram"],
+    "cooldown": "8h",
+    "isActive": true,
+    "createdAt": "2024-12-05T11:45:00Z"
+  },
+  {
+    "id": "alert-6",
+    "type": "dominance",
+    "condition": "below",
+    "threshold": 50,
+    "notificationMethods": ["email", "sms"],
+    "cooldown": "24h",
+    "isActive": true,
+    "createdAt": "2024-12-06T08:00:00Z"
+  }
+]
