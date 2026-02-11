@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { TabBar } from '../components/ui/TabBar';
 import { AlertForm } from '../components/alerts/AlertForm';
 import type { AlertFormConfig } from '../components/alerts/AlertForm';
-const marketTabs = ['Price', 'Percent', 'Periodic', 'Volume', 'Funding Rate', 'Market Cap', 'Dominance', 'Stock'];
+const marketTabs = ['Price', 'Percent', 'Periodic', 'Volume', 'Market Cap', 'Crypto Briefing', 'Twitter Digest'];
 
 const marketConfigs: Record<string, AlertFormConfig> = {
   Price: {
@@ -51,17 +51,6 @@ const marketConfigs: Record<string, AlertFormConfig> = {
     showCurrency: true,
     showCooldown: true,
   },
-  'Funding Rate': {
-    type: 'funding-rate',
-    showCoin: true,
-    showExchange: true,
-    showDirection: true,
-    directionOptions: ['above', 'below'],
-    showThreshold: true,
-    thresholdLabel: 'Funding Rate (%)',
-    thresholdPlaceholder: 'e.g. 0.1',
-    showCooldown: true,
-  },
   'Market Cap': {
     type: 'market-cap',
     showCoin: true,
@@ -73,26 +62,15 @@ const marketConfigs: Record<string, AlertFormConfig> = {
     showCurrency: true,
     showCooldown: true,
   },
-  Dominance: {
-    type: 'dominance',
-    showDirection: true,
-    directionOptions: ['above', 'below'],
-    showThreshold: true,
-    thresholdLabel: 'BTC Dominance (%)',
-    thresholdPlaceholder: 'e.g. 50',
-    showCooldown: true,
+  'Crypto Briefing': {
+    type: 'crypto-briefing',
+    showFrequency: true,
+    showNote: true,
   },
-  Stock: {
-    type: 'stock',
-    showCoin: true,
-    showExchange: true,
-    showDirection: true,
-    directionOptions: ['above', 'below'],
-    showThreshold: true,
-    thresholdLabel: 'Target Price',
-    thresholdPlaceholder: 'e.g. 250',
-    showCurrency: true,
-    showCooldown: true,
+  'Twitter Digest': {
+    type: 'twitter-digest',
+    showFrequency: true,
+    showNote: true,
   },
 };
 

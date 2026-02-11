@@ -16,7 +16,9 @@ export type AlertType =
   | 'whale'
   | 'gas'
   | 'mempool'
-  | 'blockchain';
+  | 'blockchain'
+  | 'crypto-briefing'
+  | 'twitter-digest';
 
 export type NotificationMethod =
   | 'email'
