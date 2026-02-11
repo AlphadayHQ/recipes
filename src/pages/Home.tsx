@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import coins from '../mocks/coins.json';
-import exchanges from '../mocks/exchanges.json';
 import { TabBar } from '../components/ui/TabBar';
 import { AlertForm } from '../components/alerts/AlertForm';
 import type { AlertFormConfig } from '../components/alerts/AlertForm';
@@ -98,28 +96,23 @@ const marketConfigs: Record<string, AlertFormConfig> = {
   },
 };
 
-const onChainTypes = [
-  { label: 'Wallet Watch', to: '/alerts/wallet', description: 'Monitor wallet transactions' },
-  { label: 'Wallet Balance', to: '/alerts/wallet-balance', description: 'Track balance thresholds' },
-  { label: 'Whale Alert', to: '/alerts/whale', description: 'Detect large transfers' },
-  { label: 'ETH Gas', to: '/alerts/gas', description: 'Low gas price notifications' },
-  { label: 'Mempool', to: '/alerts/mempool', description: 'Bitcoin mempool monitoring' },
-  { label: 'Blockchain', to: '/alerts/blockchain', description: 'Custom blockchain metrics' },
+// const ingredients = [
+//   'Real-time breakout alerts',
+//   'Smart money flow tracking',
+//   'Narrative shifts before they trend',
+//   '5-minute daily market briefings',
+//   'Clear entries, risk levels, invalidation',
+// ];
+
+const notList = [
+  'Not another noisy signal group.',
+  'Not recycled Twitter threads.',
+  'Not 50 alerts a day.',
 ];
 
-const features = [
-  {
-    title: '8+ Notification Channels',
-    description: 'Email, SMS, Phone, Push, Webhook, Telegram, Discord, and Slack — your choice.',
-  },
-  {
-    title: 'Wide Exchange Coverage',
-    description: `Monitor prices across ${exchanges.length}+ exchanges including Binance, Coinbase, and Kraken.`,
-  },
-  {
-    title: 'Set & Forget',
-    description: 'Configure once, get alerted automatically. One-time or recurring — you decide.',
-  },
+const testimonials = [
+  { quote: 'Paid for itself in one trade.', author: 'Early member' },
+  { quote: 'Finally, a signal group that explains WHY.', author: 'Community member' },
 ];
 
 export function Home() {
@@ -131,99 +124,96 @@ export function Home() {
       <section className="py-20 px-4 text-center">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
-            Crypto Alerts
+            Fresh Alpha.
             <br />
-            <span className="text-primary">Made Simple</span>
+            <span className="text-primary">Cooked Daily.</span>
           </h1>
           <p className="text-lg sm:text-xl text-text-muted mb-8 max-w-2xl mx-auto">
-            Set price alerts, track new listings, monitor wallets, and never miss a move.
-            Get notified via Email, Telegram, Discord, and more.
+            Actionable crypto alerts and sharp briefings — no noise, no fluff.
           </p>
-          <div className="flex gap-4 justify-center">
+          <div className="flex flex-wrap gap-4 justify-center">
             <Link
               to="/signup"
               className="px-8 py-3 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg no-underline transition-colors"
             >
-              Get Started Free
+              Get Today's Recipe
             </Link>
             <Link
-              to="/pricing"
+              to="/signup"
               className="px-8 py-3 bg-surface-light hover:bg-surface border border-surface-border text-text font-semibold rounded-lg no-underline transition-colors"
             >
-              View Plans
+              Join the Kitchen
+            </Link>
+            <Link
+              to="/alerts"
+              className="px-8 py-3 bg-surface-light hover:bg-surface border border-surface-border text-text font-semibold rounded-lg no-underline transition-colors"
+            >
+              Start Cooking
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Interactive Alert Demo */}
-      <section className="py-16 px-4 bg-surface/50">
+      {/* Hook */}
+      <section className="py-20 px-4 text-center bg-surface/50">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6">
+            The Crypto Market Moves Fast.
+            <br />
+            <span className="text-text-muted">Most People React Too Late.</span>
+          </h2>
+          <p className="text-lg sm:text-xl text-text-muted mb-8 max-w-2xl mx-auto">
+            Recipes gives you the signals before the crowd.
+          </p>
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="space-y-3 mb-8">
+              {notList.map((line) => (
+                <p key={line} className="text-lg sm:text-xl text-text-muted">
+                  {line}
+                </p>
+              ))}
+            </div>
+            <p className="text-xl sm:text-2xl font-bold text-primary">
+              Just high-quality setups worth acting on.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Cook Your Own Alert */}
+      <section className="py-16 px-4">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4">Try It Out</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4">
+            Cook Your Own Alert
+          </h2>
           <p className="text-text-muted text-center mb-8 max-w-xl mx-auto">
-            Create an alert right here — choose a type and configure it.
+            Pick a recipe, set your ingredients, and let it cook.
           </p>
           <div className="mb-6">
-            <TabBar tabs={marketTabs} active={activeTab} onChange={setActiveTab} />
+            <TabBar
+              tabs={marketTabs}
+              active={activeTab}
+              onChange={setActiveTab}
+            />
           </div>
           <AlertForm key={activeTab} config={marketConfigs[activeTab]} />
         </div>
       </section>
 
-      {/* On-chain Alert Types */}
-      <section className="py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4">On-chain Alerts</h2>
-          <p className="text-text-muted text-center mb-10 max-w-xl mx-auto">
-            Monitor wallets, whale movements, gas prices, and blockchain metrics.
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {onChainTypes.map((type) => (
-              <Link
-                key={type.to}
-                to={type.to}
-                className="block p-5 bg-surface border border-surface-border rounded-xl hover:border-primary/50 transition-colors no-underline group"
-              >
-                <h3 className="text-base font-semibold text-text group-hover:text-primary mb-2 transition-colors">
-                  {type.label}
-                </h3>
-                <p className="text-sm text-text-muted">{type.description}</p>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Stats */}
+      {/* Social Proof */}
       <section className="py-16 px-4 bg-surface/50">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-            <div>
-              <p className="text-4xl font-bold text-primary">{coins.length}+</p>
-              <p className="text-text-muted mt-1">Coins Tracked</p>
-            </div>
-            <div>
-              <p className="text-4xl font-bold text-primary">{exchanges.length}+</p>
-              <p className="text-text-muted mt-1">Exchanges Supported</p>
-            </div>
-            <div>
-              <p className="text-4xl font-bold text-primary">8</p>
-              <p className="text-text-muted mt-1">Notification Channels</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-10">Why CryptoAlerts?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature) => (
-              <div key={feature.title} className="p-6 bg-surface border border-surface-border rounded-xl">
-                <h3 className="text-lg font-semibold mb-3">{feature.title}</h3>
-                <p className="text-sm text-text-muted">{feature.description}</p>
-              </div>
+        <div className="max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {testimonials.map((t) => (
+              <blockquote
+                key={t.quote}
+                className="p-6 bg-surface border border-surface-border rounded-xl"
+              >
+                <p className="text-lg font-medium mb-3">"{t.quote}"</p>
+                <cite className="text-sm text-text-muted not-italic">
+                  — {t.author}
+                </cite>
+              </blockquote>
             ))}
           </div>
         </div>

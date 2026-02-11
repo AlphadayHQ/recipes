@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../../store/useStore';
+import Logo from './Logo';
 
 const navGroups = [
   {
@@ -47,9 +48,7 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="text-xl font-bold text-primary no-underline">
-            CryptoAlerts
-          </Link>
+          <Logo />
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-1">
@@ -140,6 +139,7 @@ export function Navbar() {
 
           {/* Mobile hamburger */}
           <button
+            title="Toggle Menu"
             className="md:hidden p-2 text-text-muted hover:text-text"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
