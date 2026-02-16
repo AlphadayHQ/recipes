@@ -1,14 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
-import coins from '../../mocks/coins.json';
+import type { MarketCoin } from '../../api/marketApi';
 
 interface CoinSelectorProps {
   value: string;
   onChange: (symbol: string) => void;
+  coins: MarketCoin[];
   label?: string;
   variant?: 'default' | 'inline';
 }
 
-export function CoinSelector({ value, onChange, label = 'Coin', variant = 'default' }: CoinSelectorProps) {
+export function CoinSelector({ value, onChange, coins, label = 'Coin', variant = 'default' }: CoinSelectorProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const ref = useRef<HTMLDivElement>(null);

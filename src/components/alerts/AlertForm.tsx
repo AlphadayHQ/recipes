@@ -3,7 +3,7 @@ import type { AlertType, NotificationMethod } from '../../store/useStore';
 import { useStore } from '../../store/useStore';
 import { CoinSelector } from '../selectors/CoinSelector';
 import { ExchangeSelector } from '../selectors/ExchangeSelector';
-import coins from '../../mocks/coins.json';
+import { useMarketData } from '../../hooks/useMarketData';
 
 export interface AlertFormConfig {
   type: AlertType;
@@ -68,6 +68,7 @@ interface AlertFormProps {
 export function AlertForm({ config }: AlertFormProps) {
   const addAlert = useStore((s) => s.addAlert);
   const addToast = useStore((s) => s.addToast);
+  const { coins } = useMarketData();
 
   const [coin, setCoin] = useState('BTC');
   const [exchange, setExchange] = useState('');
@@ -138,7 +139,7 @@ export function AlertForm({ config }: AlertFormProps) {
               ))}
             </select>
             <span>update about</span>
-            {config.showCoin && <CoinSelector value={coin} onChange={setCoin} variant="inline" />}
+            {config.showCoin && <CoinSelector value={coin} onChange={setCoin} coins={coins} variant="inline" />}
             {config.showCurrency && (
               <>
                 <span>in</span>
@@ -179,7 +180,7 @@ export function AlertForm({ config }: AlertFormProps) {
               ))}
             </select>
             <span>as soon as</span>
-            {config.showCoin && <CoinSelector value={coin} onChange={setCoin} variant="inline" />}
+            {config.showCoin && <CoinSelector value={coin} onChange={setCoin} coins={coins} variant="inline" />}
             {config.showDirection && (
               <select
                 title="Select Condition"
@@ -243,7 +244,7 @@ export function AlertForm({ config }: AlertFormProps) {
               ))}
             </select>
             <span>as soon as</span>
-            {config.showCoin && <CoinSelector value={coin} onChange={setCoin} variant="inline" />}
+            {config.showCoin && <CoinSelector value={coin} onChange={setCoin} coins={coins} variant="inline" />}
             {config.showDirection && (
               <>
                 <span>goes</span>
