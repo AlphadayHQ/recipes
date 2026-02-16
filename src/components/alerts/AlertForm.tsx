@@ -102,6 +102,7 @@ export function AlertForm({ config }: AlertFormProps) {
           <div>
             <label className="block text-sm text-text-muted mb-1">Condition</label>
             <select
+              title='Select Condition'
               value={condition}
               onChange={(e) => setCondition(e.target.value)}
               className="w-full px-3 py-2.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text cursor-pointer focus:outline-none focus:border-primary transition-colors"
@@ -136,6 +137,7 @@ export function AlertForm({ config }: AlertFormProps) {
           <div>
             <label className="block text-sm text-text-muted mb-1">Currency</label>
             <select
+              title='Select Currency'
               value={currency}
               onChange={(e) => setCurrency(e.target.value)}
               className="w-full px-3 py-2.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text cursor-pointer focus:outline-none focus:border-primary transition-colors"
@@ -151,6 +153,7 @@ export function AlertForm({ config }: AlertFormProps) {
           <div>
             <label className="block text-sm text-text-muted mb-1">Cooldown</label>
             <select
+              title='Select Cooldown'
               value={cooldown}
               onChange={(e) => setCooldown(e.target.value)}
               className="w-full px-3 py-2.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text cursor-pointer focus:outline-none focus:border-primary transition-colors"
@@ -166,6 +169,7 @@ export function AlertForm({ config }: AlertFormProps) {
           <div>
             <label className="block text-sm text-text-muted mb-1">Frequency</label>
             <select
+              title='Select Frequency'
               value={frequency}
               onChange={(e) => setFrequency(e.target.value)}
               className="w-full px-3 py-2.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text cursor-pointer focus:outline-none focus:border-primary transition-colors"
@@ -181,6 +185,7 @@ export function AlertForm({ config }: AlertFormProps) {
           <div>
             <label className="block text-sm text-text-muted mb-1">Time Window</label>
             <select
+              title='Select Time Window'
               value={timeWindow}
               onChange={(e) => setTimeWindow(e.target.value)}
               className="w-full px-3 py-2.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text cursor-pointer focus:outline-none focus:border-primary transition-colors"

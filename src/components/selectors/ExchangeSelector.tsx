@@ -11,6 +11,7 @@ export function ExchangeSelector({ value, onChange, label = 'Exchange' }: Exchan
     <div>
       {label && <label className="block text-sm text-text-muted mb-1">{label}</label>}
       <select
+        title='exchanges'
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full px-3 py-2.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text cursor-pointer focus:outline-none focus:border-primary transition-colors"
