@@ -5,9 +5,10 @@ interface CoinSelectorProps {
   value: string;
   onChange: (symbol: string) => void;
   label?: string;
+  variant?: 'default' | 'inline';
 }
 
-export function CoinSelector({ value, onChange, label = 'Coin' }: CoinSelectorProps) {
+export function CoinSelector({ value, onChange, label = 'Coin', variant = 'default' }: CoinSelectorProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const ref = useRef<HTMLDivElement>(null);
@@ -28,19 +29,30 @@ export function CoinSelector({ value, onChange, label = 'Coin' }: CoinSelectorPr
 
   const selected = coins.find((c) => c.symbol === value);
 
+  const isInline = variant === 'inline';
+
   return (
-    <div ref={ref} className="relative">
-      {label && <label className="block text-sm text-text-muted mb-1">{label}</label>}
+    <div ref={ref} className={isInline ? 'relative inline-block' : 'relative'}>
+      {!isInline && label && <label className="block text-sm text-text-muted mb-1">{label}</label>}
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full px-3 py-2.5 bg-surface-light border border-surface-border rounded-lg text-sm text-left text-text cursor-pointer hover:border-primary/50 transition-colors"
+        className={
+          isInline
+            ? 'inline-flex items-center gap-1 bg-transparent border-0 border-b-2 border-primary text-primary font-semibold cursor-pointer text-lg px-1 py-0 focus:outline-none hover:border-primary/70 transition-colors'
+            : 'w-full px-3 py-2.5 bg-surface-light border border-surface-border rounded-lg text-sm text-left text-text cursor-pointer hover:border-primary/50 transition-colors'
+        }
       >
-        {selected ? `${selected.symbol} — ${selected.name}` : 'Select a coin'}
+        {selected
+          ? isInline
+            ? `${selected.name} (${selected.symbol})`
+            : `${selected.symbol} — ${selected.name}`
+          : 'Select a coin'}
+        {isInline && <span className="text-xs ml-0.5">&#9662;</span>}
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-surface-light border border-surface-border rounded-lg shadow-xl z-40 max-h-64 overflow-hidden flex flex-col">
+        <div className={`absolute top-full mt-1 bg-surface-light border border-surface-border rounded-lg shadow-xl z-40 max-h-64 overflow-hidden flex flex-col ${isInline ? 'left-0 min-w-55' : 'left-0 right-0'}`}>
           <input
             type="text"
             value={search}
