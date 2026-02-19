@@ -155,7 +155,7 @@ export function AlertForm({ config }: AlertFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="bg-surface border border-surface-border rounded-xl p-8">
-      <p className="text-lg leading-[3] text-text flex flex-wrap items-baseline gap-x-1.5">
+      <div className="text-lg leading-[3] text-text flex flex-wrap items-baseline gap-x-1.5">
         {/* --- Periodic style: "Send me a [Daily] [Email] update about [coin] in [currency] on [exchange]." --- */}
         {isPeriodicStyle && (
           <>
@@ -349,7 +349,7 @@ export function AlertForm({ config }: AlertFormProps) {
             <span>.</span>
           </>
         )}
-      </p>
+      </div>
 
       {/* Current price info */}
       {config.showCoin && selectedCoin && (
