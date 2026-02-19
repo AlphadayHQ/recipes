@@ -30,7 +30,7 @@ export function AlertCard({ alert }: AlertCardProps) {
       >
         <span
           className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${
-            alert.isActive ? "left-[18px]" : "left-0.5"
+            alert.isActive ? "left-4.5" : "left-0.5"
           }`}
         />
       </button>

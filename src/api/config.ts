@@ -17,6 +17,12 @@ export const MARKET_ROUTES = {
   BASE: "market/",
 } as const;
 
+export const ALERT_ROUTES = {
+  PRICE: "recipes/price-alerts/",
+  PERCENTAGE: "recipes/percentage-alerts/",
+  PERIODIC: "recipes/periodic-alerts/",
+} as const;
+
 export const OAUTH = {
   GOOGLE_CLIENT_ID: import.meta.env.VITE_OAUTH_ID_GOOGLE as string,
   APPLE_CLIENT_ID: import.meta.env.VITE_OAUTH_ID_APPLE as string,

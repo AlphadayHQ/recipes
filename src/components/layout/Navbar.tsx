@@ -109,7 +109,7 @@ export function Navbar() {
                   Dashboard
                 </Link>
                 {authEmail && (
-                  <span className="text-xs text-text-muted truncate max-w-[140px]">
+                  <span className="text-xs text-text-muted truncate max-w-35">
                     {authEmail}
                   </span>
                 )}

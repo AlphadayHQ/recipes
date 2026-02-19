@@ -4,6 +4,7 @@ import { useStore } from '../../store/useStore';
 import { CoinSelector } from '../selectors/CoinSelector';
 import { ExchangeSelector } from '../selectors/ExchangeSelector';
 import { useMarketData } from '../../hooks/useMarketData';
+import { createPriceAlert, createPercentageAlert, createPeriodicAlert } from '../../api/alertApi';
 
 export interface AlertFormConfig {
   type: AlertType;
@@ -68,6 +69,7 @@ interface AlertFormProps {
 export function AlertForm({ config }: AlertFormProps) {
   const addAlert = useStore((s) => s.addAlert);
   const addToast = useStore((s) => s.addToast);
+  const authToken = useStore((s) => s.authToken);
   const { coins } = useMarketData();
 
   const [coin, setCoin] = useState('BTC');
@@ -87,8 +89,54 @@ export function AlertForm({ config }: AlertFormProps) {
   const isPeriodicStyle = config.showFrequency && !config.showDirection;
   const isPercentStyle = config.showTimeWindow;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const coinSlug = coins.find((c) => c.symbol === coin)?.id ?? coin.toLowerCase();
+
+    // POST to backend API for supported alert types
+    if (['price', 'percent', 'periodic'].includes(config.type) && authToken?.value) {
+      setSubmitting(true);
+      try {
+        if (config.type === 'price') {
+          await createPriceAlert(authToken.value, {
+            coinSlug,
+            direction: condition,
+            threshold: Number(threshold),
+            cooldown: cooldown || undefined,
+            notificationMethod,
+          });
+        } else if (config.type === 'percent') {
+          await createPercentageAlert(authToken.value, {
+            coinSlug,
+            direction: condition,
+            timeWindow,
+            threshold: Number(threshold),
+            cooldown: cooldown || undefined,
+            notificationMethod,
+          });
+        } else if (config.type === 'periodic') {
+          await createPeriodicAlert(authToken.value, {
+            coinSlug,
+            direction: condition,
+            threshold: Number(threshold),
+            frequency,
+            cooldown: cooldown || undefined,
+            notificationMethod,
+          });
+        }
+      } catch (err) {
+        addToast(
+          err instanceof Error ? err.message : 'Failed to create alert',
+          'error'
+        );
+        setSubmitting(false);
+        return;
+      }
+      setSubmitting(false);
+    }
 
     addAlert({
       type: config.type,
@@ -229,10 +277,22 @@ export function AlertForm({ config }: AlertFormProps) {
           </>
         )}
 
-        {/* --- Default style (price, volume, marketcap, dominance, funding, stock): "Send me an [Email] as soon as [coin] goes [above] the price of [threshold] [currency] on [exchange]." --- */}
+        {/* --- Default style (price, volume, marketcap, dominance, funding, stock, periodic with condition): --- */}
         {!isPeriodicStyle && !isPercentStyle && (
           <>
-            <span>Send me an</span>
+            <span>Send me a</span>
+            {config.showFrequency && (
+              <select
+                title="Select Frequency"
+                value={frequency}
+                onChange={(e) => setFrequency(e.target.value)}
+                className={inlineSelectClass}
+              >
+                {frequencyOptions.map((f) => (
+                  <option key={f} value={f}>{f}</option>
+                ))}
+              </select>
+            )}
             <select
               title="Select Notification Method"
               value={notificationMethod}
@@ -243,7 +303,7 @@ export function AlertForm({ config }: AlertFormProps) {
                 <option key={m.id} value={m.id}>{m.label}</option>
               ))}
             </select>
-            <span>as soon as</span>
+            {config.showFrequency ? <span>when</span> : <span>as soon as</span>}
             {config.showCoin && <CoinSelector value={coin} onChange={setCoin} coins={coins} variant="inline" />}
             {config.showDirection && (
               <>
@@ -356,9 +416,10 @@ export function AlertForm({ config }: AlertFormProps) {
 
       <button
         type="submit"
-        className="mt-6 w-full sm:w-auto px-6 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-colors border-none cursor-pointer"
+        disabled={submitting}
+        className="mt-6 w-full sm:w-auto px-6 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-colors border-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Create Alert
+        {submitting ? 'Creating...' : 'Create Alert'}
       </button>
     </form>
   );
