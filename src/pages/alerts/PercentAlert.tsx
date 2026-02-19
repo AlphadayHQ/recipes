@@ -1,18 +1,6 @@
 import { AlertForm } from '../../components/alerts/AlertForm';
 import { AlertList } from '../../components/alerts/AlertList';
-import type { AlertFormConfig } from '../../components/alerts/AlertForm';
-
-const config: AlertFormConfig = {
-  type: 'percent',
-  showCoin: true,
-  showDirection: true,
-  directionOptions: ['rises', 'drops'],
-  showThreshold: true,
-  thresholdLabel: 'Percentage (%)',
-  thresholdPlaceholder: 'e.g. 10',
-  showCooldown: true,
-  showTimeWindow: true,
-};
+import { percentAlertConfig } from '../../components/alerts/alertConfigs';
 
 export function PercentAlert() {
   return (
@@ -24,7 +12,7 @@ export function PercentAlert() {
         </p>
       </div>
 
-      <AlertForm config={config} />
+      <AlertForm config={percentAlertConfig} />
       <AlertList type="percent" />
 
       <div className="bg-surface border border-surface-border rounded-xl p-6">

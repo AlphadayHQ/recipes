@@ -1,18 +1,6 @@
 import { AlertForm } from '../../components/alerts/AlertForm';
 import { AlertList } from '../../components/alerts/AlertList';
-import type { AlertFormConfig } from '../../components/alerts/AlertForm';
-
-const config: AlertFormConfig = {
-  type: 'market-cap',
-  showCoin: true,
-  showDirection: true,
-  directionOptions: ['above', 'below'],
-  showThreshold: true,
-  thresholdLabel: 'Market Cap ($)',
-  thresholdPlaceholder: 'e.g. 1000000000000',
-  showCurrency: true,
-  showCooldown: true,
-};
+import { marketCapAlertConfig } from '../../components/alerts/alertConfigs';
 
 export function MarketCapAlert() {
   return (
@@ -24,7 +12,7 @@ export function MarketCapAlert() {
         </p>
       </div>
 
-      <AlertForm config={config} />
+      <AlertForm config={marketCapAlertConfig} />
       <AlertList type="market-cap" />
 
       <div className="bg-surface border border-surface-border rounded-xl p-6">

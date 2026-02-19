@@ -1,19 +1,6 @@
 import { AlertForm } from '../../components/alerts/AlertForm';
 import { AlertList } from '../../components/alerts/AlertList';
-import type { AlertFormConfig } from '../../components/alerts/AlertForm';
-
-const config: AlertFormConfig = {
-  type: 'volume',
-  showCoin: true,
-  showExchange: true,
-  showDirection: true,
-  directionOptions: ['above', 'below'],
-  showThreshold: true,
-  thresholdLabel: 'Volume Threshold',
-  thresholdPlaceholder: 'e.g. 5000000000',
-  showCurrency: true,
-  showCooldown: true,
-};
+import { volumeAlertConfig } from '../../components/alerts/alertConfigs';
 
 export function VolumeAlert() {
   return (
@@ -25,7 +12,7 @@ export function VolumeAlert() {
         </p>
       </div>
 
-      <AlertForm config={config} />
+      <AlertForm config={volumeAlertConfig} />
       <AlertList type="volume" />
 
       <div className="bg-surface border border-surface-border rounded-xl p-6">

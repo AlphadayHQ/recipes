@@ -151,7 +151,7 @@ export function AlertForm({ config }: AlertFormProps) {
     addToast('Alert created successfully!');
     setThreshold('');
     setNote('');
-  };
+  };  
 
   return (
     <form onSubmit={handleSubmit} className="bg-surface border border-surface-border rounded-xl p-8">

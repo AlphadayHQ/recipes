@@ -3,75 +3,26 @@ import { Link } from 'react-router-dom';
 import { TabBar } from '../components/ui/TabBar';
 import { AlertForm } from '../components/alerts/AlertForm';
 import type { AlertFormConfig } from '../components/alerts/AlertForm';
+import {
+  priceAlertConfig,
+  percentAlertConfig,
+  periodicAlertConfig,
+  volumeAlertConfig,
+  marketCapAlertConfig,
+  cryptoBriefingAlertConfig,
+  twitterDigestAlertConfig,
+} from '../components/alerts/alertConfigs';
+
 const marketTabs = ['Price', 'Percent', 'Periodic', 'Volume', 'Market Cap', 'Crypto Briefing', 'Twitter Digest'];
 
 const marketConfigs: Record<string, AlertFormConfig> = {
-  Price: {
-    type: 'price',
-    showCoin: true,
-    showExchange: true,
-    showDirection: true,
-    directionOptions: ['above', 'below'],
-    showThreshold: true,
-    thresholdLabel: 'Target Price',
-    thresholdPlaceholder: 'e.g. 70000',
-    showCurrency: true,
-    showCooldown: true,
-    showNote: true,
-    showOneTime: true,
-  },
-  Percent: {
-    type: 'percent',
-    showCoin: true,
-    showExchange: true,
-    showDirection: true,
-    directionOptions: ['rises', 'drops'],
-    showThreshold: true,
-    thresholdLabel: 'Percentage (%)',
-    thresholdPlaceholder: 'e.g. 10',
-    showCooldown: true,
-    showTimeWindow: true,
-  },
-  Periodic: {
-    type: 'periodic',
-    showCoin: true,
-    showExchange: true,
-    showCurrency: true,
-    showFrequency: true,
-  },
-  Volume: {
-    type: 'volume',
-    showCoin: true,
-    showExchange: true,
-    showDirection: true,
-    directionOptions: ['above', 'below'],
-    showThreshold: true,
-    thresholdLabel: 'Volume Threshold',
-    thresholdPlaceholder: 'e.g. 5000000000',
-    showCurrency: true,
-    showCooldown: true,
-  },
-  'Market Cap': {
-    type: 'market-cap',
-    showCoin: true,
-    showDirection: true,
-    directionOptions: ['above', 'below'],
-    showThreshold: true,
-    thresholdLabel: 'Market Cap ($)',
-    thresholdPlaceholder: 'e.g. 1000000000000',
-    showCurrency: true,
-    showCooldown: true,
-  },
-  'Crypto Briefing': {
-    type: 'crypto-briefing',
-    showFrequency: true,
-    showNote: true,
-  },
-  'Twitter Digest': {
-    type: 'twitter-digest',
-    showFrequency: true,
-    showNote: true,
-  },
+  Price: priceAlertConfig,
+  Percent: percentAlertConfig,
+  Periodic: periodicAlertConfig,
+  Volume: volumeAlertConfig,
+  'Market Cap': marketCapAlertConfig,
+  'Crypto Briefing': cryptoBriefingAlertConfig,
+  'Twitter Digest': twitterDigestAlertConfig,
 };
 
 const popularRecipes = [

@@ -1,19 +1,8 @@
 import { AlertForm } from '../../components/alerts/AlertForm';
 import { AlertList } from '../../components/alerts/AlertList';
-import type { AlertFormConfig } from '../../components/alerts/AlertForm';
+import { priceAlertConfig } from '../../components/alerts/alertConfigs';
 
-const config: AlertFormConfig = {
-  type: 'price',
-  showCoin: true,
-  showDirection: true,
-  directionOptions: ['above', 'below'],
-  showThreshold: true,
-  thresholdLabel: 'Target Price',
-  thresholdPlaceholder: 'e.g. 70000',
-  showCooldown: true,
-};
-
-export function PriceAlert() {
+export function PriceAlert() {  
   return (
     <div className="max-w-4xl mx-auto px-4 py-10 space-y-8">
       <div>
@@ -23,7 +12,7 @@ export function PriceAlert() {
         </p>
       </div>
 
-      <AlertForm config={config} />
+      <AlertForm config={priceAlertConfig} />
       <AlertList type="price" />
 
       <div className="bg-surface border border-surface-border rounded-xl p-6">
