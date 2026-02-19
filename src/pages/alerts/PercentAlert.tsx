@@ -5,7 +5,6 @@ import type { AlertFormConfig } from '../../components/alerts/AlertForm';
 const config: AlertFormConfig = {
   type: 'percent',
   showCoin: true,
-  showExchange: true,
   showDirection: true,
   directionOptions: ['rises', 'drops'],
   showThreshold: true,
@@ -32,7 +31,7 @@ export function PercentAlert() {
         <h3 className="font-semibold mb-3">How Percentage Alerts Work</h3>
         <ul className="text-sm text-text-muted space-y-2 list-disc pl-5">
           <li>Set a percentage threshold (e.g. 10% rise or drop)</li>
-          <li>Choose a time window to monitor (1h, 4h, 24h, 7d)</li>
+          <li>Choose a time window to monitor (24h or 7d)</li>
           <li>Great for catching sudden volatility or momentum shifts</li>
         </ul>
       </div>

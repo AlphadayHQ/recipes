@@ -5,13 +5,11 @@ import type { AlertFormConfig } from '../../components/alerts/AlertForm';
 const config: AlertFormConfig = {
   type: 'periodic',
   showCoin: true,
-  showExchange: true,
   showDirection: true,
   directionOptions: ['above', 'below'],
   showThreshold: true,
   thresholdLabel: 'Target Price',
   thresholdPlaceholder: 'e.g. 70000',
-  showCurrency: true,
   showCooldown: true,
   showFrequency: true,
 };

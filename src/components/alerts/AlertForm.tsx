@@ -43,17 +43,11 @@ const currencyLabels: Record<string, string> = {
 
 const currencyOptions = ['USD', 'BTC', 'ETH', 'EUR', 'GBP'];
 const frequencyOptions = ['Hourly', 'Daily', 'Weekly'];
-const timeWindowOptions = ['1h', '4h', '24h', '7d'];
+const timeWindowOptions = ['24h', '7d'];
 
 const notificationOptions: { id: NotificationMethod; label: string }[] = [
   { id: 'email', label: 'Email' },
-  { id: 'sms', label: 'SMS' },
-  { id: 'phone', label: 'Phone Call' },
   { id: 'push', label: 'Push Notification' },
-  { id: 'webhook', label: 'Webhook' },
-  { id: 'telegram', label: 'Telegram Message' },
-  { id: 'discord', label: 'Discord Message' },
-  { id: 'slack', label: 'Slack Message' },
 ];
 
 const inlineSelectClass =
