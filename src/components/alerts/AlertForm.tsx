@@ -1,10 +1,15 @@
-import { useState } from 'react';
-import type { AlertType, NotificationMethod } from '../../store/useStore';
-import { useStore } from '../../store/useStore';
-import { CoinSelector } from '../selectors/CoinSelector';
-import { ExchangeSelector } from '../selectors/ExchangeSelector';
-import { useMarketData } from '../../hooks/useMarketData';
-import { createPriceAlert, createPercentageAlert, createPeriodicAlert } from '../../api/alertApi';
+import { useState } from "react";
+import type { AlertType, NotificationMethod } from "../../store/useStore";
+import { useStore } from "../../store/useStore";
+import { CoinSelector } from "../selectors/CoinSelector";
+import { ExchangeSelector } from "../selectors/ExchangeSelector";
+import { useMarketData } from "../../hooks/useMarketData";
+import { useAlertOptions } from "../../hooks/useAlertOptions";
+import {
+  createPriceAlert,
+  createPercentageAlert,
+  createPeriodicAlert,
+} from "../../api/alertApi";
 
 export interface AlertFormConfig {
   type: AlertType;
@@ -23,38 +28,27 @@ export interface AlertFormConfig {
   showTimeWindow?: boolean;
 }
 
-const cooldownOptions = [
-  { value: '', label: 'No cooldown' },
-  { value: '5m', label: '5 minutes' },
-  { value: '15m', label: '15 minutes' },
-  { value: '1h', label: '1 hour' },
-  { value: '4h', label: '4 hours' },
-  { value: '12h', label: '12 hours' },
-  { value: '24h', label: '24 hours' },
-];
-
 const currencyLabels: Record<string, string> = {
-  USD: 'Dollars (USD)',
-  BTC: 'Bitcoin (BTC)',
-  ETH: 'Ether (ETH)',
-  EUR: 'Euros (EUR)',
-  GBP: 'Pounds (GBP)',
+  USD: "Dollars (USD)",
+  BTC: "Bitcoin (BTC)",
+  ETH: "Ether (ETH)",
+  EUR: "Euros (EUR)",
+  GBP: "Pounds (GBP)",
 };
 
-const currencyOptions = ['USD', 'BTC', 'ETH', 'EUR', 'GBP'];
-const frequencyOptions = ['Hourly', 'Daily', 'Weekly'];
-const timeWindowOptions = ['24h', '7d'];
+const currencyOptions = ["USD", "BTC", "ETH", "EUR", "GBP"];
+const timeWindowOptions = ["24h", "7d"];
 
 const notificationOptions: { id: NotificationMethod; label: string }[] = [
-  { id: 'email', label: 'Email' },
-  { id: 'push', label: 'Push Notification' },
+  { id: "email", label: "Email" },
+  { id: "push", label: "Push Notification" },
 ];
 
 const inlineSelectClass =
-  'bg-transparent border-0 border-b-2 border-primary text-primary font-semibold cursor-pointer text-lg px-1 py-0 focus:outline-none hover:border-primary/70 transition-colors';
+  "bg-transparent border-0 border-b-2 border-primary text-primary font-semibold cursor-pointer text-lg px-1 py-0 focus:outline-none hover:border-primary/70 transition-colors";
 
 const inlineInputClass =
-  'bg-transparent border-0 border-b-2 border-primary text-primary font-semibold text-lg px-1 py-0 focus:outline-none hover:border-primary/70 transition-colors w-28 text-center';
+  "bg-transparent border-0 border-b-2 border-primary text-primary font-semibold text-lg px-1 py-0 focus:outline-none hover:border-primary/70 transition-colors w-28 text-center";
 
 interface AlertFormProps {
   config: AlertFormConfig;
@@ -65,20 +59,24 @@ export function AlertForm({ config }: AlertFormProps) {
   const addToast = useStore((s) => s.addToast);
   const authToken = useStore((s) => s.authToken);
   const { coins } = useMarketData();
+  const { cooldowns, frequencies } = useAlertOptions();
 
-  const [coin, setCoin] = useState('BTC');
-  const [exchange, setExchange] = useState('');
-  const [condition, setCondition] = useState(config.directionOptions?.[0] ?? 'above');
-  const [threshold, setThreshold] = useState('');
-  const [currency, setCurrency] = useState('USD');
-  const [notificationMethod, setNotificationMethod] = useState<NotificationMethod>('email');
-  const [cooldown, setCooldown] = useState('1h');
-  const [note, setNote] = useState('');
+  const [coin, setCoin] = useState("BTC");
+  const [exchange, setExchange] = useState("");
+  const [condition, setCondition] = useState(
+    config.directionOptions?.[0] ?? "above",
+  );
+  const [threshold, setThreshold] = useState("");
+  const [currency, setCurrency] = useState("USD");
+  const [notificationMethod, setNotificationMethod] =
+    useState<NotificationMethod>("email");
+  const [cooldown, setCooldown] = useState("");
+  const [note, setNote] = useState("");
   const [oneTime, setOneTime] = useState(false);
-  const [frequency, setFrequency] = useState('Daily');
-  const [timeWindow, setTimeWindow] = useState('24h');
+  const [frequency, setFrequency] = useState("");
+  const [timeWindow, setTimeWindow] = useState("24h");
 
-  const directions = config.directionOptions ?? ['above', 'below'];
+  const directions = config.directionOptions ?? ["above", "below"];
   const selectedCoin = coins.find((c) => c.symbol === coin);
   const isPeriodicStyle = config.showFrequency && !config.showDirection;
   const isPercentStyle = config.showTimeWindow;
@@ -88,13 +86,17 @@ export function AlertForm({ config }: AlertFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const coinSlug = coins.find((c) => c.symbol === coin)?.id ?? coin.toLowerCase();
+    const coinSlug =
+      coins.find((c) => c.symbol === coin)?.id ?? coin.toLowerCase();
 
     // POST to backend API for supported alert types
-    if (['price', 'percent', 'periodic'].includes(config.type) && authToken?.value) {
+    if (
+      ["price", "percent", "periodic"].includes(config.type) &&
+      authToken?.value
+    ) {
       setSubmitting(true);
       try {
-        if (config.type === 'price') {
+        if (config.type === "price") {
           await createPriceAlert(authToken.value, {
             coinSlug,
             direction: condition,
@@ -102,7 +104,7 @@ export function AlertForm({ config }: AlertFormProps) {
             cooldown: cooldown || undefined,
             notificationMethod,
           });
-        } else if (config.type === 'percent') {
+        } else if (config.type === "percent") {
           await createPercentageAlert(authToken.value, {
             coinSlug,
             direction: condition,
@@ -111,7 +113,7 @@ export function AlertForm({ config }: AlertFormProps) {
             cooldown: cooldown || undefined,
             notificationMethod,
           });
-        } else if (config.type === 'periodic') {
+        } else if (config.type === "periodic") {
           await createPeriodicAlert(authToken.value, {
             coinSlug,
             direction: condition,
@@ -123,8 +125,8 @@ export function AlertForm({ config }: AlertFormProps) {
         }
       } catch (err) {
         addToast(
-          err instanceof Error ? err.message : 'Failed to create alert',
-          'error'
+          err instanceof Error ? err.message : "Failed to create alert",
+          "error",
         );
         setSubmitting(false);
         return;
@@ -136,8 +138,11 @@ export function AlertForm({ config }: AlertFormProps) {
       type: config.type,
       coin: config.showCoin ? coin : undefined,
       exchange: config.showExchange && exchange ? exchange : undefined,
-      condition: config.showDirection ? (condition as 'above' | 'below' | 'rises' | 'drops' | 'change') : undefined,
-      threshold: config.showThreshold && threshold ? Number(threshold) : undefined,
+      condition: config.showDirection
+        ? (condition as "above" | "below" | "rises" | "drops" | "change")
+        : undefined,
+      threshold:
+        config.showThreshold && threshold ? Number(threshold) : undefined,
       currency: config.showCurrency ? currency : undefined,
       notificationMethods: [notificationMethod],
       cooldown: config.showCooldown && cooldown ? cooldown : undefined,
@@ -148,13 +153,16 @@ export function AlertForm({ config }: AlertFormProps) {
       isActive: true,
     });
 
-    addToast('Alert created successfully!');
-    setThreshold('');
-    setNote('');
-  };  
+    addToast("Alert created successfully!");
+    setThreshold("");
+    setNote("");
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-surface border border-surface-border rounded-xl p-8">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-surface border border-surface-border rounded-xl p-8"
+    >
       <div className="text-lg leading-[3] text-text flex flex-wrap items-baseline gap-x-1.5">
         {/* --- Periodic style: "Send me a [Daily] [Email] update about [coin] in [currency] on [exchange]." --- */}
         {isPeriodicStyle && (
@@ -166,22 +174,35 @@ export function AlertForm({ config }: AlertFormProps) {
               onChange={(e) => setFrequency(e.target.value)}
               className={inlineSelectClass}
             >
-              {frequencyOptions.map((f) => (
-                <option key={f} value={f}>{f}</option>
+              {frequencies.map((f) => (
+                <option className="capitalize" key={f.name} value={f.name}>
+                  {f.name}
+                </option>
               ))}
             </select>
             <select
               title="Select Notification Method"
               value={notificationMethod}
-              onChange={(e) => setNotificationMethod(e.target.value as NotificationMethod)}
+              onChange={(e) =>
+                setNotificationMethod(e.target.value as NotificationMethod)
+              }
               className={inlineSelectClass}
             >
               {notificationOptions.map((m) => (
-                <option key={m.id} value={m.id}>{m.label}</option>
+                <option className="capitalize" key={m.id} value={m.id}>
+                  {m.label}
+                </option>
               ))}
             </select>
             <span>update about</span>
-            {config.showCoin && <CoinSelector value={coin} onChange={setCoin} coins={coins} variant="inline" />}
+            {config.showCoin && (
+              <CoinSelector
+                value={coin}
+                onChange={setCoin}
+                coins={coins}
+                variant="inline"
+              />
+            )}
             {config.showCurrency && (
               <>
                 <span>in</span>
@@ -192,7 +213,9 @@ export function AlertForm({ config }: AlertFormProps) {
                   className={inlineSelectClass}
                 >
                   {currencyOptions.map((c) => (
-                    <option key={c} value={c}>{currencyLabels[c] ?? c}</option>
+                    <option key={c} value={c}>
+                      {currencyLabels[c] ?? c}
+                    </option>
                   ))}
                 </select>
               </>
@@ -200,7 +223,11 @@ export function AlertForm({ config }: AlertFormProps) {
             {config.showExchange && (
               <>
                 <span>on</span>
-                <ExchangeSelector value={exchange} onChange={setExchange} variant="inline" />
+                <ExchangeSelector
+                  value={exchange}
+                  onChange={setExchange}
+                  variant="inline"
+                />
               </>
             )}
             <span>.</span>
@@ -214,15 +241,26 @@ export function AlertForm({ config }: AlertFormProps) {
             <select
               title="Select Notification Method"
               value={notificationMethod}
-              onChange={(e) => setNotificationMethod(e.target.value as NotificationMethod)}
+              onChange={(e) =>
+                setNotificationMethod(e.target.value as NotificationMethod)
+              }
               className={inlineSelectClass}
             >
               {notificationOptions.map((m) => (
-                <option key={m.id} value={m.id}>{m.label}</option>
+                <option className="capitalize" key={m.id} value={m.id}>
+                  {m.label}
+                </option>
               ))}
             </select>
             <span>as soon as</span>
-            {config.showCoin && <CoinSelector value={coin} onChange={setCoin} coins={coins} variant="inline" />}
+            {config.showCoin && (
+              <CoinSelector
+                value={coin}
+                onChange={setCoin}
+                coins={coins}
+                variant="inline"
+              />
+            )}
             {config.showDirection && (
               <select
                 title="Select Condition"
@@ -231,7 +269,9 @@ export function AlertForm({ config }: AlertFormProps) {
                 className={inlineSelectClass}
               >
                 {directions.map((d) => (
-                  <option key={d} value={d}>{d.charAt(0).toUpperCase() + d.slice(1)}</option>
+                  <option key={d} value={d}>
+                    {d.charAt(0).toUpperCase() + d.slice(1)}
+                  </option>
                 ))}
               </select>
             )}
@@ -242,7 +282,7 @@ export function AlertForm({ config }: AlertFormProps) {
                   type="number"
                   value={threshold}
                   onChange={(e) => setThreshold(e.target.value)}
-                  placeholder={config.thresholdPlaceholder ?? '0.00'}
+                  placeholder={config.thresholdPlaceholder ?? "0.00"}
                   className={inlineInputClass}
                   required
                   step="any"
@@ -258,13 +298,19 @@ export function AlertForm({ config }: AlertFormProps) {
               className={inlineSelectClass}
             >
               {timeWindowOptions.map((tw) => (
-                <option key={tw} value={tw}>{tw}</option>
+                <option key={tw} value={tw}>
+                  {tw}
+                </option>
               ))}
             </select>
             {config.showExchange && (
               <>
                 <span>on</span>
-                <ExchangeSelector value={exchange} onChange={setExchange} variant="inline" />
+                <ExchangeSelector
+                  value={exchange}
+                  onChange={setExchange}
+                  variant="inline"
+                />
               </>
             )}
             <span>.</span>
@@ -282,23 +328,36 @@ export function AlertForm({ config }: AlertFormProps) {
                 onChange={(e) => setFrequency(e.target.value)}
                 className={inlineSelectClass}
               >
-                {frequencyOptions.map((f) => (
-                  <option key={f} value={f}>{f}</option>
+                {frequencies.map((f) => (
+                  <option className="capitalize" key={f.name} value={f.name}>
+                    {f.label}
+                  </option>
                 ))}
               </select>
             )}
             <select
               title="Select Notification Method"
               value={notificationMethod}
-              onChange={(e) => setNotificationMethod(e.target.value as NotificationMethod)}
+              onChange={(e) =>
+                setNotificationMethod(e.target.value as NotificationMethod)
+              }
               className={inlineSelectClass}
             >
               {notificationOptions.map((m) => (
-                <option key={m.id} value={m.id}>{m.label}</option>
+                <option className="capitalize"  key={m.id} value={m.id}>
+                  {m.label}
+                </option>
               ))}
             </select>
             {config.showFrequency ? <span>when</span> : <span>as soon as</span>}
-            {config.showCoin && <CoinSelector value={coin} onChange={setCoin} coins={coins} variant="inline" />}
+            {config.showCoin && (
+              <CoinSelector
+                value={coin}
+                onChange={setCoin}
+                coins={coins}
+                variant="inline"
+              />
+            )}
             {config.showDirection && (
               <>
                 <span>goes</span>
@@ -309,7 +368,9 @@ export function AlertForm({ config }: AlertFormProps) {
                   className={inlineSelectClass}
                 >
                   {directions.map((d) => (
-                    <option key={d} value={d}>{d.charAt(0).toUpperCase() + d.slice(1)}</option>
+                    <option key={d} value={d}>
+                      {d.charAt(0).toUpperCase() + d.slice(1)}
+                    </option>
                   ))}
                 </select>
               </>
@@ -321,7 +382,7 @@ export function AlertForm({ config }: AlertFormProps) {
                   type="number"
                   value={threshold}
                   onChange={(e) => setThreshold(e.target.value)}
-                  placeholder={config.thresholdPlaceholder ?? '0.00'}
+                  placeholder={config.thresholdPlaceholder ?? "0.00"}
                   className={inlineInputClass}
                   required
                   step="any"
@@ -336,14 +397,20 @@ export function AlertForm({ config }: AlertFormProps) {
                 className={inlineSelectClass}
               >
                 {currencyOptions.map((c) => (
-                  <option key={c} value={c}>{currencyLabels[c] ?? c}</option>
+                  <option key={c} value={c}>
+                    {currencyLabels[c] ?? c}
+                  </option>
                 ))}
               </select>
             )}
             {config.showExchange && (
               <>
                 <span>on</span>
-                <ExchangeSelector value={exchange} onChange={setExchange} variant="inline" />
+                <ExchangeSelector
+                  value={exchange}
+                  onChange={setExchange}
+                  variant="inline"
+                />
               </>
             )}
             <span>.</span>
@@ -354,10 +421,13 @@ export function AlertForm({ config }: AlertFormProps) {
       {/* Current price info */}
       {config.showCoin && selectedCoin && (
         <p className="text-sm text-text-muted mt-2">
-          The price of {coin} is currently{' '}
+          The price of {coin} is currently{" "}
           <span className="font-semibold text-text">
-            {selectedCoin.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </span>{' '}
+            {selectedCoin.price.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </span>{" "}
           {currency}.
         </p>
       )}
@@ -367,15 +437,19 @@ export function AlertForm({ config }: AlertFormProps) {
         <div className="mt-6 flex flex-wrap gap-4 items-end">
           {config.showCooldown && (
             <div>
-              <label className="block text-xs text-text-muted mb-1">Cooldown</label>
+              <label className="block text-xs text-text-muted mb-1">
+                Cooldown
+              </label>
               <select
                 title="Select Cooldown"
                 value={cooldown}
                 onChange={(e) => setCooldown(e.target.value)}
                 className="px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text cursor-pointer focus:outline-none focus:border-primary transition-colors"
               >
-                {cooldownOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                {cooldowns.map((cd) => (
+                  <option key={cd.name} value={cd.name} className="capitalize">
+                    {cd.name}
+                  </option>
                 ))}
               </select>
             </div>
@@ -395,7 +469,9 @@ export function AlertForm({ config }: AlertFormProps) {
 
           {config.showNote && (
             <div className="flex-1 min-w-48">
-              <label className="block text-xs text-text-muted mb-1">Note (optional)</label>
+              <label className="block text-xs text-text-muted mb-1">
+                Note (optional)
+              </label>
               <input
                 type="text"
                 value={note}
@@ -413,7 +489,7 @@ export function AlertForm({ config }: AlertFormProps) {
         disabled={submitting}
         className="mt-6 w-full sm:w-auto px-6 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-colors border-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {submitting ? 'Creating...' : 'Create Alert'}
+        {submitting ? "Creating..." : "Create Alert"}
       </button>
     </form>
   );

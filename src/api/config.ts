@@ -21,6 +21,8 @@ export const ALERT_ROUTES = {
   PRICE: "recipes/price-alerts/",
   PERCENTAGE: "recipes/percentage-alerts/",
   PERIODIC: "recipes/periodic-alerts/",
+  COOLDOWNS: "recipes/cooldowns/",
+  FREQUENCIES: "recipes/frequencies/",
 } as const;
 
 export const OAUTH = {

@@ -1,5 +1,24 @@
 import { API_BASE_URL, APP_HEADERS, ALERT_ROUTES } from "./config";
 
+// --- Lookup types ---
+
+export interface Cooldown {
+  name: string;
+  cooldown_seconds: number;
+  description: string;
+}
+
+export interface Frequency {
+  name: string;
+  label: string;
+}
+
+interface PaginatedResponse<T> {
+  links: { next: string | null; previous: string | null };
+  total: number;
+  results: T[];
+}
+
 // --- Request payload types ---
 
 interface PriceAlertPayload {
@@ -40,6 +59,16 @@ interface PeriodicAlertPayload {
 }
 
 // --- Helpers ---
+
+async function get<T>(path: string): Promise<T> {
+  const res = await fetch(`${API_BASE_URL}${path}`, {
+    headers: APP_HEADERS,
+  });
+  if (!res.ok) {
+    throw new Error(`GET ${path} failed: ${res.status}`);
+  }
+  return res.json();
+}
 
 async function post<T>(
   path: string,
@@ -161,4 +190,14 @@ export function createPeriodicAlert(
     notify_email: opts.notificationMethod === "email",
   };
   return post(ALERT_ROUTES.PERIODIC, payload as unknown as Record<string, unknown>, token);
+}
+
+export async function fetchCooldowns(): Promise<Cooldown[]> {
+  const data = await get<PaginatedResponse<Cooldown>>(ALERT_ROUTES.COOLDOWNS);
+  return data.results;
+}
+
+export async function fetchFrequencies(): Promise<Frequency[]> {
+  const data = await get<PaginatedResponse<Frequency>>(ALERT_ROUTES.FREQUENCIES);
+  return data.results;
 }
