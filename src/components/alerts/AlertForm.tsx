@@ -344,7 +344,7 @@ export function AlertForm({ config }: AlertFormProps) {
               className={inlineSelectClass}
             >
               {notificationOptions.map((m) => (
-                <option className="capitalize"  key={m.id} value={m.id}>
+                <option className="capitalize" key={m.id} value={m.id}>
                   {m.label}
                 </option>
               ))}
@@ -437,8 +437,11 @@ export function AlertForm({ config }: AlertFormProps) {
         <div className="mt-6 flex flex-wrap gap-4 items-end">
           {config.showCooldown && (
             <div>
-              <label className="block text-xs text-text-muted mb-1">
-                Cooldown
+              <label className="block text-sm text-text-muted mb-1">
+                Cooldown{" "}
+                <span className="text-xs text-text-muted mt-1">
+                  (Minimum time between repeated notifications for this alert.)
+                </span>
               </label>
               <select
                 title="Select Cooldown"
@@ -452,6 +455,9 @@ export function AlertForm({ config }: AlertFormProps) {
                   </option>
                 ))}
               </select>
+              <p className="text-xs text-text-muted mt-1">
+                Minimum time between repeated notifications for this alert.
+              </p>
             </div>
           )}
 
