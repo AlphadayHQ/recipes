@@ -41,6 +41,16 @@ interface PercentageAlertPayload {
   notify_email: boolean;
 }
 
+interface TwitterDigestPayload {
+  frequency: string;
+  timezone: string;
+  max_tweets: number;
+  is_active: boolean;
+  notify_push: boolean;
+  notify_email: boolean;
+  account_usernames: string[];
+}
+
 interface PeriodicAlertPayload {
   coin_slug: string;
   condition:
@@ -190,6 +200,28 @@ export function createPeriodicAlert(
     notify_email: opts.notificationMethod === "email",
   };
   return post(ALERT_ROUTES.PERIODIC, payload as unknown as Record<string, unknown>, token);
+}
+
+export function createTwitterDigestAlert(
+  token: string,
+  opts: {
+    frequency: string;
+    timezone: string;
+    maxTweets: number;
+    notificationMethod: string;
+    accountUsernames: string[];
+  }
+): Promise<unknown> {
+  const payload: TwitterDigestPayload = {
+    frequency: opts.frequency,
+    timezone: opts.timezone,
+    max_tweets: opts.maxTweets,
+    is_active: true,
+    notify_push: opts.notificationMethod === "push",
+    notify_email: opts.notificationMethod === "email",
+    account_usernames: opts.accountUsernames,
+  };
+  return post(ALERT_ROUTES.TWITTER_DIGEST, payload as unknown as Record<string, unknown>, token);
 }
 
 export async function fetchCooldowns(): Promise<Cooldown[]> {

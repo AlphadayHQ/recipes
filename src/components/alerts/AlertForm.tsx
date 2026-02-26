@@ -9,6 +9,7 @@ import {
   createPriceAlert,
   createPercentageAlert,
   createPeriodicAlert,
+  createTwitterDigestAlert,
 } from "../../api/alertApi";
 
 export interface AlertFormConfig {
@@ -26,6 +27,9 @@ export interface AlertFormConfig {
   showOneTime?: boolean;
   showFrequency?: boolean;
   showTimeWindow?: boolean;
+  showAccountUsernames?: boolean;
+  showTimezone?: boolean;
+  showMaxTweets?: boolean;
 }
 
 const currencyLabels: Record<string, string> = {
@@ -75,6 +79,9 @@ export function AlertForm({ config }: AlertFormProps) {
   const [oneTime, setOneTime] = useState(false);
   const [frequency, setFrequency] = useState("");
   const [timeWindow, setTimeWindow] = useState("24h");
+  const [accountUsernames, setAccountUsernames] = useState("");
+  const [timezone, setTimezone] = useState("UTC");
+  const [maxTweets, setMaxTweets] = useState("10");
 
   const directions = config.directionOptions ?? ["above", "below"];
   const selectedCoin = coins.find((c) => c.symbol === coin);
@@ -91,7 +98,7 @@ export function AlertForm({ config }: AlertFormProps) {
 
     // POST to backend API for supported alert types
     if (
-      ["price", "percent", "periodic"].includes(config.type) &&
+      ["price", "percent", "periodic", "twitter-digest"].includes(config.type) &&
       authToken?.value
     ) {
       setSubmitting(true);
@@ -121,6 +128,17 @@ export function AlertForm({ config }: AlertFormProps) {
             frequency,
             cooldown: cooldown || undefined,
             notificationMethod,
+          });
+        } else if (config.type === "twitter-digest") {
+          await createTwitterDigestAlert(authToken.value, {
+            frequency,
+            timezone,
+            maxTweets: Number(maxTweets) || 10,
+            notificationMethod,
+            accountUsernames: accountUsernames
+              .split(",")
+              .map((u) => u.trim().replace(/^@/, ""))
+              .filter(Boolean),
           });
         }
       } catch (err) {
@@ -433,8 +451,8 @@ export function AlertForm({ config }: AlertFormProps) {
       )}
 
       {/* Additional options row */}
-      {(config.showCooldown || config.showOneTime || config.showNote) && (
-        <div className="mt-6 flex flex-wrap gap-4 items-end">
+      {(config.showCooldown || config.showOneTime || config.showNote || config.showAccountUsernames || config.showTimezone || config.showMaxTweets) && (
+        <div className="mt-6 flex flex-wrap gap-4 items-start">
           {config.showCooldown && (
             <div>
               <label className="block text-sm text-text-muted mb-1">
@@ -484,6 +502,56 @@ export function AlertForm({ config }: AlertFormProps) {
                 onChange={(e) => setNote(e.target.value)}
                 placeholder="Add a note to this alert"
                 className="w-full px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary transition-colors"
+              />
+            </div>
+          )}
+
+          {config.showAccountUsernames && (
+            <div className="flex-1 min-w-48">
+              <label className="block text-xs text-text-muted mb-1">
+                Twitter accounts
+              </label>
+              <input
+                type="text"
+                value={accountUsernames}
+                onChange={(e) => setAccountUsernames(e.target.value)}
+                placeholder="@elonmusk, @vitalikbuterin"
+                className="w-full px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary transition-colors"
+              />
+              <p className="text-xs text-text-muted mt-1">
+                Comma-separated Twitter usernames to follow.
+              </p>
+            </div>
+          )}
+
+          {config.showTimezone && (
+            <div className="h-full">
+              <label className="block text-xs text-text-muted mb-1">
+                Timezone
+              </label>
+              <input
+                type="text"
+                value={timezone}
+                onChange={(e) => setTimezone(e.target.value)}
+                placeholder="UTC"
+                className="px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary transition-colors w-36"
+              />
+            </div>
+          )}
+
+          {config.showMaxTweets && (
+            <div>
+              <label className="block text-xs text-text-muted mb-1">
+                Max tweets
+              </label>
+              <input
+                type="number"
+                value={maxTweets}
+                onChange={(e) => setMaxTweets(e.target.value)}
+                min={1}
+                title="Max tweets"
+                placeholder="10"
+                className="px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary transition-colors w-24"
               />
             </div>
           )}
