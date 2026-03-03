@@ -19,7 +19,8 @@ export type AlertType =
   | 'mempool'
   | 'blockchain'
   | 'crypto-briefing'
-  | 'twitter-digest';
+  | 'twitter-digest'
+  | 'custom';
 
 export type NotificationMethod =
   | 'email'
@@ -50,6 +51,7 @@ export interface Alert {
   gasSpeed?: string;
   frequency?: string;
   timeWindow?: string;
+  query?: string;
 }
 
 export interface Toast {

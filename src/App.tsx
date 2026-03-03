@@ -12,6 +12,7 @@ import { FundingRateAlert } from './pages/alerts/FundingRateAlert';
 import { MarketCapAlert } from './pages/alerts/MarketCapAlert';
 import { DominanceAlert } from './pages/alerts/DominanceAlert';
 import { StockAlert } from './pages/alerts/StockAlert';
+import { CustomAlert } from './pages/alerts/CustomAlert';
 import { AuthModal } from './components/auth/AuthModal';
 import { useStore } from './store/useStore';
 import { OAUTH } from './api/config';
@@ -62,6 +63,7 @@ function App() {
             <Route path="/alerts/market-cap" element={<MarketCapAlert />} />
             <Route path="/alerts/dominance" element={<DominanceAlert />} />
             <Route path="/alerts/stock" element={<StockAlert />} />
+            <Route path="/alerts/custom" element={<CustomAlert />} />
 
             {/* Listing alerts (Phase 3) */}
             <Route path="/alerts/listing" element={<Placeholder title="New Listing Alert" />} />

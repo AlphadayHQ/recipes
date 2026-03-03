@@ -51,6 +51,16 @@ interface TwitterDigestPayload {
   account_usernames: string[];
 }
 
+interface CustomAlertPayload {
+  coin_slug?: string;
+  query: string;
+  frequency: string;
+  timezone: string;
+  is_active: boolean;
+  notify_push: boolean;
+  notify_email: boolean;
+}
+
 interface PeriodicAlertPayload {
   coin_slug: string;
   condition:
@@ -222,6 +232,28 @@ export function createTwitterDigestAlert(
     account_usernames: opts.accountUsernames,
   };
   return post(ALERT_ROUTES.TWITTER_DIGEST, payload as unknown as Record<string, unknown>, token);
+}
+
+export function createCustomAlert(
+  token: string,
+  opts: {
+    coinSlug?: string;
+    query: string;
+    frequency: string;
+    timezone: string;
+    notificationMethod: string;
+  }
+): Promise<unknown> {
+  const payload: CustomAlertPayload = {
+    ...(opts.coinSlug ? { coin_slug: opts.coinSlug } : {}),
+    query: opts.query,
+    frequency: opts.frequency,
+    timezone: opts.timezone,
+    is_active: true,
+    notify_push: opts.notificationMethod === "push",
+    notify_email: opts.notificationMethod === "email",
+  };
+  return post(ALERT_ROUTES.CUSTOM_ALERT, payload as unknown as Record<string, unknown>, token);
 }
 
 export async function fetchCooldowns(): Promise<Cooldown[]> {

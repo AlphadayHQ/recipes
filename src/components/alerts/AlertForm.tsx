@@ -10,6 +10,7 @@ import {
   createPercentageAlert,
   createPeriodicAlert,
   createTwitterDigestAlert,
+  createCustomAlert,
 } from "../../api/alertApi";
 
 export interface AlertFormConfig {
@@ -30,6 +31,7 @@ export interface AlertFormConfig {
   showAccountUsernames?: boolean;
   showTimezone?: boolean;
   showMaxTweets?: boolean;
+  showQuery?: boolean;
 }
 
 const currencyLabels: Record<string, string> = {
@@ -82,11 +84,13 @@ export function AlertForm({ config }: AlertFormProps) {
   const [accountUsernames, setAccountUsernames] = useState("");
   const [timezone, setTimezone] = useState("UTC");
   const [maxTweets, setMaxTweets] = useState("10");
+  const [query, setQuery] = useState("");
 
   const directions = config.directionOptions ?? ["above", "below"];
   const selectedCoin = coins.find((c) => c.symbol === coin);
-  const isPeriodicStyle = config.showFrequency && !config.showDirection;
-  const isPercentStyle = config.showTimeWindow;
+  const isWebSearchStyle = !!config.showQuery;
+  const isPeriodicStyle = !isWebSearchStyle && !!config.showFrequency && !config.showDirection;
+  const isPercentStyle = !isWebSearchStyle && !!config.showTimeWindow;
 
   const [submitting, setSubmitting] = useState(false);
 
@@ -98,12 +102,20 @@ export function AlertForm({ config }: AlertFormProps) {
 
     // POST to backend API for supported alert types
     if (
-      ["price", "percent", "periodic", "twitter-digest"].includes(config.type) &&
+      ["price", "percent", "periodic", "twitter-digest", "custom"].includes(config.type) &&
       authToken?.value
     ) {
       setSubmitting(true);
       try {
-        if (config.type === "price") {
+        if (config.type === "custom") {
+          await createCustomAlert(authToken.value, {
+            coinSlug: config.showCoin ? coinSlug : undefined,
+            query,
+            frequency,
+            timezone,
+            notificationMethod,
+          });
+        } else if (config.type === "price") {
           await createPriceAlert(authToken.value, {
             coinSlug,
             direction: condition,
@@ -168,6 +180,7 @@ export function AlertForm({ config }: AlertFormProps) {
       oneTime: config.showOneTime ? oneTime : undefined,
       frequency: config.showFrequency ? frequency : undefined,
       timeWindow: config.showTimeWindow ? timeWindow : undefined,
+      query: config.showQuery && query ? query : undefined,
       isActive: true,
     });
 
@@ -182,6 +195,60 @@ export function AlertForm({ config }: AlertFormProps) {
       className="bg-surface border border-surface-border rounded-xl p-8"
     >
       <div className="text-lg leading-[3] text-text flex flex-wrap items-baseline gap-x-1.5">
+        {/* --- Web Search style: "Search the web for [query] related to [coin] and send me a [Daily] [Email]." --- */}
+        {isWebSearchStyle && (
+          <>
+            <span>Search the web for</span>
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="e.g. Bitcoin ETF"
+              className={inlineInputClass + " w-40"}
+              required
+            />
+            {config.showCoin && (
+              <>
+                <span>related to</span>
+                <CoinSelector
+                  value={coin}
+                  onChange={setCoin}
+                  coins={coins}
+                  variant="inline"
+                />
+              </>
+            )}
+            <span>and send me a</span>
+            <select
+              title="Select Frequency"
+              value={frequency}
+              onChange={(e) => setFrequency(e.target.value)}
+              className={inlineSelectClass}
+            >
+              {frequencies.map((f) => (
+                <option className="capitalize" key={f.name} value={f.name}>
+                  {f.label}
+                </option>
+              ))}
+            </select>
+            <select
+              title="Select Notification Method"
+              value={notificationMethod}
+              onChange={(e) =>
+                setNotificationMethod(e.target.value as NotificationMethod)
+              }
+              className={inlineSelectClass}
+            >
+              {notificationOptions.map((m) => (
+                <option className="capitalize" key={m.id} value={m.id}>
+                  {m.label}
+                </option>
+              ))}
+            </select>
+            <span>.</span>
+          </>
+        )}
+
         {/* --- Periodic style: "Send me a [Daily] [Email] update about [coin] in [currency] on [exchange]." --- */}
         {isPeriodicStyle && (
           <>

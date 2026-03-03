@@ -73,3 +73,11 @@ export const twitterDigestAlertConfig: AlertFormConfig = {
   showTimezone: true,
   showMaxTweets: true,
 };
+
+export const customAlertConfig: AlertFormConfig = {
+  type: 'custom',
+  showQuery: true,
+  showCoin: true,
+  showFrequency: true,
+  showTimezone: true,
+};

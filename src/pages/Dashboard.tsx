@@ -24,6 +24,7 @@ const ALERT_TYPE_LABELS: Partial<Record<AlertType, string>> = {
   blockchain: 'Blockchain',
   'crypto-briefing': 'Crypto Briefing',
   'twitter-digest': 'Twitter Digest',
+  'custom': 'Custom Alert',
 };
 
 const NEW_ALERT_OPTIONS = [
@@ -35,6 +36,7 @@ const NEW_ALERT_OPTIONS = [
   { label: 'Market Cap', to: '/alerts/market-cap' },
   { label: 'BTC Dominance', to: '/alerts/dominance' },
   { label: 'Stock / ETF', to: '/alerts/stock' },
+  { label: 'Custom Alert', to: '/alerts/custom' },
 ];
 
 export function Dashboard() {

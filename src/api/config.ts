@@ -22,6 +22,7 @@ export const ALERT_ROUTES = {
   PERCENTAGE: "recipes/percentage-alerts/",
   PERIODIC: "recipes/periodic-alerts/",
   TWITTER_DIGEST: "recipes/twitter-digests/",
+  CUSTOM_ALERT: "recipes/web-search-alerts/",
   COOLDOWNS: "recipes/cooldowns/",
   FREQUENCIES: "recipes/frequencies/",
 } as const;

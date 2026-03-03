@@ -132,6 +132,9 @@ function buildDescription(alert: Alert): string {
     parts.push(
       `Price ${alert.condition} ${alert.threshold} ${alert.currency ?? "USD"}`,
     );
+  } else if (alert.type === "custom") {
+    parts.push(`Custom alert: "${alert.query}"`);
+    if (alert.frequency) parts.push(`· ${alert.frequency}`);
   } else {
     parts.push(alert.type);
   }
