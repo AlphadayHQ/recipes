@@ -67,7 +67,7 @@ export function AlertForm({ config }: AlertFormProps) {
   const { coins } = useMarketData();
   const { cooldowns, frequencies } = useAlertOptions();
 
-  const [coin, setCoin] = useState("BTC");
+  const [coin, setCoin] = useState(config.showQuery ? "" : "BTC");
   const [exchange, setExchange] = useState("");
   const [condition, setCondition] = useState(
     config.directionOptions?.[0] ?? "above",
@@ -109,7 +109,7 @@ export function AlertForm({ config }: AlertFormProps) {
       try {
         if (config.type === "custom") {
           await createCustomAlert(authToken.value, {
-            coinSlug: config.showCoin ? coinSlug : undefined,
+            coinSlug: config.showCoin && coin ? (coins.find((c) => c.symbol === coin)?.id ?? coin.toLowerCase()) : undefined,
             query,
             frequency,
             timezone,
@@ -215,6 +215,7 @@ export function AlertForm({ config }: AlertFormProps) {
                   onChange={setCoin}
                   coins={coins}
                   variant="inline"
+                  allowNone
                 />
               </>
             )}
@@ -403,7 +404,7 @@ export function AlertForm({ config }: AlertFormProps) {
         )}
 
         {/* --- Default style (price, volume, marketcap, dominance, funding, stock, periodic with condition): --- */}
-        {!isPeriodicStyle && !isPercentStyle && (
+        {!isWebSearchStyle && !isPeriodicStyle && !isPercentStyle && (
           <>
             <span>Send me a</span>
             {config.showFrequency && (

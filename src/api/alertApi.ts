@@ -250,6 +250,9 @@ export function createCustomAlert(
     frequency: opts.frequency,
     timezone: opts.timezone,
     is_active: true,
+    // The form only offers "email" and "push"; other NotificationMethod values
+    // would leave both flags false. If new channels are added to the form, this
+    // mapping must be extended accordingly.
     notify_push: opts.notificationMethod === "push",
     notify_email: opts.notificationMethod === "email",
   };

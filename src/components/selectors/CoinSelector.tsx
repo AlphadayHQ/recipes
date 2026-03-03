@@ -7,9 +7,10 @@ interface CoinSelectorProps {
   coins: MarketCoin[];
   label?: string;
   variant?: 'default' | 'inline';
+  allowNone?: boolean;
 }
 
-export function CoinSelector({ value, onChange, coins, label = 'Coin', variant = 'default' }: CoinSelectorProps) {
+export function CoinSelector({ value, onChange, coins, label = 'Coin', variant = 'default', allowNone = false }: CoinSelectorProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const ref = useRef<HTMLDivElement>(null);
@@ -48,7 +49,7 @@ export function CoinSelector({ value, onChange, coins, label = 'Coin', variant =
           ? isInline
             ? `${selected.name} (${selected.symbol})`
             : `${selected.symbol} — ${selected.name}`
-          : 'Select a coin'}
+          : allowNone ? 'Any coin' : 'Select a coin'}
         {isInline && <span className="text-xs ml-0.5">&#9662;</span>}
       </button>
 
@@ -63,6 +64,17 @@ export function CoinSelector({ value, onChange, coins, label = 'Coin', variant =
             autoFocus
           />
           <div className="overflow-y-auto">
+            {allowNone && (
+              <button
+                type="button"
+                onClick={() => { onChange(''); setOpen(false); setSearch(''); }}
+                className={`w-full px-3 py-2 text-sm text-left border-none cursor-pointer transition-colors ${
+                  value === '' ? 'bg-primary/20 text-primary' : 'bg-transparent text-text-muted hover:bg-surface'
+                }`}
+              >
+                Any coin
+              </button>
+            )}
             {filtered.map((coin) => (
               <button
                 key={coin.id}
