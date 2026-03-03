@@ -4,9 +4,10 @@ import { Badge } from "../ui/Badge";
 
 interface AlertCardProps {
   alert: Alert;
+  onEdit?: (alert: Alert) => void;
 }
 
-export function AlertCard({ alert }: AlertCardProps) {
+export function AlertCard({ alert, onEdit }: AlertCardProps) {
   const toggleAlert = useStore((s) => s.toggleAlert);
   const deleteAlert = useStore((s) => s.deleteAlert);
   const addToast = useStore((s) => s.addToast);
@@ -22,6 +23,7 @@ export function AlertCard({ alert }: AlertCardProps) {
     <div className="flex items-center gap-4 p-4 bg-surface border border-surface-border rounded-xl">
       {/* Toggle */}
       <button
+        type="button"
         title="Toggle alert"
         onClick={() => toggleAlert(alert.id)}
         className={`w-10 h-6 rounded-full relative transition-colors border-none cursor-pointer ${
@@ -61,8 +63,23 @@ export function AlertCard({ alert }: AlertCardProps) {
         ))}
       </div>
 
+      {/* Edit */}
+      {onEdit && (
+        <button
+          type="button"
+          onClick={() => onEdit(alert)}
+          className="p-1.5 text-text-muted hover:text-primary transition-colors bg-transparent border-none cursor-pointer"
+          title="Edit alert"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+        </button>
+      )}
+
       {/* Delete */}
       <button
+        type="button"
         onClick={handleDelete}
         className="p-1.5 text-text-muted hover:text-danger transition-colors bg-transparent border-none cursor-pointer"
         title="Delete alert"

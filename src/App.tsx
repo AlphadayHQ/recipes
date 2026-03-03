@@ -1,7 +1,9 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Shell } from './components/layout/Shell';
 import { Home } from './pages/Home';
+import { Dashboard } from './pages/Dashboard';
 import { PriceAlert } from './pages/alerts/PriceAlert';
 import { PercentAlert } from './pages/alerts/PercentAlert';
 import { PeriodicAlert } from './pages/alerts/PeriodicAlert';
@@ -16,6 +18,16 @@ import { OAUTH } from './api/config';
 
 function KeyedAuthModal() {
   const authStatus = useStore((s) => s.authStatus);
+  const navigate = useNavigate();
+  const prevStatus = useRef(authStatus);
+
+  useEffect(() => {
+    if (prevStatus.current !== 'verified' && authStatus === 'verified') {
+      navigate('/dashboard');
+    }
+    prevStatus.current = authStatus;
+  }, [authStatus, navigate]);
+
   const isOpen =
     authStatus === 'selecting-method' ||
     authStatus === 'signing-in' ||
@@ -70,7 +82,7 @@ function App() {
             <Route path="/exchanges/:slug" element={<Placeholder title="Exchange Detail" />} />
 
             {/* Supporting pages (Phase 5) */}
-            <Route path="/dashboard" element={<Placeholder title="Dashboard" />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/pricing" element={<Placeholder title="Pricing" />} />
             <Route path="/settings" element={<Placeholder title="Settings" />} />
             <Route path="/faq" element={<Placeholder title="FAQ" />} />
