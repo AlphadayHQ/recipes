@@ -11,9 +11,10 @@ import {
   marketCapAlertConfig,
   cryptoBriefingAlertConfig,
   twitterDigestAlertConfig,
+  customAlertConfig,
 } from '../components/alerts/alertConfigs';
 
-const marketTabs = ['Price', 'Percent', 'Periodic', 'Volume', 'Market Cap', 'Crypto Briefing', 'Twitter Digest'];
+const marketTabs = ['Price', 'Percent', 'Periodic', 'Volume', 'Market Cap', 'Crypto Briefing', 'Twitter Digest', 'Custom'];
 
 const marketConfigs: Record<string, AlertFormConfig> = {
   Price: priceAlertConfig,
@@ -23,6 +24,7 @@ const marketConfigs: Record<string, AlertFormConfig> = {
   'Market Cap': marketCapAlertConfig,
   'Crypto Briefing': cryptoBriefingAlertConfig,
   'Twitter Digest': twitterDigestAlertConfig,
+  Custom: customAlertConfig,
 };
 
 const popularRecipes = [
