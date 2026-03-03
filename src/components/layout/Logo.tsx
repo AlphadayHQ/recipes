@@ -14,7 +14,7 @@ const Logo: FC = () => {
           className="mr-1.25 block h-8 focus:outline-none"
         />
         <div className="text-[19px] sm:text-[23.5px] text-white font-semibold">
-          <span>alphaday <span className="font-normal mx-0.5">x</span> Recipes</span>
+          <span>AlphaRecipes</span>
         </div>
       </Link>
     </div>
