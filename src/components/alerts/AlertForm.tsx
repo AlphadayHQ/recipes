@@ -33,6 +33,7 @@ export interface AlertFormConfig {
   showTimezone?: boolean;
   showMaxTweets?: boolean;
   showQuery?: boolean;
+  showTopics?: boolean;
 }
 
 const currencyLabels: Record<string, string> = {
@@ -86,6 +87,19 @@ export function AlertForm({ config }: AlertFormProps) {
   const [timezone, setTimezone] = useState("UTC");
   const [maxTweets, setMaxTweets] = useState("10");
   const [query, setQuery] = useState("");
+  const [includePrices, setIncludePrices] = useState(true);
+  const [includeNews, setIncludeNews] = useState(true);
+  const [includeDao, setIncludeDao] = useState(false);
+  const [includeSocialSentiment, setIncludeSocialSentiment] = useState(true);
+  const [includeEvents, setIncludeEvents] = useState(true);
+
+  const topics = [
+    { key: "prices", label: "Prices", value: includePrices, toggle: () => setIncludePrices((v) => !v) },
+    { key: "news", label: "News", value: includeNews, toggle: () => setIncludeNews((v) => !v) },
+    { key: "dao", label: "DAOs", value: includeDao, toggle: () => setIncludeDao((v) => !v) },
+    { key: "social", label: "Social Sentiment", value: includeSocialSentiment, toggle: () => setIncludeSocialSentiment((v) => !v) },
+    { key: "events", label: "Events", value: includeEvents, toggle: () => setIncludeEvents((v) => !v) },
+  ];
 
   const directions = config.directionOptions ?? ["above", "below"];
   const selectedCoin = coins.find((c) => c.symbol === coin);
@@ -147,6 +161,11 @@ export function AlertForm({ config }: AlertFormProps) {
             preset: frequency || frequencies[0]?.name || undefined,
             timezone,
             notificationMethod,
+            includePrices,
+            includeNews,
+            includeDao,
+            includeSocialSentiment,
+            includeEvents,
           });
         } else if (config.type === "twitter-digest") {
           await createTwitterDigestAlert(authToken.value, {
@@ -188,6 +207,11 @@ export function AlertForm({ config }: AlertFormProps) {
       frequency: config.showFrequency ? frequency : undefined,
       timeWindow: config.showTimeWindow ? timeWindow : undefined,
       query: config.showQuery && query ? query : undefined,
+      includePrices: config.showTopics ? includePrices : undefined,
+      includeNews: config.showTopics ? includeNews : undefined,
+      includeDao: config.showTopics ? includeDao : undefined,
+      includeSocialSentiment: config.showTopics ? includeSocialSentiment : undefined,
+      includeEvents: config.showTopics ? includeEvents : undefined,
       isActive: true,
     });
 
@@ -323,6 +347,27 @@ export function AlertForm({ config }: AlertFormProps) {
                   onChange={setExchange}
                   variant="inline"
                 />
+              </>
+            )}
+            {config.showTopics && (
+              <>
+                <span>about</span>
+                <span className="inline-flex flex-wrap gap-1.5 items-center">
+                  {topics.map((t) => (
+                    <button
+                      key={t.key}
+                      type="button"
+                      onClick={t.toggle}
+                      className={`px-2.5 py-0.5 rounded-full text-sm font-medium border transition-colors cursor-pointer ${
+                        t.value
+                          ? "bg-primary/10 border-primary text-primary"
+                          : "bg-surface-light border-surface-border text-text-muted"
+                      }`}
+                    >
+                      {t.value ? "✓ " : ""}{t.label}
+                    </button>
+                  ))}
+                </span>
               </>
             )}
             <span>.</span>

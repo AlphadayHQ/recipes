@@ -52,6 +52,11 @@ export interface Alert {
   frequency?: string;
   timeWindow?: string;
   query?: string;
+  includePrices?: boolean;
+  includeNews?: boolean;
+  includeDao?: boolean;
+  includeSocialSentiment?: boolean;
+  includeEvents?: boolean;
 }
 
 export interface Toast {

@@ -278,16 +278,21 @@ export function createCryptoBriefingAlert(
     preset?: string;
     timezone: string;
     notificationMethod: string;
+    includePrices: boolean;
+    includeNews: boolean;
+    includeDao: boolean;
+    includeSocialSentiment: boolean;
+    includeEvents: boolean;
   }
 ): Promise<unknown> {
   const payload: CryptoBriefingPayload = {
     preset: opts.preset || null,
     timezone: opts.timezone,
-    include_prices: true,
-    include_news: true,
-    include_dao: false,
-    include_social_sentiment: true,
-    include_events: true,
+    include_prices: opts.includePrices,
+    include_news: opts.includeNews,
+    include_dao: opts.includeDao,
+    include_social_sentiment: opts.includeSocialSentiment,
+    include_events: opts.includeEvents,
     is_active: true,
     notify_push: opts.notificationMethod === "push",
     notify_email: opts.notificationMethod === "email",
