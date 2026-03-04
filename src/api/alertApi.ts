@@ -61,6 +61,19 @@ interface CustomAlertPayload {
   notify_email: boolean;
 }
 
+interface CryptoBriefingPayload {
+  preset?: string | null;
+  timezone: string;
+  include_prices: boolean;
+  include_news: boolean;
+  include_dao: boolean;
+  include_social_sentiment: boolean;
+  include_events: boolean;
+  is_active: boolean;
+  notify_push: boolean;
+  notify_email: boolean;
+}
+
 interface PeriodicAlertPayload {
   coin_slug: string;
   condition:
@@ -257,6 +270,29 @@ export function createCustomAlert(
     notify_email: opts.notificationMethod === "email",
   };
   return post(ALERT_ROUTES.CUSTOM_ALERT, payload as unknown as Record<string, unknown>, token);
+}
+
+export function createCryptoBriefingAlert(
+  token: string,
+  opts: {
+    preset?: string;
+    timezone: string;
+    notificationMethod: string;
+  }
+): Promise<unknown> {
+  const payload: CryptoBriefingPayload = {
+    preset: opts.preset || null,
+    timezone: opts.timezone,
+    include_prices: true,
+    include_news: true,
+    include_dao: false,
+    include_social_sentiment: true,
+    include_events: true,
+    is_active: true,
+    notify_push: opts.notificationMethod === "push",
+    notify_email: opts.notificationMethod === "email",
+  };
+  return post(ALERT_ROUTES.CRYPTO_BRIEFING, payload as unknown as Record<string, unknown>, token);
 }
 
 export async function fetchCooldowns(): Promise<Cooldown[]> {

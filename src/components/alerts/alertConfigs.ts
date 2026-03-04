@@ -63,6 +63,7 @@ export const marketCapAlertConfig: AlertFormConfig = {
 export const cryptoBriefingAlertConfig: AlertFormConfig = {
   type: 'crypto-briefing',
   showFrequency: true,
+  showTimezone: true,
   showNote: true,
 };
 

@@ -11,6 +11,7 @@ import {
   createPeriodicAlert,
   createTwitterDigestAlert,
   createCustomAlert,
+  createCryptoBriefingAlert,
 } from "../../api/alertApi";
 
 export interface AlertFormConfig {
@@ -94,7 +95,7 @@ export function AlertForm({ config }: AlertFormProps) {
 
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const coinSlug =
@@ -102,7 +103,7 @@ export function AlertForm({ config }: AlertFormProps) {
 
     // POST to backend API for supported alert types
     if (
-      ["price", "percent", "periodic", "twitter-digest", "custom"].includes(config.type) &&
+      ["price", "percent", "periodic", "twitter-digest", "custom", "crypto-briefing"].includes(config.type) &&
       authToken?.value
     ) {
       setSubmitting(true);
@@ -139,6 +140,12 @@ export function AlertForm({ config }: AlertFormProps) {
             threshold: Number(threshold),
             frequency,
             cooldown: cooldown || undefined,
+            notificationMethod,
+          });
+        } else if (config.type === "crypto-briefing") {
+          await createCryptoBriefingAlert(authToken.value, {
+            preset: frequency || frequencies[0]?.name || undefined,
+            timezone,
             notificationMethod,
           });
         } else if (config.type === "twitter-digest") {
@@ -280,7 +287,9 @@ export function AlertForm({ config }: AlertFormProps) {
                 </option>
               ))}
             </select>
-            <span>update about</span>
+            {(config.showCoin || config.showCurrency || config.showExchange) && (
+              <span>update about</span>
+            )}
             {config.showCoin && (
               <CoinSelector
                 value={coin}

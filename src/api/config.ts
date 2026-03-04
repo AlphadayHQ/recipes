@@ -23,6 +23,7 @@ export const ALERT_ROUTES = {
   PERIODIC: "recipes/periodic-alerts/",
   TWITTER_DIGEST: "recipes/twitter-digests/",
   CUSTOM_ALERT: "recipes/web-search-alerts/",
+  CRYPTO_BRIEFING: "recipes/crypto-briefings/",
   COOLDOWNS: "recipes/cooldowns/",
   FREQUENCIES: "recipes/frequencies/",
 } as const;
