@@ -252,18 +252,6 @@ export function AlertForm({ config }: AlertFormProps) {
             )}
             <span>and send me a</span>
             <select
-              title="Select Frequency"
-              value={frequency}
-              onChange={(e) => setFrequency(e.target.value)}
-              className={inlineSelectClass}
-            >
-              {frequencies.map((f) => (
-                <option className="capitalize" key={f.name} value={f.name}>
-                  {f.label}
-                </option>
-              ))}
-            </select>
-            <select
               title="Select Notification Method"
               value={notificationMethod}
               onChange={(e) =>
@@ -274,6 +262,18 @@ export function AlertForm({ config }: AlertFormProps) {
               {notificationOptions.map((m) => (
                 <option className="capitalize" key={m.id} value={m.id}>
                   {m.label}
+                </option>
+              ))}
+            </select>
+            <select
+              title="Select Frequency"
+              value={frequency}
+              onChange={(e) => setFrequency(e.target.value)}
+              className={inlineSelectClass}
+            >
+              {frequencies.map((f) => (
+                <option className="capitalize" key={f.name} value={f.name}>
+                  {f.label}
                 </option>
               ))}
             </select>
@@ -286,18 +286,6 @@ export function AlertForm({ config }: AlertFormProps) {
           <>
             <span>Send me a</span>
             <select
-              title="Select Frequency"
-              value={frequency}
-              onChange={(e) => setFrequency(e.target.value)}
-              className={inlineSelectClass}
-            >
-              {frequencies.map((f) => (
-                <option className="capitalize" key={f.name} value={f.name}>
-                  {f.name}
-                </option>
-              ))}
-            </select>
-            <select
               title="Select Notification Method"
               value={notificationMethod}
               onChange={(e) =>
@@ -308,6 +296,18 @@ export function AlertForm({ config }: AlertFormProps) {
               {notificationOptions.map((m) => (
                 <option className="capitalize" key={m.id} value={m.id}>
                   {m.label}
+                </option>
+              ))}
+            </select>
+            <select
+              title="Select Frequency"
+              value={frequency}
+              onChange={(e) => setFrequency(e.target.value)}
+              className={inlineSelectClass}
+            >
+              {frequencies.map((f) => (
+                <option className="capitalize" key={f.name} value={f.name}>
+                  {f.name}
                 </option>
               ))}
             </select>
@@ -461,20 +461,6 @@ export function AlertForm({ config }: AlertFormProps) {
         {!isWebSearchStyle && !isPeriodicStyle && !isPercentStyle && (
           <>
             <span>Send me a</span>
-            {config.showFrequency && (
-              <select
-                title="Select Frequency"
-                value={frequency}
-                onChange={(e) => setFrequency(e.target.value)}
-                className={inlineSelectClass}
-              >
-                {frequencies.map((f) => (
-                  <option className="capitalize" key={f.name} value={f.name}>
-                    {f.label}
-                  </option>
-                ))}
-              </select>
-            )}
             <select
               title="Select Notification Method"
               value={notificationMethod}
@@ -489,6 +475,20 @@ export function AlertForm({ config }: AlertFormProps) {
                 </option>
               ))}
             </select>
+            {config.showFrequency && (
+              <select
+                title="Select Frequency"
+                value={frequency}
+                onChange={(e) => setFrequency(e.target.value)}
+                className={inlineSelectClass}
+              >
+                {frequencies.map((f) => (
+                  <option className="capitalize" key={f.name} value={f.name}>
+                    {f.label}
+                  </option>
+                ))}
+              </select>
+            )}
             {config.showFrequency ? <span>when</span> : <span>as soon as</span>}
             {config.showCoin && (
               <CoinSelector
