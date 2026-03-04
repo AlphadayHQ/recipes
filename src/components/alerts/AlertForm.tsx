@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Select from "react-select";
 import type { AlertType, NotificationMethod } from "../../store/useStore";
 import { useStore } from "../../store/useStore";
 import { CoinSelector } from "../selectors/CoinSelector";
@@ -52,6 +53,74 @@ const notificationOptions: { id: NotificationMethod; label: string }[] = [
   { id: "push", label: "Push Notification" },
 ];
 
+const topicOptions = [
+  { value: "prices", label: "Prices" },
+  { value: "news", label: "News" },
+  { value: "dao", label: "DAOs" },
+  { value: "social", label: "Social Sentiment" },
+  { value: "events", label: "Events" },
+];
+
+const inlineTopicsSelectStyles: React.ComponentProps<typeof Select>["styles"] =
+  {
+    control: (base) => ({
+      ...base,
+      background: "transparent",
+      border: "none",
+      borderBottom: "2px solid var(--color-primary)",
+      borderRadius: 0,
+      boxShadow: "none",
+      minHeight: "unset",
+      cursor: "pointer",
+      flexWrap: "nowrap",
+      lineHeight: "1.5",
+    }),
+    valueContainer: (base) => ({ ...base, padding: "0 4px", gap: 4 }),
+    multiValue: (base) => ({
+      ...base,
+      background: "color-mix(in srgb, var(--color-primary) 15%, transparent)",
+      borderRadius: 4,
+    }),
+    multiValueLabel: (base) => ({
+      ...base,
+      color: "var(--color-primary)",
+      fontWeight: 600,
+      fontSize: "1rem",
+      padding: "0 4px",
+    }),
+    multiValueRemove: (base) => ({
+      ...base,
+      color: "var(--color-primary)",
+      ":hover": {
+        background: "transparent",
+        color: "var(--color-primary-hover)",
+      },
+    }),
+    dropdownIndicator: (base) => ({
+      ...base,
+      color: "var(--color-primary)",
+      padding: "0 4px",
+    }),
+    indicatorSeparator: () => ({ display: "none" }),
+    menu: (base) => ({
+      ...base,
+      background: "var(--color-surface-light)",
+      border: "1px solid var(--color-surface-border)",
+      borderRadius: 8,
+      minWidth: 160,
+    }),
+    option: (base, state) => ({
+      ...base,
+      background: state.isFocused
+        ? "color-mix(in srgb, var(--color-primary) 15%, transparent)"
+        : "transparent",
+      color: state.isSelected ? "var(--color-primary)" : "var(--color-text)",
+      cursor: "pointer",
+      fontWeight: state.isSelected ? 600 : 400,
+      lineHeight: "1",
+    }),
+  };
+
 const inlineSelectClass =
   "bg-transparent border-0 border-b-2 border-primary text-primary font-semibold cursor-pointer text-lg px-1 py-0 focus:outline-none hover:border-primary/70 transition-colors";
 
@@ -87,24 +156,26 @@ export function AlertForm({ config }: AlertFormProps) {
   const [timezone, setTimezone] = useState("UTC");
   const [maxTweets, setMaxTweets] = useState("10");
   const [query, setQuery] = useState("");
-  const [includePrices, setIncludePrices] = useState(true);
-  const [includeNews, setIncludeNews] = useState(true);
-  const [includeDao, setIncludeDao] = useState(false);
-  const [includeSocialSentiment, setIncludeSocialSentiment] = useState(true);
-  const [includeEvents, setIncludeEvents] = useState(true);
+  const [selectedTopics, setSelectedTopics] = useState([
+    { value: "prices", label: "Prices" },
+    { value: "news", label: "News" },
+    { value: "social", label: "Social Sentiment" },
+    { value: "events", label: "Events" },
+  ]);
 
-  const topics = [
-    { key: "prices", label: "Prices", value: includePrices, toggle: () => setIncludePrices((v) => !v) },
-    { key: "news", label: "News", value: includeNews, toggle: () => setIncludeNews((v) => !v) },
-    { key: "dao", label: "DAOs", value: includeDao, toggle: () => setIncludeDao((v) => !v) },
-    { key: "social", label: "Social Sentiment", value: includeSocialSentiment, toggle: () => setIncludeSocialSentiment((v) => !v) },
-    { key: "events", label: "Events", value: includeEvents, toggle: () => setIncludeEvents((v) => !v) },
-  ];
+  const includePrices = selectedTopics.some((t) => t.value === "prices");
+  const includeNews = selectedTopics.some((t) => t.value === "news");
+  const includeDao = selectedTopics.some((t) => t.value === "dao");
+  const includeSocialSentiment = selectedTopics.some(
+    (t) => t.value === "social",
+  );
+  const includeEvents = selectedTopics.some((t) => t.value === "events");
 
   const directions = config.directionOptions ?? ["above", "below"];
   const selectedCoin = coins.find((c) => c.symbol === coin);
   const isWebSearchStyle = !!config.showQuery;
-  const isPeriodicStyle = !isWebSearchStyle && !!config.showFrequency && !config.showDirection;
+  const isPeriodicStyle =
+    !isWebSearchStyle && !!config.showFrequency && !config.showDirection;
   const isPercentStyle = !isWebSearchStyle && !!config.showTimeWindow;
 
   const [submitting, setSubmitting] = useState(false);
@@ -117,14 +188,25 @@ export function AlertForm({ config }: AlertFormProps) {
 
     // POST to backend API for supported alert types
     if (
-      ["price", "percent", "periodic", "twitter-digest", "custom", "crypto-briefing"].includes(config.type) &&
+      [
+        "price",
+        "percent",
+        "periodic",
+        "twitter-digest",
+        "custom",
+        "crypto-briefing",
+      ].includes(config.type) &&
       authToken?.value
     ) {
       setSubmitting(true);
       try {
         if (config.type === "custom") {
           await createCustomAlert(authToken.value, {
-            coinSlug: config.showCoin && coin ? (coins.find((c) => c.symbol === coin)?.id ?? coin.toLowerCase()) : undefined,
+            coinSlug:
+              config.showCoin && coin
+                ? (coins.find((c) => c.symbol === coin)?.id ??
+                  coin.toLowerCase())
+                : undefined,
             query,
             frequency,
             timezone,
@@ -210,7 +292,9 @@ export function AlertForm({ config }: AlertFormProps) {
       includePrices: config.showTopics ? includePrices : undefined,
       includeNews: config.showTopics ? includeNews : undefined,
       includeDao: config.showTopics ? includeDao : undefined,
-      includeSocialSentiment: config.showTopics ? includeSocialSentiment : undefined,
+      includeSocialSentiment: config.showTopics
+        ? includeSocialSentiment
+        : undefined,
       includeEvents: config.showTopics ? includeEvents : undefined,
       isActive: true,
     });
@@ -311,9 +395,9 @@ export function AlertForm({ config }: AlertFormProps) {
                 </option>
               ))}
             </select>
-            {(config.showCoin || config.showCurrency || config.showExchange) && (
-              <span>update about</span>
-            )}
+            {(config.showCoin ||
+              config.showCurrency ||
+              config.showExchange) && <span>update about</span>}
             {config.showCoin && (
               <CoinSelector
                 value={coin}
@@ -352,22 +436,17 @@ export function AlertForm({ config }: AlertFormProps) {
             {config.showTopics && (
               <>
                 <span>about</span>
-                <span className="inline-flex flex-wrap gap-1.5 items-center">
-                  {topics.map((t) => (
-                    <button
-                      key={t.key}
-                      type="button"
-                      onClick={t.toggle}
-                      className={`px-2.5 py-0.5 rounded-full text-sm font-medium border transition-colors cursor-pointer ${
-                        t.value
-                          ? "bg-primary/10 border-primary text-primary"
-                          : "bg-surface-light border-surface-border text-text-muted"
-                      }`}
-                    >
-                      {t.value ? "✓ " : ""}{t.label}
-                    </button>
-                  ))}
-                </span>
+                <Select
+                  isMulti
+                  options={topicOptions}
+                  value={selectedTopics}
+                  onChange={(opts) =>
+                    setSelectedTopics(opts as typeof topicOptions)
+                  }
+                  styles={inlineTopicsSelectStyles}
+                  closeMenuOnSelect={false}
+                  hideSelectedOptions={false}
+                />
               </>
             )}
             <span>.</span>
@@ -573,7 +652,12 @@ export function AlertForm({ config }: AlertFormProps) {
       )}
 
       {/* Additional options row */}
-      {(config.showCooldown || config.showOneTime || config.showNote || config.showAccountUsernames || config.showTimezone || config.showMaxTweets) && (
+      {(config.showCooldown ||
+        config.showOneTime ||
+        config.showNote ||
+        config.showAccountUsernames ||
+        config.showTimezone ||
+        config.showMaxTweets) && (
         <div className="mt-6 flex flex-wrap gap-4 items-start">
           {config.showCooldown && (
             <div>
