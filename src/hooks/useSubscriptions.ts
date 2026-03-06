@@ -57,17 +57,27 @@ function subscriptionToAlert(sub: Subscription): Alert {
 export function useSubscriptions() {
   const token = useStore((s) => s.authToken);
   const setAlerts = useStore((s) => s.setAlerts);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(!!token);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!token) return;
-    setLoading(true);
-    setError(null);
-    fetchSubscriptions(token.value)
-      .then((subs) => setAlerts(subs.map(subscriptionToAlert)))
-      .catch((e: Error) => setError(e.message))
-      .finally(() => setLoading(false));
+    const tokenValue = token.value;
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const subs = await fetchSubscriptions(tokenValue);
+        if (!cancelled) setAlerts(subs.map(subscriptionToAlert));
+      } catch (e) {
+        if (!cancelled) setError(e instanceof Error ? e.message : 'Failed to fetch subscriptions');
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+    return () => { cancelled = true; };
   }, [token, setAlerts]);
 
   return { loading, error };
