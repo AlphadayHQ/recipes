@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { useAuth } from '../hooks/useAuth';
+import { useSubscriptions } from '../hooks/useSubscriptions';
 import { AlertCard } from '../components/alerts/AlertCard';
 import { EditAlertModal } from '../components/alerts/EditAlertModal';
 import type { Alert, AlertType } from '../store/useStore';
@@ -42,6 +43,7 @@ const NEW_ALERT_OPTIONS = [
 export function Dashboard() {
   const { isAuthenticated, authEmail } = useAuth();
   const alerts = useStore((s) => s.alerts);
+  const { loading, error } = useSubscriptions();
 
   const [typeFilter, setTypeFilter] = useState<AlertType | 'all'>('all');
   const [search, setSearch] = useState('');
@@ -185,7 +187,11 @@ export function Dashboard() {
       </div>
 
       {/* Alert list */}
-      {filtered.length === 0 ? (
+      {loading ? (
+        <div className="text-center py-20 text-text-muted text-sm">Loading alerts…</div>
+      ) : error ? (
+        <div className="text-center py-20 text-error text-sm">{error}</div>
+      ) : filtered.length === 0 ? (
         <div className="text-center py-20 text-text-muted">
           {alerts.length === 0 ? (
             <>

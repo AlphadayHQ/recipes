@@ -309,3 +309,48 @@ export async function fetchFrequencies(): Promise<Frequency[]> {
   const data = await get<PaginatedResponse<Frequency>>(ALERT_ROUTES.FREQUENCIES);
   return data.results;
 }
+
+// --- Subscriptions ---
+
+export interface SubscriptionPayload {
+  coin_slug?: string;
+  coin_ticker?: string;
+  condition?: string;
+  threshold?: number;
+  is_active: boolean;
+  notify_push: boolean;
+  notify_email: boolean;
+  frequency?: string;
+  cooldown?: string | null;
+  timezone?: string;
+  query?: string;
+  max_tweets?: number;
+  account_usernames?: string[];
+  preset?: string | null;
+  include_prices?: boolean;
+  include_news?: boolean;
+  include_dao?: boolean;
+  include_social_sentiment?: boolean;
+  include_events?: boolean;
+}
+
+export interface Subscription {
+  id: number;
+  created: string;
+  recipe_type: string;
+  endpoint: string;
+  payload: SubscriptionPayload;
+}
+
+export async function fetchSubscriptions(token: string): Promise<Subscription[]> {
+  const res = await fetch(`${API_BASE_URL}${ALERT_ROUTES.SUBSCRIPTIONS}`, {
+    headers: {
+      ...APP_HEADERS,
+      Authorization: `Token ${token}`,
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`GET subscriptions failed: ${res.status}`);
+  }
+  return res.json();
+}

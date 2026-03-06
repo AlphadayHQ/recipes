@@ -89,6 +89,7 @@ interface AppState {
 
   // Alerts
   alerts: Alert[];
+  setAlerts: (alerts: Alert[]) => void;
   addAlert: (alert: Omit<Alert, 'id' | 'createdAt'>) => void;
   updateAlert: (id: string, patch: Partial<Alert>) => void;
   deleteAlert: (id: string) => void;
@@ -125,6 +126,7 @@ export const useStore = create<AppState>()(
 
       // Alerts
       alerts: seedAlerts as Alert[],
+      setAlerts: (alerts) => set({ alerts }),
       addAlert: (alert) =>
         set((state) => ({
           alerts: [

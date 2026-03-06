@@ -26,6 +26,7 @@ export const ALERT_ROUTES = {
   CRYPTO_BRIEFING: "recipes/crypto-briefings/",
   COOLDOWNS: "recipes/cooldowns/",
   FREQUENCIES: "recipes/frequencies/",
+  SUBSCRIPTIONS: "recipes/subscriptions/",
 } as const;
 
 export const OAUTH = {
