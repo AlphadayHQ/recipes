@@ -124,6 +124,59 @@ async function post<T>(
   return res.json();
 }
 
+async function put<T>(
+  path: string,
+  body: Record<string, unknown>,
+  token: string
+): Promise<T> {
+  const res = await fetch(`${API_BASE_URL}${path}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      ...APP_HEADERS,
+      Authorization: `Token ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`${res.status}: ${text}`);
+  }
+  if (res.status === 204 || res.headers.get("content-length") === "0") return null as T;
+  return res.json();
+}
+
+async function del(path: string, token: string): Promise<void> {
+  const res = await fetch(`${API_BASE_URL}${path}`, {
+    method: "DELETE",
+    headers: {
+      ...APP_HEADERS,
+      Authorization: `Token ${token}`,
+    },
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`${res.status}: ${text}`);
+  }
+}
+
+/**
+ * Build the path for a subscription mutation.
+ * `endpoint` is expected to be a relative path (e.g. "/recipes/price-alerts/").
+ * Absolute URLs (returned by DRF HyperlinkedModelSerializer) are detected and
+ * the origin is stripped so we always route through API_BASE_URL.
+ */
+function resolvePath(endpoint: string, id: string, suffix = ""): string {
+  let relative = endpoint;
+  try {
+    const url = new URL(endpoint);
+    relative = url.pathname;
+  } catch {
+    // not an absolute URL — use as-is
+  }
+  return `${relative.replace(/^\//, "")}${id}/${suffix}`;
+}
+
 /**
  * Map frontend direction value ("above"/"below") to the API condition for price alerts.
  */
@@ -353,4 +406,29 @@ export async function fetchSubscriptions(token: string): Promise<Subscription[]>
     throw new Error(`GET subscriptions failed: ${res.status}`);
   }
   return res.json();
+}
+
+export async function toggleSubscription(
+  token: string,
+  endpoint: string,
+  id: string
+): Promise<void> {
+  await post(resolvePath(endpoint, id, "toggle/"), {}, token);
+}
+
+export async function deleteSubscription(
+  token: string,
+  endpoint: string,
+  id: string
+): Promise<void> {
+  return del(resolvePath(endpoint, id), token);
+}
+
+export async function updateSubscription(
+  token: string,
+  endpoint: string,
+  id: string,
+  body: Record<string, unknown>
+): Promise<unknown> {
+  return put(resolvePath(endpoint, id), body, token);
 }

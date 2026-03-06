@@ -51,6 +51,8 @@ function subscriptionToAlert(sub: Subscription): Alert {
     includeDao: payload.include_dao,
     includeSocialSentiment: payload.include_social_sentiment,
     includeEvents: payload.include_events,
+    endpoint: sub.endpoint,
+    rawPayload: payload as unknown as Record<string, unknown>,
   };
 }
 

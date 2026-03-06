@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Alert } from '../../store/useStore';
 import { useStore } from '../../store/useStore';
+import { updateSubscription } from '../../api/alertApi';
 
 interface EditAlertModalProps {
   alert: Alert;
@@ -24,18 +25,40 @@ const cooldownOptions = [
 export function EditAlertModal({ alert, onClose }: EditAlertModalProps) {
   const updateAlert = useStore((s) => s.updateAlert);
   const addToast = useStore((s) => s.addToast);
+  const authToken = useStore((s) => s.authToken);
 
   const [threshold, setThreshold] = useState(alert.threshold?.toString() ?? '');
   const [note, setNote] = useState(alert.note ?? '');
   const [cooldown, setCooldown] = useState(alert.cooldown ?? '');
   const [oneTime, setOneTime] = useState(alert.oneTime ?? false);
+  const [saving, setSaving] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (saving) return;
+    const parsedThreshold = threshold ? Number(threshold) : undefined;
+
+    if (authToken && alert.endpoint && alert.rawPayload) {
+      setSaving(true);
+      try {
+        // coin_ticker is read-only on the API; strip it before sending
+        const mutablePayload = { ...(alert.rawPayload as Record<string, unknown>) };
+        delete mutablePayload['coin_ticker'];
+        await updateSubscription(authToken.value, alert.endpoint, alert.id, {
+          ...mutablePayload,
+          ...(parsedThreshold !== undefined && { threshold: parsedThreshold }),
+          cooldown: cooldown || null,
+        });
+      } catch (e) {
+        addToast(e instanceof Error ? e.message : 'Failed to update alert', 'error');
+        setSaving(false);
+        return;
+      }
+      setSaving(false);
+    }
+
     updateAlert(alert.id, {
-      ...(alert.threshold !== undefined && {
-        threshold: threshold ? Number(threshold) : undefined,
-      }),
+      ...(alert.threshold !== undefined && { threshold: parsedThreshold }),
       note: note || undefined,
       cooldown: cooldown || undefined,
       oneTime,
@@ -57,7 +80,7 @@ export function EditAlertModal({ alert, onClose }: EditAlertModalProps) {
         : '';
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+    <div className="fixed inset-0 z-100 flex items-center justify-center">
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
@@ -85,6 +108,7 @@ export function EditAlertModal({ alert, onClose }: EditAlertModalProps) {
                 Threshold{thresholdSuffix ? ` (${thresholdSuffix})` : ''}
               </label>
               <input
+                title="Threshold"
                 type="number"
                 value={threshold}
                 onChange={(e) => setThreshold(e.target.value)}
@@ -97,6 +121,7 @@ export function EditAlertModal({ alert, onClose }: EditAlertModalProps) {
           <div>
             <label className="block text-sm text-text-muted mb-1">Cooldown</label>
             <select
+              title="Cooldown period after alert triggers"
               value={cooldown}
               onChange={(e) => setCooldown(e.target.value)}
               className="w-full px-3 py-2 bg-surface-light border border-surface-border rounded-lg text-sm text-text focus:outline-none focus:border-primary transition-colors cursor-pointer"
@@ -140,9 +165,10 @@ export function EditAlertModal({ alert, onClose }: EditAlertModalProps) {
             </button>
             <button
               type="submit"
-              className="flex-1 py-2.5 rounded-lg bg-primary hover:bg-primary-hover text-white font-medium transition-colors border-none cursor-pointer text-sm"
+              disabled={saving}
+              className="flex-1 py-2.5 rounded-lg bg-primary hover:bg-primary-hover text-white font-medium transition-colors border-none cursor-pointer text-sm disabled:opacity-60"
             >
-              Save Changes
+              {saving ? 'Saving…' : 'Save Changes'}
             </button>
           </div>
         </form>

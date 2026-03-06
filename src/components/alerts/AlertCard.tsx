@@ -1,5 +1,7 @@
+import { useState } from "react";
 import type { Alert } from "../../store/useStore";
 import { useStore } from "../../store/useStore";
+import { toggleSubscription, deleteSubscription } from "../../api/alertApi";
 import { Badge } from "../ui/Badge";
 
 interface AlertCardProps {
@@ -11,10 +13,43 @@ export function AlertCard({ alert, onEdit }: AlertCardProps) {
   const toggleAlert = useStore((s) => s.toggleAlert);
   const deleteAlert = useStore((s) => s.deleteAlert);
   const addToast = useStore((s) => s.addToast);
+  const authToken = useStore((s) => s.authToken);
+  const [busy, setBusy] = useState(false);
 
-  const handleDelete = () => {
-    deleteAlert(alert.id);
-    addToast("Alert deleted", "info");
+  const handleToggle = async () => {
+    if (busy) return;
+    if (!authToken || !alert.endpoint) {
+      toggleAlert(alert.id);
+      return;
+    }
+    setBusy(true);
+    try {
+      await toggleSubscription(authToken.value, alert.endpoint, alert.id);
+      toggleAlert(alert.id);
+    } catch (e) {
+      addToast(e instanceof Error ? e.message : "Failed to toggle alert", "error");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (busy) return;
+    if (!authToken || !alert.endpoint) {
+      deleteAlert(alert.id);
+      addToast("Alert deleted", "info");
+      return;
+    }
+    setBusy(true);
+    try {
+      await deleteSubscription(authToken.value, alert.endpoint, alert.id);
+      deleteAlert(alert.id);
+      addToast("Alert deleted", "info");
+    } catch (e) {
+      addToast(e instanceof Error ? e.message : "Failed to delete alert", "error");
+    } finally {
+      setBusy(false);
+    }
   };
 
   const description = buildDescription(alert);
@@ -25,7 +60,8 @@ export function AlertCard({ alert, onEdit }: AlertCardProps) {
       <button
         type="button"
         title="Toggle alert"
-        onClick={() => toggleAlert(alert.id)}
+        onClick={handleToggle}
+        disabled={busy}
         className={`w-10 h-6 rounded-full relative transition-colors border-none cursor-pointer ${
           alert.isActive ? "bg-success" : "bg-surface-border"
         }`}

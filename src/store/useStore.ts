@@ -57,6 +57,10 @@ export interface Alert {
   includeDao?: boolean;
   includeSocialSentiment?: boolean;
   includeEvents?: boolean;
+  /** API endpoint path for this subscription, e.g. "/recipes/price-alerts/" */
+  endpoint?: string;
+  /** Raw API payload — used to reconstruct PUT body on edit */
+  rawPayload?: Record<string, unknown>;
 }
 
 export interface Toast {
