@@ -35,6 +35,8 @@ export interface AlertFormConfig {
   showMaxTweets?: boolean;
   showQuery?: boolean;
   showTopics?: boolean;
+  showTone?: boolean;
+  showFocusTags?: boolean;
 }
 
 const currencyLabels: Record<string, string> = {
@@ -51,6 +53,13 @@ const timeWindowOptions = ["24h", "7d"];
 const notificationOptions: { id: NotificationMethod; label: string }[] = [
   { id: "email", label: "Email" },
   { id: "push", label: "Push Notification" },
+];
+
+const toneOptions = [
+  { value: "professional", label: "Professional" },
+  { value: "casual", label: "Casual" },
+  { value: "technical", label: "Technical" },
+  { value: "brief", label: "Brief" },
 ];
 
 const topicOptions = [
@@ -136,7 +145,7 @@ export function AlertForm({ config }: AlertFormProps) {
   const addToast = useStore((s) => s.addToast);
   const authToken = useStore((s) => s.authToken);
   const { coins } = useMarketData();
-  const { cooldowns, frequencies } = useAlertOptions();
+  const { cooldowns, frequencies, presets } = useAlertOptions();
 
   const [coin, setCoin] = useState(config.showQuery ? "" : "BTC");
   const [exchange, setExchange] = useState("");
@@ -156,6 +165,9 @@ export function AlertForm({ config }: AlertFormProps) {
   const [timezone, setTimezone] = useState("UTC");
   const [maxTweets, setMaxTweets] = useState("10");
   const [query, setQuery] = useState("");
+  const [preset, setPreset] = useState("");
+  const [tone, setTone] = useState("professional");
+  const [focusTags, setFocusTags] = useState("");
   const [selectedTopics, setSelectedTopics] = useState([
     { value: "prices", label: "Prices" },
     { value: "news", label: "News" },
@@ -239,9 +251,15 @@ export function AlertForm({ config }: AlertFormProps) {
             notificationMethod,
           });
         } else if (config.type === "crypto-briefing") {
+          const parsedFocusTags = focusTags
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean);
           await createCryptoBriefingAlert(authToken.value, {
-            preset: frequency || frequencies[0]?.name || undefined,
+            preset: preset || presets[0]?.preset || undefined,
             timezone,
+            tone,
+            focusTags: parsedFocusTags,
             notificationMethod,
             includePrices,
             includeNews,
@@ -287,6 +305,10 @@ export function AlertForm({ config }: AlertFormProps) {
       note: config.showNote && note ? note : undefined,
       oneTime: config.showOneTime ? oneTime : undefined,
       frequency: config.showFrequency ? frequency : undefined,
+      tone: config.showTone ? tone : undefined,
+      focusTags: config.showFocusTags && focusTags
+        ? focusTags.split(",").map((t) => t.trim()).filter(Boolean)
+        : undefined,
       timeWindow: config.showTimeWindow ? timeWindow : undefined,
       query: config.showQuery && query ? query : undefined,
       includePrices: config.showTopics ? includePrices : undefined,
@@ -383,18 +405,33 @@ export function AlertForm({ config }: AlertFormProps) {
                 </option>
               ))}
             </select>
-            <select
-              title="Select Frequency"
-              value={frequency}
-              onChange={(e) => setFrequency(e.target.value)}
-              className={inlineSelectClass}
-            >
-              {frequencies.map((f) => (
-                <option className="capitalize" key={f.name} value={f.name}>
-                  {f.name}
-                </option>
-              ))}
-            </select>
+            {config.type === "crypto-briefing" ? (
+              <select
+                title="Select Preset"
+                value={preset}
+                onChange={(e) => setPreset(e.target.value)}
+                className={inlineSelectClass}
+              >
+                {presets.map((p) => (
+                  <option key={p.preset} value={p.preset}>
+                    {p.preset_display}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <select
+                title="Select Frequency"
+                value={frequency}
+                onChange={(e) => setFrequency(e.target.value)}
+                className={inlineSelectClass}
+              >
+                {frequencies.map((f) => (
+                  <option className="capitalize" key={f.name} value={f.name}>
+                    {f.name}
+                  </option>
+                ))}
+              </select>
+            )}
             {(config.showCoin ||
               config.showCurrency ||
               config.showExchange) && <span>update about</span>}
@@ -431,6 +468,24 @@ export function AlertForm({ config }: AlertFormProps) {
                   onChange={setExchange}
                   variant="inline"
                 />
+              </>
+            )}
+            {config.showTone && (
+              <>
+                <span>in a</span>
+                <select
+                  title="Select Tone"
+                  value={tone}
+                  onChange={(e) => setTone(e.target.value)}
+                  className={inlineSelectClass}
+                >
+                  {toneOptions.map((t) => (
+                    <option key={t.value} value={t.value}>
+                      {t.label}
+                    </option>
+                  ))}
+                </select>
+                <span>tone</span>
               </>
             )}
             {config.showTopics && (
@@ -657,7 +712,8 @@ export function AlertForm({ config }: AlertFormProps) {
         config.showNote ||
         config.showAccountUsernames ||
         config.showTimezone ||
-        config.showMaxTweets) && (
+        config.showMaxTweets ||
+        config.showFocusTags) && (
         <div className="mt-6 flex flex-wrap gap-4 items-start">
           {config.showCooldown && (
             <div>
@@ -742,6 +798,24 @@ export function AlertForm({ config }: AlertFormProps) {
                 placeholder="UTC"
                 className="px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary transition-colors w-36"
               />
+            </div>
+          )}
+
+          {config.showFocusTags && (
+            <div className="flex-1 min-w-48">
+              <label className="block text-xs text-text-muted mb-1">
+                Focus tags
+              </label>
+              <input
+                type="text"
+                value={focusTags}
+                onChange={(e) => setFocusTags(e.target.value)}
+                placeholder="bitcoin, defi, ethereum"
+                className="w-full px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary transition-colors"
+              />
+              <p className="text-xs text-text-muted mt-1">
+                Comma-separated tag slugs to focus the briefing on.
+              </p>
             </div>
           )}
 

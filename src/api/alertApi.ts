@@ -13,6 +13,12 @@ export interface Frequency {
   label: string;
 }
 
+export interface Preset {
+  id: number;
+  preset: string;
+  preset_display: string;
+}
+
 interface PaginatedResponse<T> {
   links: { next: string | null; previous: string | null };
   total: number;
@@ -64,6 +70,8 @@ interface CustomAlertPayload {
 interface CryptoBriefingPayload {
   preset?: string | null;
   timezone: string;
+  tone: string;
+  focus_tags: string[];
   include_prices: boolean;
   include_news: boolean;
   include_dao: boolean;
@@ -330,6 +338,8 @@ export function createCryptoBriefingAlert(
   opts: {
     preset?: string;
     timezone: string;
+    tone: string;
+    focusTags: string[];
     notificationMethod: string;
     includePrices: boolean;
     includeNews: boolean;
@@ -341,6 +351,8 @@ export function createCryptoBriefingAlert(
   const payload: CryptoBriefingPayload = {
     preset: opts.preset || null,
     timezone: opts.timezone,
+    tone: opts.tone,
+    focus_tags: opts.focusTags,
     include_prices: opts.includePrices,
     include_news: opts.includeNews,
     include_dao: opts.includeDao,
@@ -363,6 +375,11 @@ export async function fetchFrequencies(): Promise<Frequency[]> {
   return data.results;
 }
 
+export async function fetchPresets(): Promise<Preset[]> {
+  const data = await get<PaginatedResponse<Preset>>(ALERT_ROUTES.CRYPTO_BRIEFING_PRESETS);
+  return data.results;
+}
+
 // --- Subscriptions ---
 
 export interface SubscriptionPayload {
@@ -380,6 +397,8 @@ export interface SubscriptionPayload {
   max_tweets?: number;
   account_usernames?: string[];
   preset?: string | null;
+  tone?: string;
+  focus_tags?: string[];
   include_prices?: boolean;
   include_news?: boolean;
   include_dao?: boolean;

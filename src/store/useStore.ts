@@ -52,6 +52,8 @@ export interface Alert {
   frequency?: string;
   timeWindow?: string;
   query?: string;
+  tone?: string;
+  focusTags?: string[];
   includePrices?: boolean;
   includeNews?: boolean;
   includeDao?: boolean;

@@ -24,6 +24,7 @@ export const ALERT_ROUTES = {
   TWITTER_DIGEST: "recipes/twitter-digests/",
   CUSTOM_ALERT: "recipes/web-search-alerts/",
   CRYPTO_BRIEFING: "recipes/crypto-briefings/",
+  CRYPTO_BRIEFING_PRESETS: "recipes/crypto-briefings/presets/",
   COOLDOWNS: "recipes/cooldowns/",
   FREQUENCIES: "recipes/frequencies/",
   SUBSCRIPTIONS: "recipes/subscriptions/",
