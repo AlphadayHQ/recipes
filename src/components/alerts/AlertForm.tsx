@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Select from "react-select";
 import type { AlertType, NotificationMethod } from "../../store/useStore";
 import { useStore } from "../../store/useStore";
@@ -145,6 +145,32 @@ export function AlertForm({ config }: AlertFormProps) {
   const addToast = useStore((s) => s.addToast);
   const authToken = useStore((s) => s.authToken);
   const { coins } = useMarketData();
+  const timezoneOptions = useMemo(() => {
+    const now = new Date();
+    return Intl.supportedValuesOf("timeZone")
+      .map((tz) => {
+        const offsetStr =
+          new Intl.DateTimeFormat("en", {
+            timeZone: tz,
+            timeZoneName: "shortOffset",
+          })
+            .formatToParts(now)
+            .find((p) => p.type === "timeZoneName")?.value ?? "GMT";
+        const match = offsetStr.match(/GMT([+-]\d+(?::\d+)?)?/);
+        const offsetMinutes = match?.[1]
+          ? (() => {
+              const [h, m] = match[1].split(":").map(Number);
+              return h * 60 + (m || 0);
+            })()
+          : 0;
+        return {
+          value: tz,
+          label: `${offsetStr} ${tz.replace(/_/g, " ")}`,
+          offsetMinutes,
+        };
+      })
+      .sort((a, b) => a.offsetMinutes - b.offsetMinutes);
+  }, []);
   const { cooldowns, frequencies, presets } = useAlertOptions(authToken?.value);
 
   const [coin, setCoin] = useState(config.showQuery ? "" : "BTC");
@@ -821,13 +847,19 @@ export function AlertForm({ config }: AlertFormProps) {
               <label className="block text-xs text-text-muted mb-1">
                 Timezone
               </label>
-              <input
-                type="text"
+              <select
+                title="Select Timezone"
                 value={timezone}
                 onChange={(e) => setTimezone(e.target.value)}
-                placeholder="UTC"
-                className="px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary transition-colors w-36"
-              />
+                className="px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text focus:outline-none focus:border-primary transition-colors w-56"
+              >
+                <option value="UTC">GMT+0 UTC</option>
+                {timezoneOptions.map((tz) => (
+                  <option key={tz.value} value={tz.value}>
+                    {tz.label}
+                  </option>
+                ))}
+              </select>
             </div>
           )}
 
