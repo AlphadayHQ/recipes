@@ -402,6 +402,24 @@ export function AlertForm({ config }: AlertFormProps) {
         {isPeriodicStyle && (
           <>
             <span>Send me a</span>
+            {config.type === "crypto-briefing" && (
+              <select
+                title="Select Preset"
+                value={triggerAt ? "" : preset}
+                onChange={(e) => {
+                  setSelectedPreset(e.target.value);
+                  setTriggerAt("");
+                }}
+                disabled={!!triggerAt}
+                className={inlineSelectClass}
+              >
+                {presets.map((p) => (
+                  <option key={p.value} value={p.value}>
+                    {p.label}
+                  </option>
+                ))}
+              </select>
+            )}
             <select
               title="Select Notification Method"
               value={notificationMethod}
@@ -416,24 +434,9 @@ export function AlertForm({ config }: AlertFormProps) {
                 </option>
               ))}
             </select>
-            {config.type === "crypto-briefing" ? (
+            {config.type === "crypto-briefing" && (
               <>
-                <select
-                  title="Select Preset"
-                  value={triggerAt ? "" : preset}
-                  onChange={(e) => {
-                    setSelectedPreset(e.target.value);
-                    setTriggerAt("");
-                  }}
-                  disabled={!!triggerAt}
-                  className={inlineSelectClass}
-                >
-                  {presets.map((p) => (
-                    <option key={p.value} value={p.value}>
-                      {p.label}
-                    </option>
-                  ))}
-                </select>
+                <span>at</span>
                 <input
                   type="time"
                   title="Custom time (overrides preset)"
@@ -442,7 +445,8 @@ export function AlertForm({ config }: AlertFormProps) {
                   className={inlineSelectClass}
                 />
               </>
-            ) : (
+            )}
+            {config.type !== "crypto-briefing" && (
               <select
                 title="Select Frequency"
                 value={frequency}
