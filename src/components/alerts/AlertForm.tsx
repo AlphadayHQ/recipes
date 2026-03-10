@@ -145,7 +145,7 @@ export function AlertForm({ config }: AlertFormProps) {
   const addToast = useStore((s) => s.addToast);
   const authToken = useStore((s) => s.authToken);
   const { coins } = useMarketData();
-  const { cooldowns, frequencies, presets } = useAlertOptions();
+  const { cooldowns, frequencies, presets } = useAlertOptions(authToken?.value);
 
   const [coin, setCoin] = useState(config.showQuery ? "" : "BTC");
   const [exchange, setExchange] = useState("");
@@ -165,7 +165,8 @@ export function AlertForm({ config }: AlertFormProps) {
   const [timezone, setTimezone] = useState("UTC");
   const [maxTweets, setMaxTweets] = useState("10");
   const [query, setQuery] = useState("");
-  const [preset, setPreset] = useState("");
+  const [selectedPreset, setSelectedPreset] = useState("");
+  const preset = selectedPreset || presets[0]?.value || "";
   const [tone, setTone] = useState("professional");
   const [focusTags, setFocusTags] = useState("");
   const [selectedTopics, setSelectedTopics] = useState([
@@ -255,8 +256,11 @@ export function AlertForm({ config }: AlertFormProps) {
             .split(",")
             .map((t) => t.trim())
             .filter(Boolean);
+          console.log("[AlertForm] preset state:", JSON.stringify(preset));
+          console.log("[AlertForm] presets array:", JSON.stringify(presets));
+          console.log("[AlertForm] resolved preset:", preset);
           await createCryptoBriefingAlert(authToken.value, {
-            preset: preset || presets[0]?.preset || undefined,
+            preset,
             timezone,
             tone,
             focusTags: parsedFocusTags,
@@ -415,12 +419,12 @@ export function AlertForm({ config }: AlertFormProps) {
               <select
                 title="Select Preset"
                 value={preset}
-                onChange={(e) => setPreset(e.target.value)}
+                onChange={(e) => setSelectedPreset(e.target.value)}
                 className={inlineSelectClass}
               >
                 {presets.map((p) => (
-                  <option key={p.preset} value={p.preset}>
-                    {p.preset_display}
+                  <option key={p.value} value={p.value}>
+                    {p.label}
                   </option>
                 ))}
               </select>

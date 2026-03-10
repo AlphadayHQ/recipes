@@ -43,7 +43,7 @@ function writeSessionCache<T>(key: string, data: T[]) {
   }
 }
 
-export function useAlertOptions() {
+export function useAlertOptions(token?: string) {
   const [cooldowns, setCooldowns] = useState<Cooldown[]>([]);
   const [frequencies, setFrequencies] = useState<Frequency[]>([]);
   const [presets, setPresets] = useState<Preset[]>([]);
@@ -83,36 +83,45 @@ export function useAlertOptions() {
       }
 
       try {
-        const [cdData, fqData, psData] = await Promise.all([
+        const fetches: [Promise<Cooldown[]>, Promise<Frequency[]>, Promise<Preset[]> | null] = [
           fetchCooldowns(),
           fetchFrequencies(),
-          fetchPresets(),
+          token ? fetchPresets(token) : null,
+        ];
+
+        const [cdData, fqData, psData] = await Promise.all([
+          fetches[0],
+          fetches[1],
+          fetches[2] ?? Promise.resolve([] as Preset[]),
         ]);
 
         cooldownCache = { data: cdData, timestamp: Date.now() };
         frequencyCache = { data: fqData, timestamp: Date.now() };
-        presetCache = { data: psData, timestamp: Date.now() };
         writeSessionCache(CACHE_KEY_COOLDOWNS, cdData);
         writeSessionCache(CACHE_KEY_FREQUENCIES, fqData);
-        writeSessionCache(CACHE_KEY_PRESETS, psData);
+
+        if (token && psData.length > 0) {
+          presetCache = { data: psData, timestamp: Date.now() };
+          writeSessionCache(CACHE_KEY_PRESETS, psData);
+        }
 
         if (!cancelled) {
           setCooldowns(cdData);
           setFrequencies(fqData);
-          setPresets(psData);
+          if (token) setPresets(psData);
         }
       } catch {
         // keep empty arrays on failure
-      } finally {
-        if (!cancelled) setLoading(false);
       }
+
+      if (!cancelled) setLoading(false);
     }
 
     load();
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [token]);
 
   return { cooldowns, frequencies, presets, loading };
 }

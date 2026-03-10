@@ -14,9 +14,9 @@ export interface Frequency {
 }
 
 export interface Preset {
-  id: number;
-  preset: string;
-  preset_display: string;
+  value: string;
+  label: string;
+  default_cron: string;
 }
 
 interface PaginatedResponse<T> {
@@ -103,9 +103,12 @@ interface PeriodicAlertPayload {
 
 // --- Helpers ---
 
-async function get<T>(path: string): Promise<T> {
+async function get<T>(path: string, token?: string): Promise<T> {
   const res = await fetch(`${API_BASE_URL}${path}`, {
-    headers: APP_HEADERS,
+    headers: {
+      ...APP_HEADERS,
+      ...(token ? { Authorization: `Token ${token}` } : {}),
+    },
   });
   if (!res.ok) {
     throw new Error(`GET ${path} failed: ${res.status}`);
@@ -354,6 +357,7 @@ export function createCryptoBriefingAlert(
     includeEvents: boolean;
   }
 ): Promise<unknown> {
+  console.log("[createCryptoBriefingAlert] opts.preset:", JSON.stringify(opts.preset));
   const payload: CryptoBriefingPayload = {
     preset: opts.preset || null,
     timezone: opts.timezone,
@@ -368,6 +372,7 @@ export function createCryptoBriefingAlert(
     notify_push: opts.notificationMethod === "push",
     notify_email: opts.notificationMethod === "email",
   };
+  console.log("[createCryptoBriefingAlert] payload:", JSON.stringify(payload));
   return post(ALERT_ROUTES.CRYPTO_BRIEFING, payload as unknown as Record<string, unknown>, token);
 }
 
@@ -381,9 +386,8 @@ export async function fetchFrequencies(): Promise<Frequency[]> {
   return data.results;
 }
 
-export async function fetchPresets(): Promise<Preset[]> {
-  const data = await get<PaginatedResponse<Preset>>(ALERT_ROUTES.CRYPTO_BRIEFING_PRESETS);
-  return data.results;
+export async function fetchPresets(token: string): Promise<Preset[]> {
+  return get<Preset[]>(ALERT_ROUTES.CRYPTO_BRIEFING_PRESETS, token);
 }
 
 // --- Subscriptions ---
