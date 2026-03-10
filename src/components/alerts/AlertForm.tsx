@@ -372,7 +372,7 @@ export function AlertForm({ config }: AlertFormProps) {
         {/* --- Web Search style: "Search the web for [query] related to [coin] and send me a [Daily] [Email]." --- */}
         {isWebSearchStyle && (
           <>
-            <span>Search the web for</span>
+            <span>Alert me on</span>
             <input
               type="text"
               value={query}
