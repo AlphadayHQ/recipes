@@ -167,6 +167,7 @@ export function AlertForm({ config }: AlertFormProps) {
   const [query, setQuery] = useState("");
   const [selectedPreset, setSelectedPreset] = useState("");
   const preset = selectedPreset || presets[0]?.value || "";
+  const [triggerAt, setTriggerAt] = useState("");
   const [tone, setTone] = useState("professional");
   const [focusTags, setFocusTags] = useState("");
   const [selectedTopics, setSelectedTopics] = useState([
@@ -256,11 +257,11 @@ export function AlertForm({ config }: AlertFormProps) {
             .split(",")
             .map((t) => t.trim())
             .filter(Boolean);
-          console.log("[AlertForm] preset state:", JSON.stringify(preset));
-          console.log("[AlertForm] presets array:", JSON.stringify(presets));
-          console.log("[AlertForm] resolved preset:", preset);
           await createCryptoBriefingAlert(authToken.value, {
-            preset,
+            preset: triggerAt ? undefined : preset,
+            triggerAt: triggerAt
+              ? `${new Date().toISOString().split("T")[0]}T${triggerAt}:00Z`
+              : undefined,
             timezone,
             tone,
             focusTags: parsedFocusTags,
@@ -416,18 +417,31 @@ export function AlertForm({ config }: AlertFormProps) {
               ))}
             </select>
             {config.type === "crypto-briefing" ? (
-              <select
-                title="Select Preset"
-                value={preset}
-                onChange={(e) => setSelectedPreset(e.target.value)}
-                className={inlineSelectClass}
-              >
-                {presets.map((p) => (
-                  <option key={p.value} value={p.value}>
-                    {p.label}
-                  </option>
-                ))}
-              </select>
+              <>
+                <select
+                  title="Select Preset"
+                  value={triggerAt ? "" : preset}
+                  onChange={(e) => {
+                    setSelectedPreset(e.target.value);
+                    setTriggerAt("");
+                  }}
+                  disabled={!!triggerAt}
+                  className={inlineSelectClass}
+                >
+                  {presets.map((p) => (
+                    <option key={p.value} value={p.value}>
+                      {p.label}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="time"
+                  title="Custom time (overrides preset)"
+                  value={triggerAt}
+                  onChange={(e) => setTriggerAt(e.target.value)}
+                  className={inlineSelectClass}
+                />
+              </>
             ) : (
               <select
                 title="Select Frequency"

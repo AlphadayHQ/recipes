@@ -71,6 +71,7 @@ interface CustomAlertPayload {
 
 interface CryptoBriefingPayload {
   preset?: string | null;
+  trigger_at?: string | null;
   timezone: string;
   tone: string;
   focus_tags: string[];
@@ -346,6 +347,7 @@ export function createCryptoBriefingAlert(
   token: string,
   opts: {
     preset?: string;
+    triggerAt?: string;
     timezone: string;
     tone: string;
     focusTags: string[];
@@ -357,9 +359,9 @@ export function createCryptoBriefingAlert(
     includeEvents: boolean;
   }
 ): Promise<unknown> {
-  console.log("[createCryptoBriefingAlert] opts.preset:", JSON.stringify(opts.preset));
   const payload: CryptoBriefingPayload = {
     preset: opts.preset || null,
+    trigger_at: opts.triggerAt || null,
     timezone: opts.timezone,
     tone: opts.tone,
     focus_tags: opts.focusTags,
@@ -372,7 +374,6 @@ export function createCryptoBriefingAlert(
     notify_push: opts.notificationMethod === "push",
     notify_email: opts.notificationMethod === "email",
   };
-  console.log("[createCryptoBriefingAlert] payload:", JSON.stringify(payload));
   return post(ALERT_ROUTES.CRYPTO_BRIEFING, payload as unknown as Record<string, unknown>, token);
 }
 
