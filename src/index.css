@@ -35,6 +35,10 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Montserrat', 'Open Sans', system-ui, sans-serif;
 }
 
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(56%) sepia(97%) saturate(1500%) hue-rotate(18deg) brightness(103%) contrast(101%);
+}
+
 #root {
   min-height: 100vh;
   display: flex;
