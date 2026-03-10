@@ -498,6 +498,30 @@ export function AlertForm({ config }: AlertFormProps) {
                 allowNone={config.type === "twitter-digest"}
               />
             )}
+            {config.showAccountUsernames && (
+              <>
+                <span>or from these twitter accounts</span>
+                <input
+                  type="text"
+                  value={accountUsernames}
+                  onChange={(e) => setAccountUsernames(e.target.value)}
+                  placeholder="@elonmusk, @vitalikbuterin"
+                  className={inlineInputClass + " w-64"}
+                />
+              </>
+            )}
+            {!isWebSearchStyle && config.showQuery && (
+              <>
+                <span>or on this topic</span>
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="e.g. latest airdrop news"
+                  className={inlineInputClass + " w-48"}
+                />
+              </>
+            )}
             {config.showCurrency && (
               <>
                 <span>in</span>
@@ -765,11 +789,9 @@ export function AlertForm({ config }: AlertFormProps) {
       {(config.showCooldown ||
         config.showOneTime ||
         config.showNote ||
-        config.showAccountUsernames ||
         config.showTimezone ||
         config.showMaxTweets ||
-        config.showFocusTags ||
-        (!isWebSearchStyle && config.showQuery)) && (
+        config.showFocusTags) && (
         <div className="mt-6 flex flex-wrap gap-4 items-start">
           {config.showCooldown && (
             <div>
@@ -821,24 +843,6 @@ export function AlertForm({ config }: AlertFormProps) {
                 placeholder="Add a note to this alert"
                 className="w-full px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary transition-colors"
               />
-            </div>
-          )}
-
-          {config.showAccountUsernames && (
-            <div className="flex-1 min-w-48">
-              <label className="block text-xs text-text-muted mb-1">
-                Twitter accounts
-              </label>
-              <input
-                type="text"
-                value={accountUsernames}
-                onChange={(e) => setAccountUsernames(e.target.value)}
-                placeholder="@elonmusk, @vitalikbuterin"
-                className="w-full px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary transition-colors"
-              />
-              <p className="text-xs text-text-muted mt-1">
-                Comma-separated Twitter usernames to follow.
-              </p>
             </div>
           )}
 
@@ -898,23 +902,6 @@ export function AlertForm({ config }: AlertFormProps) {
             </div>
           )}
 
-          {!isWebSearchStyle && config.showQuery && (
-            <div className="flex-1 min-w-48">
-              <label className="block text-xs text-text-muted mb-1">
-                Grok query (optional)
-              </label>
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="e.g. latest Bitcoin news"
-                className="w-full px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary transition-colors"
-              />
-              <p className="text-xs text-text-muted mt-1">
-                Natural language query for Grok-powered digest mode.
-              </p>
-            </div>
-          )}
         </div>
       )}
 
