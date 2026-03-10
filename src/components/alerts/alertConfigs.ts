@@ -71,10 +71,12 @@ export const cryptoBriefingAlertConfig: AlertFormConfig = {
 
 export const twitterDigestAlertConfig: AlertFormConfig = {
   type: 'twitter-digest',
+  showCoin: true,
   showFrequency: true,
   showAccountUsernames: true,
   showTimezone: true,
   showMaxTweets: true,
+  showQuery: true,
 };
 
 export const customAlertConfig: AlertFormConfig = {

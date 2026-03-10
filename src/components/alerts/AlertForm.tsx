@@ -185,7 +185,7 @@ export function AlertForm({ config }: AlertFormProps) {
 
   const directions = config.directionOptions ?? ["above", "below"];
   const selectedCoin = coins.find((c) => c.symbol === coin);
-  const isWebSearchStyle = !!config.showQuery;
+  const isWebSearchStyle = !!config.showQuery && config.type === "custom";
   const isPeriodicStyle =
     !isWebSearchStyle && !!config.showFrequency && !config.showDirection;
   const isPercentStyle = !isWebSearchStyle && !!config.showTimeWindow;
@@ -269,8 +269,14 @@ export function AlertForm({ config }: AlertFormProps) {
           });
         } else if (config.type === "twitter-digest") {
           await createTwitterDigestAlert(authToken.value, {
+            coinSlug:
+              config.showCoin && coin
+                ? (coins.find((c) => c.symbol === coin)?.id ??
+                  coin.toLowerCase())
+                : undefined,
             frequency,
             timezone,
+            query: query || undefined,
             maxTweets: Number(maxTweets) || 10,
             notificationMethod,
             accountUsernames: accountUsernames
@@ -441,6 +447,7 @@ export function AlertForm({ config }: AlertFormProps) {
                 onChange={setCoin}
                 coins={coins}
                 variant="inline"
+                allowNone={config.type === "twitter-digest"}
               />
             )}
             {config.showCurrency && (
@@ -713,7 +720,8 @@ export function AlertForm({ config }: AlertFormProps) {
         config.showAccountUsernames ||
         config.showTimezone ||
         config.showMaxTweets ||
-        config.showFocusTags) && (
+        config.showFocusTags ||
+        (!isWebSearchStyle && config.showQuery)) && (
         <div className="mt-6 flex flex-wrap gap-4 items-start">
           {config.showCooldown && (
             <div>
@@ -833,6 +841,24 @@ export function AlertForm({ config }: AlertFormProps) {
                 placeholder="10"
                 className="px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary transition-colors w-24"
               />
+            </div>
+          )}
+
+          {!isWebSearchStyle && config.showQuery && (
+            <div className="flex-1 min-w-48">
+              <label className="block text-xs text-text-muted mb-1">
+                Grok query (optional)
+              </label>
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="e.g. latest Bitcoin news"
+                className="w-full px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary transition-colors"
+              />
+              <p className="text-xs text-text-muted mt-1">
+                Natural language query for Grok-powered digest mode.
+              </p>
             </div>
           )}
         </div>

@@ -48,8 +48,10 @@ interface PercentageAlertPayload {
 }
 
 interface TwitterDigestPayload {
+  coin_slug?: string | null;
   frequency: string;
   timezone: string;
+  query?: string;
   max_tweets: number;
   is_active: boolean;
   notify_push: boolean;
@@ -289,16 +291,20 @@ export function createPeriodicAlert(
 export function createTwitterDigestAlert(
   token: string,
   opts: {
+    coinSlug?: string;
     frequency: string;
     timezone: string;
+    query?: string;
     maxTweets: number;
     notificationMethod: string;
     accountUsernames: string[];
   }
 ): Promise<unknown> {
   const payload: TwitterDigestPayload = {
+    ...(opts.coinSlug ? { coin_slug: opts.coinSlug } : {}),
     frequency: opts.frequency,
     timezone: opts.timezone,
+    ...(opts.query ? { query: opts.query } : {}),
     max_tweets: opts.maxTweets,
     is_active: true,
     notify_push: opts.notificationMethod === "push",
