@@ -52,50 +52,27 @@ export function Navbar() {
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-1">
             {navGroups.map((group) => (
-              <div
-                key={group.label}
-                className="relative"
-                onMouseEnter={() => setOpenDropdown(group.label)}
-                onMouseLeave={() => setOpenDropdown(null)}
-              >
-                <button className="px-3 py-2 text-sm text-text-muted hover:text-text rounded-md hover:bg-surface-light transition-colors">
+              <div key={group.label} className="relative group/nav">
+                <button
+                  type="button"
+                  title="Coming Soon"
+                  className="px-3 py-2 text-sm text-text-muted/40 rounded-md cursor-default flex items-center gap-1"
+                >
                   {group.label}
+                  <span className="text-[10px] text-text-muted/40">Soon</span>
                 </button>
-                {openDropdown === group.label && (
-                  <div className="absolute top-full left-0 mt-0 w-48 bg-surface-light border border-surface-border rounded-lg shadow-xl py-1 z-50">
-                    {group.items.map((item) => (
-                      <Link
-                        key={item.to}
-                        to={item.to}
-                        className="block px-4 py-2 text-sm text-text-muted hover:text-text hover:bg-surface no-underline transition-colors"
-                        onClick={() => setOpenDropdown(null)}
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
               </div>
             ))}
 
-            <Link
-              to="/coins"
-              className="px-3 py-2 text-sm text-text-muted hover:text-text rounded-md hover:bg-surface-light no-underline transition-colors"
-            >
-              Coins
-            </Link>
-            <Link
-              to="/exchanges"
-              className="px-3 py-2 text-sm text-text-muted hover:text-text rounded-md hover:bg-surface-light no-underline transition-colors"
-            >
-              Exchanges
-            </Link>
-            <Link
-              to="/pricing"
-              className="px-3 py-2 text-sm text-text-muted hover:text-text rounded-md hover:bg-surface-light no-underline transition-colors"
-            >
-              Pricing
-            </Link>
+            <span className="px-3 py-2 text-sm text-text-muted/40 cursor-default flex items-center gap-1">
+              Coins <span className="text-[10px]">Soon</span>
+            </span>
+            <span className="px-3 py-2 text-sm text-text-muted/40 cursor-default flex items-center gap-1">
+              Exchanges <span className="text-[10px]">Soon</span>
+            </span>
+            <span className="px-3 py-2 text-sm text-text-muted/40 cursor-default flex items-center gap-1">
+              Pricing <span className="text-[10px]">Soon</span>
+            </span>
           </div>
 
           {/* Auth buttons */}
@@ -114,6 +91,7 @@ export function Navbar() {
                   </span>
                 )}
                 <button
+                  type="button"
                   onClick={logout}
                   className="px-4 py-2 text-sm bg-surface-light text-text-muted hover:text-text rounded-lg border border-surface-border transition-colors"
                 >
@@ -123,12 +101,14 @@ export function Navbar() {
             ) : (
               <>
                 <button
+                  type="button"
                   onClick={openAuthModal}
                   className="px-4 py-2 text-sm text-text-muted hover:text-text"
                 >
                   Log In
                 </button>
                 <button
+                  type="button"
                   onClick={openAuthModal}
                   className="px-4 py-2 text-sm bg-primary hover:bg-primary-hover text-white rounded-lg transition-colors"
                 >
@@ -140,6 +120,7 @@ export function Navbar() {
 
           {/* Mobile hamburger */}
           <button
+            type="button"
             title="Toggle Menu"
             className="md:hidden p-2 text-text-muted hover:text-text"
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -178,6 +159,7 @@ export function Navbar() {
           <div className="pt-2 border-t border-surface-border flex gap-2">
             {isAuthenticated ? (
               <button
+                type="button"
                 onClick={() => {
                   logout();
                   setMobileOpen(false);
@@ -188,6 +170,7 @@ export function Navbar() {
               </button>
             ) : (
               <button
+                type="button"
                 onClick={() => {
                   openAuthModal();
                   setMobileOpen(false);

@@ -910,7 +910,7 @@ export function AlertForm({ config }: AlertFormProps) {
         disabled={submitting}
         className="mt-6 w-full sm:w-auto px-6 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-colors border-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {submitting ? "Creating..." : "Create Alert"}
+        {submitting ? "Creating..." : "Create Recipe"}
       </button>
     </form>
   );
