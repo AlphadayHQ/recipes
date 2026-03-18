@@ -245,7 +245,7 @@ export default function Hero() {
           Custom crypto alerts and intelligent briefings — the alpha that matters to you, delivered your way. Trusted by power users.
         </p>
 
-        <button className="hero-anim pointer-events-auto btn-primary mt-6 px-8 py-4 rounded-xl text-lg flex items-center justify-center gap-3 w-full md:w-auto shadow-[0_0_40px_rgba(250,162,2,0.3)] hover:shadow-[0_0_60px_rgba(250,162,2,0.5)] transition-shadow">
+        <button className="hero-anim pointer-events-auto btn-primary mt-6 px-8 py-4 rounded-xl text-lg flex items-center justify-center gap-3 w-full md:w-auto">
           Start cooking
           <ArrowRight size={20} />
         </button>
@@ -253,7 +253,7 @@ export default function Hero() {
 
       {/* Market Pulse Widget */}
       <div className="absolute bottom-8 right-8 z-20 flex items-center gap-3 bg-surface/80 backdrop-blur-md border border-white/5 px-4 py-2 rounded-lg pointer-events-auto shadow-xl">
-        <div className="pulse-dot w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_rgba(250,162,2,0.8)]"></div>
+        <div className="pulse-dot w-2 h-2 rounded-full bg-primary"></div>
         <span className="font-mono text-xs text-text-muted tracking-wider uppercase">Markets Open</span>
       </div>
     </section>
