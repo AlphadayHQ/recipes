@@ -11,10 +11,6 @@ export function SearchInput({ placeholder = 'Search...', value: controlledValue,
   const [internal, setInternal] = useState(controlledValue ?? '');
 
   useEffect(() => {
-    if (controlledValue !== undefined) setInternal(controlledValue);
-  }, [controlledValue]);
-
-  useEffect(() => {
     const timer = setTimeout(() => onChange(internal), delay);
     return () => clearTimeout(timer);
   }, [internal, delay, onChange]);

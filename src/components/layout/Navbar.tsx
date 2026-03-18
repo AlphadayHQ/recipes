@@ -39,7 +39,6 @@ const navGroups = [
 
 export function Navbar() {
   const { isAuthenticated, authEmail, logout, openAuthModal } = useAuth();
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (

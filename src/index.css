@@ -1,46 +1,79 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap');
 @import "tailwindcss";
 
 @theme {
   /* Accent / Interactive */
-   --color-primary: #FAA202;
+  --color-primary: #FAA202;
   --color-primary-hover: #FFB84D;
-  /* --color-primary: #477FF7;
-  --color-primary-hover: #165DF5; */
-
+  
   /* Backgrounds */
+  --color-background: #121212;
   --color-surface: #191919;
   --color-surface-light: #242424;
   --color-surface-border: #3b3a3a;
-
+  
   /* Text */
   --color-text: #f2f2f2;
   --color-text-muted: #849399;
-
+  
   /* Status */
   --color-success: #6DD230;
   --color-danger: #F45532;
   --color-warning: #FAA202;
+
+  /* Typography Base */
+  --font-sans: 'Open Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-display: 'Montserrat', system-ui, sans-serif;
 }
 
 body {
   margin: 0;
-  background-color: #121212;
+  background-color: var(--color-background);
   color: var(--color-text);
-  font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans);
   min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Global CSS noise overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.04;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Montserrat', 'Open Sans', system-ui, sans-serif;
-}
-
-input[type="time"]::-webkit-calendar-picker-indicator {
-  filter: invert(56%) sepia(97%) saturate(1500%) hue-rotate(18deg) brightness(103%) contrast(101%);
+  font-family: var(--font-display);
 }
 
 #root {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+/* Micro-Interactions */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #121212;
+  font-weight: 600;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: scale(1.02);
+  background-color: var(--color-primary-hover);
+}
+
+.interactive-element {
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.interactive-element:hover {
+  transform: translateY(-1px);
 }
