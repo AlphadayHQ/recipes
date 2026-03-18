@@ -304,7 +304,7 @@ export default function Hero() {
       </div>
 
       {/* Market Pulse Widget */}
-      <div className="absolute bottom-8 right-8 z-20 flex items-center gap-3 bg-surface/80 backdrop-blur-md border border-white/5 px-4 py-2 rounded-lg pointer-events-auto shadow-xl">
+      <div className="absolute bottom-8 right-8 z-20 hidden md:flex items-center gap-3 bg-surface/80 backdrop-blur-md border border-white/5 px-4 py-2 rounded-lg pointer-events-auto shadow-xl">
         <div className="pulse-dot w-2 h-2 rounded-full bg-primary"></div>
         <span className="font-mono text-xs text-text-muted tracking-wider uppercase">
           Markets Open
