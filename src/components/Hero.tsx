@@ -34,8 +34,10 @@ export default function Hero() {
         <img 
           src="/landing-hero-bg.jpeg" 
           alt="AlphaRecipes Intelligence Background" 
-          className="w-full h-full object-cover opacity-40 mix-blend-luminosity grayscale-50 contrast-125"
+          className="w-full h-full object-cover opacity-50 contrast-125 filter max-w-none"
         />
+        {/* Brand Orange Tint Overlay */}
+        <div className="absolute inset-0 bg-primary/20 mix-blend-color z-0"></div>
         <div className="absolute inset-0 bg-linear-to-t from-background via-background/80 to-transparent"></div>
         <div className="absolute inset-0 bg-linear-to-r from-background via-background/60 to-transparent"></div>
       </div>
