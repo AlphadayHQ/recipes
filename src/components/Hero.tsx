@@ -32,9 +32,9 @@ export default function Hero() {
       {/* Background Image & Gradient */}
       <div className="absolute inset-0 z-0">
         <img 
-          src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=2070&auto=format&fit=crop" 
-          alt="Trading desk terminals" 
-          className="w-full h-full object-cover opacity-35"
+          src="/landing-hero-bg.jpeg" 
+          alt="AlphaRecipes Intelligence Background" 
+          className="w-full h-full object-cover opacity-40 mix-blend-luminosity grayscale-[50%] contrast-125"
         />
         <div className="absolute inset-0 bg-linear-to-t from-background via-background/80 to-transparent"></div>
         <div className="absolute inset-0 bg-linear-to-r from-background via-background/60 to-transparent"></div>
