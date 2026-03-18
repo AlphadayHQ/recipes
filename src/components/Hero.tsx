@@ -262,7 +262,42 @@ export default function Hero() {
           matters to you, delivered your way. Trusted by power users.
         </p>
 
-        <button className="hero-anim pointer-events-auto btn-primary mt-6 px-8 py-4 rounded-xl text-lg flex items-center justify-center gap-3 w-full md:w-auto">
+        {/* Mobile Swipeable Ticker */}
+        <div className="hero-anim w-screen relative left-1/2 -translate-x-1/2 md:hidden mt-4 overflow-x-auto hide-scrollbar pointer-events-auto flex items-center gap-4 px-8 pb-2 snap-x snap-mandatory">
+          <div className="bg-surface/50 backdrop-blur-xl border border-white/5 rounded-2xl p-4 flex items-center gap-4 shrink-0 shadow-xl snap-center w-[85%] max-w-75">
+            <div className="bg-success/10 p-2.5 rounded-xl text-success border border-success/20">
+              <TrendingUp size={20} />
+            </div>
+            <div>
+              <p className="text-white font-mono text-[13px] font-semibold tracking-wider">BTC BREAKOUT</p>
+              <p className="text-text-muted text-xs font-mono mt-0.5"><span className="text-success">+$2,400</span> (5m vol)</p>
+            </div>
+          </div>
+
+          <div className="bg-surface/50 backdrop-blur-xl border border-white/5 rounded-2xl p-4 flex items-center gap-4 shrink-0 shadow-xl snap-center w-[85%] max-w-75">
+            <div className="bg-danger/10 p-2.5 rounded-xl text-danger border border-danger/20">
+              <Activity size={20} />
+            </div>
+            <div>
+              <p className="text-white font-mono text-[13px] font-semibold tracking-wider">WHALE MOVEMENT</p>
+              <p className="text-text-muted text-xs font-mono mt-0.5">14,392 ETH transferred</p>
+            </div>
+          </div>
+
+          <div className="bg-surface/50 backdrop-blur-xl border border-white/5 rounded-2xl p-4 flex items-center gap-4 shrink-0 shadow-xl snap-center w-[85%] max-w-75">
+            <div className="bg-primary/10 p-2.5 rounded-xl text-primary border border-primary/20">
+              <Zap size={20} />
+            </div>
+            <div>
+              <p className="text-white font-mono text-[13px] font-semibold tracking-wider">GAS SPIKE</p>
+              <p className="text-text-muted text-xs font-mono mt-0.5"><span className="text-primary">185 Gwei</span> · Base L2</p>
+            </div>
+          </div>
+          
+          <div className="w-1 shrink-0" />
+        </div>
+
+        <button className="hero-anim pointer-events-auto btn-primary mt-4 px-8 py-4 rounded-xl text-lg flex items-center justify-center gap-3 w-full md:w-auto">
           Start cooking
           <ArrowRight size={20} />
         </button>
