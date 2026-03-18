@@ -16,11 +16,11 @@ export default function Navbar() {
     <nav
       className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 rounded-full px-6 py-3 flex items-center justify-between gap-8 md:gap-16 w-[92%] max-w-5xl ${isScrolled ? "bg-surface/80 backdrop-blur-md border border-surface-border shadow-lg shadow-black/40" : "bg-transparent border border-transparent"}`}
     >
-      <div className="flex items-center gap-2">
-        <span className="font-display font-bold text-xl tracking-tight text-text">
+      <div className="flex items-center gap-3">
+        <img src="/logo.png" alt="AlphaRecipes Logo" className="h-8 w-auto mix-blend-screen" />
+        <span className="font-display font-semibold text-xl tracking-tight text-text hidden sm:block">
           AlphaRecipes
         </span>
-        <div className="w-2 h-2 rounded-full bg-primary"></div>
       </div>
 
       <div className="hidden md:flex items-center gap-8 font-sans text-sm font-semibold text-text-muted">
