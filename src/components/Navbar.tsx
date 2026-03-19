@@ -1,27 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Menu, X, User, LogOut } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
+import { UserMenu } from "./ui/UserMenu";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const userMenuRef = useRef<HTMLDivElement>(null);
   const { openAuthModal, isAuthenticated, authEmail, logout } = useAuth();
   const { pathname } = useLocation();
   const isLanding = pathname === "/";
-
-  // Close user menu on outside click
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
-        setUserMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,9 +36,6 @@ export default function Navbar() {
             <a href="#features" className="hover:text-text transition-colors">
               Features
             </a>
-            <a href="#manifesto" className="hover:text-text transition-colors">
-              Manifesto
-            </a>
             <a href="#how" className="hover:text-text transition-colors">
               How it Works
             </a>
@@ -61,28 +46,8 @@ export default function Navbar() {
         )}
 
         {isAuthenticated ? (
-          <div className="relative hidden md:block" ref={userMenuRef}>
-            <button
-              title="Account"
-              onClick={() => setUserMenuOpen(!userMenuOpen)}
-              className="flex items-center justify-center w-9 h-9 rounded-full bg-surface-light border border-surface-border text-text hover:bg-surface-border transition-colors"
-            >
-              <User size={16} />
-            </button>
-            {userMenuOpen && (
-              <div className="absolute right-0 mt-2 w-56 bg-surface border border-surface-border rounded-xl shadow-xl shadow-black/40 overflow-hidden">
-                <div className="px-4 py-3 border-b border-surface-border">
-                  <p className="text-sm font-medium text-text truncate">{authEmail}</p>
-                </div>
-                <button
-                  onClick={() => { setUserMenuOpen(false); logout(); }}
-                  className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-text-muted hover:text-danger hover:bg-danger/10 transition-colors"
-                >
-                  <LogOut size={14} />
-                  Log out
-                </button>
-              </div>
-            )}
+          <div className="hidden md:block">
+            <UserMenu email={authEmail ?? ''} onLogout={logout} />
           </div>
         ) : (
           <button className="btn-primary px-5 py-2.5 rounded-xl text-sm hidden md:block" onClick={openAuthModal}>
@@ -115,9 +80,6 @@ export default function Navbar() {
               <div className="flex flex-col gap-3 font-sans text-sm font-semibold text-text-muted">
                 <a href="#features" className="hover:text-text transition-colors" onClick={() => setMobileOpen(false)}>
                   Features
-                </a>
-                <a href="#manifesto" className="hover:text-text transition-colors" onClick={() => setMobileOpen(false)}>
-                  Manifesto
                 </a>
                 <a href="#how" className="hover:text-text transition-colors" onClick={() => setMobileOpen(false)}>
                   How it Works
