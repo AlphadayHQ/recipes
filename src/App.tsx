@@ -6,6 +6,7 @@ import Problem from "./components/Problem";
 import HowItWorks from "./components/HowItWorks";
 import Metrics from "./components/Metrics";
 import CTABlock from "./components/CTABlock";
+import RecipeBuilder from "./components/RecipeBuilder";
 import Footer from "./components/Footer";
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <HowItWorks />
         <Metrics />
         <CTABlock />
+        <RecipeBuilder />
       </div>
       <Footer />
     </div>
