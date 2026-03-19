@@ -7,6 +7,7 @@ import HowItWorks from "./components/HowItWorks";
 import Metrics from "./components/Metrics";
 import CTABlock from "./components/CTABlock";
 import RecipeBuilder from "./components/RecipeBuilder";
+import PopularRecipes from "./components/PopularRecipes";
 import Footer from "./components/Footer";
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Metrics />
         <CTABlock />
         <RecipeBuilder />
+        <PopularRecipes />
       </div>
       <Footer />
     </div>
