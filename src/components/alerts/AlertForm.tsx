@@ -1,6 +1,10 @@
 import { useState, useMemo } from "react";
 import Select from "react-select";
-import type { AlertType, NotificationMethod } from "../../store/useStore";
+import type {
+  AlertType,
+  NotificationMethod,
+  RecipePrefill,
+} from "../../store/useStore";
 import { useStore } from "../../store/useStore";
 import { CoinSelector } from "../selectors/CoinSelector";
 import { ExchangeSelector } from "../selectors/ExchangeSelector";
@@ -14,6 +18,7 @@ import {
   createCustomAlert,
   createCryptoBriefingAlert,
 } from "../../api/alertApi";
+import { twMerge } from "tailwind-merge";
 
 export interface AlertFormConfig {
   type: AlertType;
@@ -138,9 +143,10 @@ const inlineInputClass =
 
 interface AlertFormProps {
   config: AlertFormConfig;
+  prefill?: RecipePrefill;
 }
 
-export function AlertForm({ config }: AlertFormProps) {
+export function AlertForm({ config, prefill }: AlertFormProps) {
   const addAlert = useStore((s) => s.addAlert);
   const addToast = useStore((s) => s.addToast);
   const authToken = useStore((s) => s.authToken);
@@ -173,7 +179,24 @@ export function AlertForm({ config }: AlertFormProps) {
   }, []);
   const { cooldowns, frequencies, presets } = useAlertOptions(authToken?.value);
 
-  const [coin, setCoin] = useState(config.showQuery ? "" : "BTC");
+  const topicLabelMap: Record<string, string> = {
+    prices: "Prices",
+    news: "News",
+    dao: "DAOs",
+    social: "Social Sentiment",
+    events: "Events",
+  };
+
+  const defaultTopics = [
+    { value: "prices", label: "Prices" },
+    { value: "news", label: "News" },
+    { value: "social", label: "Social Sentiment" },
+    { value: "events", label: "Events" },
+  ];
+
+  const [coin, setCoin] = useState(
+    prefill?.coin ?? (config.showQuery ? "" : "BTC"),
+  );
   const [exchange, setExchange] = useState("");
   const [condition, setCondition] = useState(
     config.directionOptions?.[0] ?? "above",
@@ -185,23 +208,39 @@ export function AlertForm({ config }: AlertFormProps) {
   const [cooldown, setCooldown] = useState("");
   const [note, setNote] = useState("");
   const [oneTime, setOneTime] = useState(false);
-  const [frequency, setFrequency] = useState("");
+  const [frequency, setFrequency] = useState(prefill?.frequency ?? "");
   const [timeWindow, setTimeWindow] = useState("24h");
-  const [accountUsernames, setAccountUsernames] = useState("");
+  const [accountUsernames, setAccountUsernames] = useState(
+    prefill?.accountUsernames ?? "",
+  );
   const [timezone, setTimezone] = useState("UTC");
-  const [maxTweets, setMaxTweets] = useState("10");
-  const [query, setQuery] = useState("");
-  const [selectedPreset, setSelectedPreset] = useState("");
+  const [maxTweets, setMaxTweets] = useState(prefill?.maxTweets ?? "10");
+  const [query, setQuery] = useState(prefill?.query ?? "");
+  const cronToTime = (cron: string) => {
+    const [minute, hour] = cron.split(" ");
+    return `${hour.padStart(2, "0")}:${minute.padStart(2, "0")}`;
+  };
+
+  const [selectedPreset, setSelectedPreset] = useState(prefill?.preset ?? "");
   const preset = selectedPreset || presets[0]?.value || "";
-  const [triggerAt, setTriggerAt] = useState("");
-  const [tone, setTone] = useState("professional");
-  const [focusTags, setFocusTags] = useState("");
-  const [selectedTopics, setSelectedTopics] = useState([
-    { value: "prices", label: "Prices" },
-    { value: "news", label: "News" },
-    { value: "social", label: "Social Sentiment" },
-    { value: "events", label: "Events" },
-  ]);
+  const [triggerAt, setTriggerAt] = useState(prefill?.triggerAt ?? "");
+  const [presetTimeSynced, setPresetTimeSynced] = useState("");
+
+  // When presets load or the active preset changes, sync triggerAt from the preset's cron
+  if (presets.length > 0 && preset && preset !== presetTimeSynced) {
+    const match = presets.find((p) => p.value === preset);
+    if (match) {
+      setTriggerAt(cronToTime(match.default_cron));
+      setPresetTimeSynced(preset);
+    }
+  }
+  const [tone, setTone] = useState(prefill?.tone ?? "professional");
+  const [focusTags, setFocusTags] = useState(prefill?.focusTags ?? "");
+  const [selectedTopics, setSelectedTopics] = useState(
+    prefill?.topics
+      ? prefill.topics.map((v) => ({ value: v, label: topicLabelMap[v] ?? v }))
+      : defaultTopics,
+  );
 
   const includePrices = selectedTopics.some((t) => t.value === "prices");
   const includeNews = selectedTopics.some((t) => t.value === "news");
@@ -284,7 +323,7 @@ export function AlertForm({ config }: AlertFormProps) {
             .map((t) => t.trim())
             .filter(Boolean);
           await createCryptoBriefingAlert(authToken.value, {
-            preset: triggerAt ? undefined : preset,
+            preset: preset || undefined,
             triggerAt: triggerAt
               ? `${new Date().toISOString().split("T")[0]}T${triggerAt}:00Z`
               : undefined,
@@ -376,15 +415,26 @@ export function AlertForm({ config }: AlertFormProps) {
         {/* --- Web Search style: "Search the web for [query] related to [coin] and send me a [Daily] [Email]." --- */}
         {isWebSearchStyle && (
           <>
-            <span>Alert me on</span>
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="e.g. Bitcoin ETF"
-              className={inlineInputClass + " w-40"}
-              required
-            />
+            <span>Alert me</span>
+            <span className="inline-grid items-baseline max-w-full">
+              <span
+                className="invisible whitespace-pre col-start-1 row-start-1 px-1 text-lg overflow-hidden"
+                aria-hidden="true"
+              >
+                {query || "e.g. Bitcoin ETF"}
+              </span>
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="e.g. Bitcoin ETF"
+                className={twMerge(
+                  inlineInputClass,
+                  " col-start-1 row-start-1 min-w-[3ch] w-full px-2",
+                )}
+                required
+              />
+            </span>
             {config.showCoin && (
               <>
                 <span>related to</span>
@@ -435,12 +485,12 @@ export function AlertForm({ config }: AlertFormProps) {
             {config.type === "crypto-briefing" && (
               <select
                 title="Select Preset"
-                value={triggerAt ? "" : preset}
+                value={preset}
                 onChange={(e) => {
                   setSelectedPreset(e.target.value);
-                  setTriggerAt("");
+                  const match = presets.find((p) => p.value === e.target.value);
+                  if (match) setTriggerAt(cronToTime(match.default_cron));
                 }}
-                disabled={!!triggerAt}
                 className={inlineSelectClass}
               >
                 {presets.map((p) => (
@@ -797,7 +847,9 @@ export function AlertForm({ config }: AlertFormProps) {
         config.showMaxTweets ||
         config.showFocusTags) && (
         <div className="mt-8 pt-6 border-t border-surface-border">
-          <h3 className="text-sm font-semibold text-text mb-4">Other Options</h3>
+          <h3 className="text-sm font-semibold text-text mb-4">
+            Other Options
+          </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
             {config.showCooldown && (
               <div className="flex flex-col h-full">
@@ -811,7 +863,11 @@ export function AlertForm({ config }: AlertFormProps) {
                   className="w-full px-3 py-2 bg-surface-light border border-surface-border rounded-lg text-sm text-text cursor-pointer focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
                 >
                   {cooldowns.map((cd) => (
-                    <option key={cd.name} value={cd.name} className="capitalize">
+                    <option
+                      key={cd.name}
+                      value={cd.name}
+                      className="capitalize"
+                    >
                       {cd.name}
                     </option>
                   ))}
@@ -823,7 +879,7 @@ export function AlertForm({ config }: AlertFormProps) {
             )}
 
             {config.showOneTime && (
-              <div className="flex flex-col justify-center h-[68px]">
+              <div className="flex flex-col justify-center h-17">
                 <label className="flex items-center gap-2 text-sm text-text cursor-pointer hover:text-text transition-colors">
                   <input
                     type="checkbox"
@@ -839,7 +895,10 @@ export function AlertForm({ config }: AlertFormProps) {
             {config.showNote && (
               <div className="flex-1 min-w-48 flex flex-col h-full">
                 <label className="block text-sm font-medium text-text mb-1.5">
-                  Note <span className="text-text-muted font-normal">(optional)</span>
+                  Note{" "}
+                  <span className="text-text-muted font-normal">
+                    (optional)
+                  </span>
                 </label>
                 <input
                   type="text"
@@ -875,7 +934,10 @@ export function AlertForm({ config }: AlertFormProps) {
             {config.showFocusTags && (
               <div className="flex-1 min-w-48 flex flex-col h-full">
                 <label className="block text-sm font-medium text-text mb-1.5">
-                  Focus tags <span className="text-text-muted font-normal">(comma-separated)</span>
+                  Focus tags{" "}
+                  <span className="text-text-muted font-normal">
+                    (comma-separated)
+                  </span>
                 </label>
                 <input
                   type="text"

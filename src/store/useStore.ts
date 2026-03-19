@@ -80,7 +80,25 @@ export type AuthStatus =
 
 export type AuthMethod = 'email' | 'google' | 'apple';
 
+export interface RecipePrefill {
+  tab: string;
+  coin?: string;
+  tone?: string;
+  focusTags?: string;
+  topics?: string[];
+  preset?: string;
+  triggerAt?: string;
+  frequency?: string;
+  query?: string;
+  accountUsernames?: string;
+  maxTweets?: string;
+}
+
 interface AppState {
+  // Pending recipe prefill
+  pendingRecipe: RecipePrefill | null;
+  setPendingRecipe: (recipe: RecipePrefill | null) => void;
+
   // Auth
   authToken: { value: string } | null;
   authStatus: AuthStatus;
@@ -112,6 +130,10 @@ let toastCounter = 0;
 export const useStore = create<AppState>()(
   persist(
     (set) => ({
+      // Pending recipe
+      pendingRecipe: null,
+      setPendingRecipe: (recipe) => set({ pendingRecipe: recipe }),
+
       // Auth
       authToken: null,
       authStatus: 'guest',

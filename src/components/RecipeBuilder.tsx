@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TabBar } from "./ui/TabBar";
 import { AlertForm } from "./alerts/AlertForm";
 import type { AlertFormConfig } from "./alerts/AlertForm";
@@ -12,6 +12,7 @@ import {
   twitterDigestAlertConfig,
   customAlertConfig,
 } from "./alerts/alertConfigs";
+import { useStore, type RecipePrefill } from "../store/useStore";
 
 const marketTabs = [
   "Price",
@@ -37,6 +38,31 @@ const marketConfigs: Record<string, AlertFormConfig> = {
 
 function RecipeBuilder() {
   const [activeTab, setActiveTab] = useState("Price");
+  const [appliedPrefill, setAppliedPrefill] = useState<RecipePrefill | null>(null);
+  const [formKey, setFormKey] = useState(0);
+
+  // Subscribe to store for pendingRecipe changes (callback-based setState is the approved pattern)
+  useEffect(() => {
+    return useStore.subscribe((state) => {
+      if (state.pendingRecipe) {
+        const recipe = state.pendingRecipe;
+        setAppliedPrefill(recipe);
+        if (marketTabs.includes(recipe.tab)) {
+          setActiveTab(recipe.tab);
+        }
+        setFormKey((k) => k + 1);
+        state.setPendingRecipe(null);
+      }
+    });
+  }, []);
+
+  const handleTabChange = (tab: string) => {
+    setAppliedPrefill(null);
+    setActiveTab(tab);
+  };
+
+  const prefill =
+    appliedPrefill?.tab === activeTab ? appliedPrefill : undefined;
 
   return (
     <section id="recipe-builder" className="py-16 px-4">
@@ -56,10 +82,14 @@ function RecipeBuilder() {
           <TabBar
             tabs={marketTabs}
             active={activeTab}
-            onChange={setActiveTab}
+            onChange={handleTabChange}
           />
         </div>
-        <AlertForm key={activeTab} config={marketConfigs[activeTab]} />
+        <AlertForm
+          key={`${activeTab}-${formKey}`}
+          config={marketConfigs[activeTab]}
+          prefill={prefill}
+        />
       </div>
     </section>
   );
