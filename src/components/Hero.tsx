@@ -195,7 +195,7 @@ export default function Hero() {
                   BTC BREAKOUT
                 </p>
                 <p className="text-text-muted text-xs font-mono mt-0.5">
-                  <span className="text-success">+$2,400</span> (5m vol)
+                  <span className="text-success">+$2,400</span> (5m)
                 </p>
               </div>
             </div>
