@@ -258,43 +258,47 @@ export default function Hero() {
         </div>
 
         <p className="hero-anim font-sans text-lg md:text-xl text-text-muted max-w-xl font-medium mt-3 drop-shadow-md">
-          Custom crypto alerts and intelligent briefings — the alpha that
+          Custom crypto alerts and intelligent briefings, the alpha that
           matters to you, delivered your way. Trusted by power users.
         </p>
 
-        {/* Mobile Swipeable Ticker */}
-        <div className="hero-anim w-screen relative left-1/2 -translate-x-1/2 md:hidden mt-4 overflow-x-auto hide-scrollbar pointer-events-auto flex items-center gap-4 px-8 pb-2 snap-x snap-mandatory">
-          <div className="bg-surface/50 backdrop-blur-xl border border-white/5 rounded-2xl p-4 flex items-center gap-4 shrink-0 shadow-xl snap-center w-[85%] max-w-75">
-            <div className="bg-success/10 p-2.5 rounded-xl text-success border border-success/20">
-              <TrendingUp size={20} />
-            </div>
-            <div>
-              <p className="text-white font-mono text-[13px] font-semibold tracking-wider">BTC BREAKOUT</p>
-              <p className="text-text-muted text-xs font-mono mt-0.5"><span className="text-success">+$2,400</span> (5m vol)</p>
-            </div>
-          </div>
+        {/* Mobile Auto-Scroll Ticker */}
+        <div className="hero-anim w-screen relative left-1/2 -translate-x-1/2 md:hidden mt-4 overflow-hidden pointer-events-auto">
+          <div className="flex items-center gap-4 animate-marquee w-max">
+            {[...Array(2)].map((_, setIdx) => (
+              <div key={setIdx} className="flex items-center gap-4">
+                <div className="bg-surface/50 backdrop-blur-xl border border-white/5 rounded-2xl p-4 flex items-center gap-4 shrink-0 shadow-xl">
+                  <div className="bg-success/10 p-2.5 rounded-xl text-success border border-success/20">
+                    <TrendingUp size={20} />
+                  </div>
+                  <div>
+                    <p className="text-white font-mono text-[13px] font-semibold tracking-wider">BTC BREAKOUT</p>
+                    <p className="text-text-muted text-xs font-mono mt-0.5"><span className="text-success">+$2,400</span> (5m vol)</p>
+                  </div>
+                </div>
 
-          <div className="bg-surface/50 backdrop-blur-xl border border-white/5 rounded-2xl p-4 flex items-center gap-4 shrink-0 shadow-xl snap-center w-[85%] max-w-75">
-            <div className="bg-danger/10 p-2.5 rounded-xl text-danger border border-danger/20">
-              <Activity size={20} />
-            </div>
-            <div>
-              <p className="text-white font-mono text-[13px] font-semibold tracking-wider">WHALE MOVEMENT</p>
-              <p className="text-text-muted text-xs font-mono mt-0.5">14,392 ETH transferred</p>
-            </div>
-          </div>
+                <div className="bg-surface/50 backdrop-blur-xl border border-white/5 rounded-2xl p-4 flex items-center gap-4 shrink-0 shadow-xl">
+                  <div className="bg-danger/10 p-2.5 rounded-xl text-danger border border-danger/20">
+                    <Activity size={20} />
+                  </div>
+                  <div>
+                    <p className="text-white font-mono text-[13px] font-semibold tracking-wider">WHALE MOVEMENT</p>
+                    <p className="text-text-muted text-xs font-mono mt-0.5">14,392 ETH transferred</p>
+                  </div>
+                </div>
 
-          <div className="bg-surface/50 backdrop-blur-xl border border-white/5 rounded-2xl p-4 flex items-center gap-4 shrink-0 shadow-xl snap-center w-[85%] max-w-75">
-            <div className="bg-primary/10 p-2.5 rounded-xl text-primary border border-primary/20">
-              <Zap size={20} />
-            </div>
-            <div>
-              <p className="text-white font-mono text-[13px] font-semibold tracking-wider">GAS SPIKE</p>
-              <p className="text-text-muted text-xs font-mono mt-0.5"><span className="text-primary">185 Gwei</span> · Base L2</p>
-            </div>
+                <div className="bg-surface/50 backdrop-blur-xl border border-white/5 rounded-2xl p-4 flex items-center gap-4 shrink-0 shadow-xl">
+                  <div className="bg-primary/10 p-2.5 rounded-xl text-primary border border-primary/20">
+                    <Zap size={20} />
+                  </div>
+                  <div>
+                    <p className="text-white font-mono text-[13px] font-semibold tracking-wider">GAS SPIKE</p>
+                    <p className="text-text-muted text-xs font-mono mt-0.5"><span className="text-primary">185 Gwei</span> · Base L2</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-          
-          <div className="w-1 shrink-0" />
         </div>
 
         <button className="hero-anim pointer-events-auto btn-primary mt-4 px-8 py-4 rounded-xl text-lg flex items-center justify-center gap-3 w-full md:w-auto">
