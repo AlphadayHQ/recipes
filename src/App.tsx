@@ -1,28 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import Problem from "./components/Problem";
-import HowItWorks from "./components/HowItWorks";
-import Metrics from "./components/Metrics";
-import CTABlock from "./components/CTABlock";
-import RecipeBuilder from "./components/RecipeBuilder";
-import PopularRecipes from "./components/PopularRecipes";
 import Footer from "./components/Footer";
 import { AuthModal } from "./components/auth/AuthModal";
+import { HomePage } from "./pages/HomePage";
 import { Dashboard } from "./pages/Dashboard";
-function HomePage() {
-  return (
-    <>
-      <Hero />
-      <Problem />
-      <HowItWorks />
-      <Metrics />
-      <CTABlock />
-      <RecipeBuilder />
-      <PopularRecipes />
-    </>
-  );
-}
 
 function App() {
   return (
