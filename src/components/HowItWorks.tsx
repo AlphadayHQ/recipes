@@ -157,8 +157,9 @@ class ParticleEngine {
 }
 
 export default function HowItWorks() {
-  const container = useRef(null);
+  const container = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<ParticleEngine | null>(null);
 
   useLayoutEffect(() => {
@@ -169,6 +170,15 @@ export default function HowItWorks() {
 
     const ctx = gsap.context(() => {
       const panels = gsap.utils.toArray<HTMLElement>('.hiw-panel');
+
+      // Pin background canvas robustly, bypassing CSS sticky issues
+      ScrollTrigger.create({
+        trigger: container.current,
+        start: "top top",
+        end: "bottom bottom",
+        pin: bgRef.current,
+        pinSpacing: false,
+      });
 
       // Animates the canvas physics engine state from 0 to 2 across the scroll
       gsap.to(engine.state, {
@@ -209,19 +219,17 @@ export default function HowItWorks() {
 
   return (
     <section id="how" ref={container} className="relative w-full bg-background pb-32">
-      {/* Absolute Canvas Background Container */}
-      <div className="absolute inset-0 z-0">
-        <div className="sticky top-0 h-screen w-full overflow-hidden">
-          <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />
-          <div 
-            className="absolute inset-0 bg-[radial-gradient(#3b3a3a_1px,transparent_1px)] opacity-20 pointer-events-none" 
-            style={{ 
-              backgroundSize: '24px 24px', 
-              maskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)',
-              WebkitMaskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)' 
-            }}
-          ></div>
-        </div>
+      {/* GSAP-Pinned Background Container */}
+      <div ref={bgRef} className="absolute top-0 left-0 w-full h-screen z-0 overflow-hidden pointer-events-none">
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />
+        <div 
+          className="absolute inset-0 bg-[radial-gradient(#3b3a3a_1px,transparent_1px)] opacity-20 pointer-events-none" 
+          style={{ 
+            backgroundSize: '24px 24px', 
+            maskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)',
+            WebkitMaskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)' 
+          }}
+        ></div>
       </div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto">
