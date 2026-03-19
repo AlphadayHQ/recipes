@@ -195,7 +195,7 @@ export default function Hero() {
                   BTC BREAKOUT
                 </p>
                 <p className="text-text-muted text-xs font-mono mt-0.5">
-                  <span className="text-success">+$2,400</span> (5m)
+                  <span className="text-success">+$2,400</span> (5m ago)
                 </p>
               </div>
             </div>
@@ -214,10 +214,10 @@ export default function Hero() {
               </div>
               <div>
                 <p className="text-white font-mono text-[13px] font-semibold tracking-wider">
-                  WHALE MOVEMENT
+                  ZCASH PLUNGES
                 </p>
                 <p className="text-text-muted text-xs font-mono mt-0.5">
-                  14,392 ETH transferred
+                  <span className="text-danger">-20%</span> · Core Team Resigns
                 </p>
               </div>
             </div>
@@ -236,10 +236,11 @@ export default function Hero() {
               </div>
               <div>
                 <p className="text-white font-mono text-[13px] font-semibold tracking-wider">
-                  GAS SPIKE
+                  TOKEN LAUNCH
                 </p>
                 <p className="text-text-muted text-xs font-mono mt-0.5">
-                  <span className="text-primary">185 Gwei</span> · Base L2
+                  <span className="text-primary">120% Subscribed</span> · Base
+                  L2
                 </p>
               </div>
             </div>
@@ -258,8 +259,8 @@ export default function Hero() {
         </div>
 
         <p className="hero-anim font-sans text-lg md:text-xl text-text-muted max-w-xl font-medium mt-3 drop-shadow-md">
-          Custom crypto alerts and intelligent briefings, the alpha that
-          matters to you, delivered your way. Trusted by power users.
+          Custom crypto alerts and intelligent briefings, the alpha that matters
+          to you, delivered your way. Trusted by power users.
         </p>
 
         {/* Mobile Auto-Scroll Ticker */}
@@ -272,8 +273,12 @@ export default function Hero() {
                     <TrendingUp size={20} />
                   </div>
                   <div>
-                    <p className="text-white font-mono text-[13px] font-semibold tracking-wider">BTC BREAKOUT</p>
-                    <p className="text-text-muted text-xs font-mono mt-0.5"><span className="text-success">+$2,400</span> (5m vol)</p>
+                    <p className="text-white font-mono text-[13px] font-semibold tracking-wider">
+                      BTC BREAKOUT
+                    </p>
+                    <p className="text-text-muted text-xs font-mono mt-0.5">
+                      <span className="text-success">+$2,400</span> (5m vol)
+                    </p>
                   </div>
                 </div>
 
@@ -282,8 +287,12 @@ export default function Hero() {
                     <Activity size={20} />
                   </div>
                   <div>
-                    <p className="text-white font-mono text-[13px] font-semibold tracking-wider">WHALE MOVEMENT</p>
-                    <p className="text-text-muted text-xs font-mono mt-0.5">14,392 ETH transferred</p>
+                    <p className="text-white font-mono text-[13px] font-semibold tracking-wider">
+                      WHALE MOVEMENT
+                    </p>
+                    <p className="text-text-muted text-xs font-mono mt-0.5">
+                      14,392 ETH transferred
+                    </p>
                   </div>
                 </div>
 
@@ -292,8 +301,12 @@ export default function Hero() {
                     <Zap size={20} />
                   </div>
                   <div>
-                    <p className="text-white font-mono text-[13px] font-semibold tracking-wider">GAS SPIKE</p>
-                    <p className="text-text-muted text-xs font-mono mt-0.5"><span className="text-primary">185 Gwei</span> · Base L2</p>
+                    <p className="text-white font-mono text-[13px] font-semibold tracking-wider">
+                      GAS SPIKE
+                    </p>
+                    <p className="text-text-muted text-xs font-mono mt-0.5">
+                      <span className="text-primary">185 Gwei</span> · Base L2
+                    </p>
                   </div>
                 </div>
               </div>
