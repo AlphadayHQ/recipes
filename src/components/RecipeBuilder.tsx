@@ -6,8 +6,8 @@ import {
   priceAlertConfig,
   percentAlertConfig,
   periodicAlertConfig,
-  volumeAlertConfig,
-  marketCapAlertConfig,
+  // volumeAlertConfig,
+  // marketCapAlertConfig,
   cryptoBriefingAlertConfig,
   twitterDigestAlertConfig,
   customAlertConfig,
@@ -17,8 +17,8 @@ const marketTabs = [
   "Price",
   "Percent",
   "Periodic",
-  "Volume",
-  "Market Cap",
+  // "Volume",
+  // "Market Cap",
   "Crypto Briefing",
   "Twitter Digest",
   "Custom",
@@ -28,8 +28,8 @@ const marketConfigs: Record<string, AlertFormConfig> = {
   Price: priceAlertConfig,
   Percent: percentAlertConfig,
   Periodic: periodicAlertConfig,
-  Volume: volumeAlertConfig,
-  "Market Cap": marketCapAlertConfig,
+  // Volume: volumeAlertConfig,
+  // "Market Cap": marketCapAlertConfig,
   "Crypto Briefing": cryptoBriefingAlertConfig,
   "Twitter Digest": twitterDigestAlertConfig,
   Custom: customAlertConfig,
@@ -41,13 +41,18 @@ function RecipeBuilder() {
   return (
     <section id="recipe-builder" className="py-16 px-4">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4">
-          Cook Your Own Recipe
-        </h2>
-        <p className="text-text-muted text-center mb-8 max-w-xl mx-auto">
-          Pick a recipe, set your ingredients, and let it cook.
-        </p>
-        <div className="mb-6">
+        <div className="flex flex-col items-center text-center mb-12">
+          <p className="font-mono font-semibold text-xs md:text-sm text-primary uppercase tracking-[0.15em] mb-4">
+            Protocol Configuration
+          </p>
+          <h2 className="font-display font-bold text-[clamp(2.5rem,4vw,3.5rem)] text-text leading-[1.05] tracking-tight mb-6 text-balance">
+            Cook Your Own Recipe
+          </h2>
+          <p className="font-sans font-medium text-[clamp(1.125rem,2vw,1.25rem)] text-text-muted leading-relaxed max-w-[45ch] mx-auto text-balance">
+            Pick a recipe, set your ingredients, and let it cook.
+          </p>
+        </div>
+        <div className="mb-8 flex justify-center w-full">
           <TabBar
             tabs={marketTabs}
             active={activeTab}

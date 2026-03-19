@@ -131,10 +131,10 @@ const inlineTopicsSelectStyles: React.ComponentProps<typeof Select>["styles"] =
   };
 
 const inlineSelectClass =
-  "bg-transparent border-0 border-b-2 border-primary text-primary font-semibold cursor-pointer text-lg px-1 py-0 focus:outline-none hover:border-primary/70 transition-colors";
+  "bg-transparent border-0 border-b-2 border-primary text-primary font-semibold cursor-pointer text-lg px-px py-0.5 focus:outline-none focus-visible:bg-primary/10 hover:border-primary/80 transition-colors";
 
 const inlineInputClass =
-  "bg-transparent border-0 border-b-2 border-primary text-primary font-semibold text-lg px-1 py-0 focus:outline-none hover:border-primary/70 transition-colors w-28 text-center";
+  "bg-transparent border-0 border-b-2 border-primary text-primary font-semibold text-lg px-px py-0.5 focus:outline-none focus-visible:bg-primary/10 hover:border-primary/80 transition-colors w-28 text-center";
 
 interface AlertFormProps {
   config: AlertFormConfig;
@@ -343,9 +343,13 @@ export function AlertForm({ config }: AlertFormProps) {
       oneTime: config.showOneTime ? oneTime : undefined,
       frequency: config.showFrequency ? frequency : undefined,
       tone: config.showTone ? tone : undefined,
-      focusTags: config.showFocusTags && focusTags
-        ? focusTags.split(",").map((t) => t.trim()).filter(Boolean)
-        : undefined,
+      focusTags:
+        config.showFocusTags && focusTags
+          ? focusTags
+              .split(",")
+              .map((t) => t.trim())
+              .filter(Boolean)
+          : undefined,
       timeWindow: config.showTimeWindow ? timeWindow : undefined,
       query: config.showQuery && query ? query : undefined,
       includePrices: config.showTopics ? includePrices : undefined,
@@ -366,9 +370,9 @@ export function AlertForm({ config }: AlertFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-surface border border-surface-border rounded-xl p-8"
+      className="bg-surface border border-surface-border rounded-xl p-6 sm:p-8"
     >
-      <div className="text-lg leading-[3] text-text flex flex-wrap items-baseline gap-x-1.5">
+      <div className="text-lg leading-loose text-text flex flex-wrap items-baseline gap-x-1.5 gap-y-3">
         {/* --- Web Search style: "Search the web for [query] related to [coin] and send me a [Daily] [Email]." --- */}
         {isWebSearchStyle && (
           <>
@@ -773,7 +777,7 @@ export function AlertForm({ config }: AlertFormProps) {
 
       {/* Current price info */}
       {config.showCoin && selectedCoin && (
-        <p className="text-sm text-text-muted mt-2">
+        <p className="text-sm text-text-muted mt-6 inline-flex items-center gap-2 px-3 py-2 bg-surface-light rounded-md">
           The price of {coin} is currently{" "}
           <span className="font-semibold text-text">
             {selectedCoin.price.toLocaleString("en-US", {
@@ -792,126 +796,126 @@ export function AlertForm({ config }: AlertFormProps) {
         config.showTimezone ||
         config.showMaxTweets ||
         config.showFocusTags) && (
-        <div className="mt-6 flex flex-wrap gap-4 items-start">
-          {config.showCooldown && (
-            <div>
-              <label className="block text-sm text-text-muted mb-1">
-                Cooldown{" "}
-                <span className="text-xs text-text-muted mt-1">
-                  (Minimum time between repeated notifications for this alert.)
-                </span>
-              </label>
-              <select
-                title="Select Cooldown"
-                value={cooldown}
-                onChange={(e) => setCooldown(e.target.value)}
-                className="px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text cursor-pointer focus:outline-none focus:border-primary transition-colors"
-              >
-                {cooldowns.map((cd) => (
-                  <option key={cd.name} value={cd.name} className="capitalize">
-                    {cd.name}
-                  </option>
-                ))}
-              </select>
-              <p className="text-xs text-text-muted mt-1">
-                Minimum time between repeated notifications for this alert.
-              </p>
-            </div>
-          )}
+        <div className="mt-8 pt-6 border-t border-surface-border">
+          <h3 className="text-sm font-semibold text-text mb-4">Other Options</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+            {config.showCooldown && (
+              <div className="flex flex-col h-full">
+                <label className="block text-sm font-medium text-text mb-1.5">
+                  Cooldown
+                </label>
+                <select
+                  title="Select Cooldown"
+                  value={cooldown}
+                  onChange={(e) => setCooldown(e.target.value)}
+                  className="w-full px-3 py-2 bg-surface-light border border-surface-border rounded-lg text-sm text-text cursor-pointer focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+                >
+                  {cooldowns.map((cd) => (
+                    <option key={cd.name} value={cd.name} className="capitalize">
+                      {cd.name}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-text-muted mt-1.5">
+                  Minimum time between repeated notifications
+                </p>
+              </div>
+            )}
 
-          {config.showOneTime && (
-            <label className="flex items-center gap-2 text-sm text-text-muted cursor-pointer py-1.5">
-              <input
-                type="checkbox"
-                checked={oneTime}
-                onChange={(e) => setOneTime(e.target.checked)}
-                className="accent-primary"
-              />
-              One-time alert
-            </label>
-          )}
+            {config.showOneTime && (
+              <div className="flex flex-col justify-center h-[68px]">
+                <label className="flex items-center gap-2 text-sm text-text cursor-pointer hover:text-text transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={oneTime}
+                    onChange={(e) => setOneTime(e.target.checked)}
+                    className="accent-primary w-4 h-4 cursor-pointer"
+                  />
+                  One-time alert
+                </label>
+              </div>
+            )}
 
-          {config.showNote && (
-            <div className="flex-1 min-w-48">
-              <label className="block text-xs text-text-muted mb-1">
-                Note (optional)
-              </label>
-              <input
-                type="text"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                placeholder="Add a note to this alert"
-                className="w-full px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary transition-colors"
-              />
-            </div>
-          )}
+            {config.showNote && (
+              <div className="flex-1 min-w-48 flex flex-col h-full">
+                <label className="block text-sm font-medium text-text mb-1.5">
+                  Note <span className="text-text-muted font-normal">(optional)</span>
+                </label>
+                <input
+                  type="text"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  placeholder="Add a note to this alert"
+                  className="w-full px-3 py-2 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+                />
+              </div>
+            )}
 
-          {config.showTimezone && (
-            <div className="h-full">
-              <label className="block text-xs text-text-muted mb-1">
-                Timezone
-              </label>
-              <select
-                title="Select Timezone"
-                value={timezone}
-                onChange={(e) => setTimezone(e.target.value)}
-                className="px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text focus:outline-none focus:border-primary transition-colors w-56"
-              >
-                <option value="UTC">GMT+0 UTC</option>
-                {timezoneOptions.map((tz) => (
-                  <option key={tz.value} value={tz.value}>
-                    {tz.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+            {config.showTimezone && (
+              <div className="flex flex-col h-full">
+                <label className="block text-sm font-medium text-text mb-1.5">
+                  Timezone
+                </label>
+                <select
+                  title="Select Timezone"
+                  value={timezone}
+                  onChange={(e) => setTimezone(e.target.value)}
+                  className="w-full px-3 py-2 bg-surface-light border border-surface-border rounded-lg text-sm text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+                >
+                  <option value="UTC">GMT+0 UTC</option>
+                  {timezoneOptions.map((tz) => (
+                    <option key={tz.value} value={tz.value}>
+                      {tz.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
-          {config.showFocusTags && (
-            <div className="flex-1 min-w-48">
-              <label className="block text-xs text-text-muted mb-1">
-                Focus tags
-              </label>
-              <input
-                type="text"
-                value={focusTags}
-                onChange={(e) => setFocusTags(e.target.value)}
-                placeholder="bitcoin, defi, ethereum"
-                className="w-full px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary transition-colors"
-              />
-              <p className="text-xs text-text-muted mt-1">
-                Comma-separated tag slugs to focus the briefing on.
-              </p>
-            </div>
-          )}
+            {config.showFocusTags && (
+              <div className="flex-1 min-w-48 flex flex-col h-full">
+                <label className="block text-sm font-medium text-text mb-1.5">
+                  Focus tags <span className="text-text-muted font-normal">(comma-separated)</span>
+                </label>
+                <input
+                  type="text"
+                  value={focusTags}
+                  onChange={(e) => setFocusTags(e.target.value)}
+                  placeholder="bitcoin, defi, ethereum"
+                  className="w-full px-3 py-2 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+                />
+              </div>
+            )}
 
-          {config.showMaxTweets && (
-            <div>
-              <label className="block text-xs text-text-muted mb-1">
-                Max tweets
-              </label>
-              <input
-                type="number"
-                value={maxTweets}
-                onChange={(e) => setMaxTweets(e.target.value)}
-                min={1}
-                title="Max tweets"
-                placeholder="10"
-                className="px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary transition-colors w-24"
-              />
-            </div>
-          )}
-
+            {config.showMaxTweets && (
+              <div className="flex flex-col h-full">
+                <label className="block text-sm font-medium text-text mb-1.5">
+                  Max tweets
+                </label>
+                <input
+                  type="number"
+                  value={maxTweets}
+                  onChange={(e) => setMaxTweets(e.target.value)}
+                  min={1}
+                  title="Max tweets"
+                  placeholder="10"
+                  className="w-full sm:w-24 px-3 py-2 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+                />
+              </div>
+            )}
+          </div>
         </div>
       )}
 
-      <button
-        type="submit"
-        disabled={submitting}
-        className="mt-6 w-full sm:w-auto px-6 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-colors border-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {submitting ? "Creating..." : "Create Recipe"}
-      </button>
+      <div className="mt-8 pt-6 border-t border-surface-border flex justify-end">
+        <button
+          type="submit"
+          disabled={submitting}
+          className="w-full sm:w-auto px-8 py-3 bg-primary hover:bg-primary-hover text-background font-semibold rounded-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 border-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus-visible:ring-primary"
+        >
+          {submitting ? "Creating..." : "Create Recipe"}
+        </button>
+      </div>
     </form>
   );
 }
