@@ -436,7 +436,8 @@ export async function fetchSubscriptions(token: string): Promise<Subscription[]>
   if (!res.ok) {
     throw new Error(`GET subscriptions failed: ${res.status}`);
   }
-  return res.json();
+  const data = await res.json();
+  return data.results ?? data;
 }
 
 export async function toggleSubscription(

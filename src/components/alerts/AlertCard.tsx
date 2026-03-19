@@ -14,7 +14,7 @@ export function AlertCard({ alert, onEdit }: AlertCardProps) {
   const deleteAlert = useStore((s) => s.deleteAlert);
   const addToast = useStore((s) => s.addToast);
   const authToken = useStore((s) => s.authToken);
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState(false);  
 
   const handleToggle = async () => {
     if (busy) return;

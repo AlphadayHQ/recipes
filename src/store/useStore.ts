@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import seedAlerts from '../mocks/alerts.json';
+
 
 export type AlertType =
   | 'price'
@@ -153,7 +153,7 @@ export const useStore = create<AppState>()(
         }),
 
       // Alerts
-      alerts: seedAlerts as Alert[],
+      alerts: [],
       setAlerts: (alerts) => set({ alerts }),
       addAlert: (alert) =>
         set((state) => ({

@@ -144,9 +144,10 @@ const inlineInputClass =
 interface AlertFormProps {
   config: AlertFormConfig;
   prefill?: RecipePrefill;
+  onSuccess?: () => void;
 }
 
-export function AlertForm({ config, prefill }: AlertFormProps) {
+export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
   const addAlert = useStore((s) => s.addAlert);
   const addToast = useStore((s) => s.addToast);
   const authToken = useStore((s) => s.authToken);
@@ -404,6 +405,7 @@ export function AlertForm({ config, prefill }: AlertFormProps) {
     addToast("Alert created successfully!");
     setThreshold("");
     setNote("");
+    onSuccess?.();
   };
 
   return (
@@ -872,8 +874,8 @@ export function AlertForm({ config, prefill }: AlertFormProps) {
                     </option>
                   ))}
                 </select>
-                <p className="text-xs text-text-muted mt-1.5">
-                  Minimum time between repeated notifications
+                <p className="text-xs text-text-muted mt-1.5 whitespace-nowrap">
+                  Min. time between notifications
                 </p>
               </div>
             )}
@@ -933,9 +935,9 @@ export function AlertForm({ config, prefill }: AlertFormProps) {
 
             {config.showFocusTags && (
               <div className="flex-1 min-w-48 flex flex-col h-full">
-                <label className="block text-sm font-medium text-text mb-1.5">
+                <label className="block text-sm font-medium text-text mb-1.5 whitespace-nowrap">
                   Focus tags{" "}
-                  <span className="text-text-muted font-normal">
+                  <span className="text-text-muted font-normal ">
                     (comma-separated)
                   </span>
                 </label>

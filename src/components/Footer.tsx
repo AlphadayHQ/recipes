@@ -4,12 +4,12 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto flex flex-col gap-16">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
           <div className="md:col-span-5 flex flex-col gap-6">
-            <div className="flex items-center gap-3">
+            <a href="/" className="flex items-center gap-3">
+              <img src="/logo.png" alt="AlphaRecipes Logo" className="h-8 w-auto mix-blend-screen" />
               <span className="font-display font-bold text-2xl tracking-tight text-text">
                 AlphaRecipes
               </span>
-              <div className="w-2.5 h-2.5 rounded-full bg-primary"></div>
-            </div>
+            </a>
             <p className="font-sans text-text-muted text-base leading-relaxed max-w-sm">
               Custom crypto alerts and intelligent briefings. The cinematic
               terminal built for analysts and power users.
@@ -110,8 +110,7 @@ export default function Footer() {
           </div>
 
           <p className="font-sans text-sm text-text-muted">
-            © {new Date().getFullYear()} AlphaRecipes. A cinematic signal
-            instrument.
+            © {new Date().getFullYear()} AlphaRecipes
           </p>
         </div>
       </div>
