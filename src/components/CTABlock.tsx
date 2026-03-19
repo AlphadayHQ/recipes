@@ -1,5 +1,7 @@
+import { useAuth } from "../hooks/useAuth";
 
 export default function CTABlock() {
+  const { openAuthModal } = useAuth();
   return (
     <section className="w-full pb-32 px-4 md:px-8 bg-background">
       <div className="relative max-w-5xl mx-auto bg-surface border border-surface-border rounded-3xl py-24 px-8 md:px-16 text-center overflow-hidden flex flex-col items-center justify-center">
@@ -25,7 +27,7 @@ export default function CTABlock() {
           </p>
           
           <div className="mt-8 flex flex-col items-center gap-6 w-full max-w-sm">
-            <button className="btn-primary w-full py-4 rounded-xl font-display font-bold text-lg md:text-xl">
+            <button className="btn-primary w-full py-4 rounded-xl font-display font-bold text-lg md:text-xl" onClick={openAuthModal}>
               Start cooking
             </button>
             <span className="font-mono font-semibold text-[0.65rem] md:text-xs text-text-muted tracking-[0.15em] uppercase">

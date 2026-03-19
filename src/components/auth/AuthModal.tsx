@@ -69,6 +69,8 @@ export function AuthModal() {
 
   const isValidEmail = EMAIL_REGEX.test(email.toLowerCase());
 
+  if (authStatus === "guest" || authStatus === "verified") return null;
+
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center">
       {/* Backdrop */}
@@ -83,7 +85,7 @@ export function AuthModal() {
         <button
           title="Close"
           onClick={handleClose}
-          className="absolute top-4 right-4 text-text-muted hover:text-text transition-colors"
+          className="absolute top-3 right-3 p-2 rounded-full text-text-muted hover:text-text hover:bg-surface-light transition-colors"
         >
           <svg
             className="w-5 h-5"
@@ -110,7 +112,7 @@ export function AuthModal() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={() => handleSSOCallback("email")}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-lg bg-primary/10 border border-primary/20 text-text font-semibold hover:bg-primary/20 transition-colors"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-lg bg-primary/10 border border-primary/20 text-primary font-semibold hover:bg-primary/20 transition-colors"
               >
                 <svg
                   className="w-5 h-5"
@@ -165,7 +167,7 @@ export function AuthModal() {
                 Continue with Apple
               </button>
 
-              <div className="mt-3 flex items-center gap-1 text-sm">
+              <div className="mt-6 flex items-center justify-center gap-1.5 text-sm">
                 <span className="text-text-muted">
                   Already have an account?
                 </span>
@@ -190,19 +192,19 @@ export function AuthModal() {
                   onChange={(e) => setEmail(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleEmailSubmit()}
                   placeholder="Enter your email"
-                  className="w-full px-4 py-3 rounded-lg bg-surface-light border border-surface-border text-text placeholder:text-text-muted focus:outline-none focus:border-primary transition-colors"
+                  className="w-full px-4 py-3 rounded-lg bg-surface-light border border-surface-border text-text placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
                   autoFocus
                 />
               </div>
               <button
                 onClick={handleEmailSubmit}
                 disabled={!isValidEmail}
-                className="w-full py-3 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="w-full py-3 rounded-lg bg-primary hover:bg-primary-hover text-background font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 Send Verification Code
               </button>
 
-              <div className="relative flex items-center gap-3 my-2">
+              <div className="relative flex items-center gap-3 my-6">
                 <div className="flex-1 h-px bg-surface-border" />
                 <span className="text-xs text-text-muted">
                   Or continue with
@@ -213,7 +215,7 @@ export function AuthModal() {
               <div className="flex gap-3">
                 <button
                   onClick={() => handleSSOCallback("google")}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg border border-surface-border text-text font-semibold hover:bg-surface-light transition-colors"
                 >
                   <svg className="w-4 h-4" viewBox="0 0 24 24">
                     <path
@@ -237,7 +239,7 @@ export function AuthModal() {
                 </button>
                 <button
                   onClick={() => handleSSOCallback("apple")}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg border border-surface-border text-text font-semibold hover:bg-surface-light transition-colors"
                 >
                   <svg
                     className="w-4 h-4"
@@ -254,11 +256,11 @@ export function AuthModal() {
 
           {/* OTP Verification */}
           {authStatus === "verifying-email" && (
-            <div className="space-y-4">
-              <p className="text-text-muted">
-                Enter the 6 digit verification code we sent to{" "}
+            <div className="space-y-4 text-center">
+              <p className="text-sm text-text-muted mb-6">
+                Enter the 6-digit verification code sent to{" "}
+                <span className="font-semibold text-text">{authEmail || email}</span>
               </p>
-              <p className="text-text font-bold">{authEmail || email}</p>
 
               <div className="flex justify-center py-4">
                 {verifyingOTP ? (

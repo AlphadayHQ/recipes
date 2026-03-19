@@ -1,9 +1,24 @@
-import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Menu, X, User, LogOut } from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+  const { openAuthModal, isAuthenticated, authEmail, logout } = useAuth();
+
+  // Close user menu on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,9 +55,35 @@ export default function Navbar() {
           </a>
         </div>
 
-        <button className="btn-primary px-5 py-2.5 rounded-xl text-sm hidden md:block">
-          Start Cooking
-        </button>
+        {isAuthenticated ? (
+          <div className="relative hidden md:block" ref={userMenuRef}>
+            <button
+              title="Account"
+              onClick={() => setUserMenuOpen(!userMenuOpen)}
+              className="flex items-center justify-center w-9 h-9 rounded-full bg-surface-light border border-surface-border text-text hover:bg-surface-border transition-colors"
+            >
+              <User size={16} />
+            </button>
+            {userMenuOpen && (
+              <div className="absolute right-0 mt-2 w-56 bg-surface border border-surface-border rounded-xl shadow-xl shadow-black/40 overflow-hidden">
+                <div className="px-4 py-3 border-b border-surface-border">
+                  <p className="text-sm font-medium text-text truncate">{authEmail}</p>
+                </div>
+                <button
+                  onClick={() => { setUserMenuOpen(false); logout(); }}
+                  className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-text-muted hover:text-danger hover:bg-danger/10 transition-colors"
+                >
+                  <LogOut size={14} />
+                  Log out
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <button className="btn-primary px-5 py-2.5 rounded-xl text-sm hidden md:block" onClick={openAuthModal}>
+            Start Cooking
+          </button>
+        )}
 
         <button
           title="menu"
@@ -79,9 +120,19 @@ export default function Navbar() {
                 Metrics
               </a>
             </div>
-            <button className="btn-primary px-5 py-2.5 rounded-xl text-sm w-full" onClick={() => setMobileOpen(false)}>
-              Start Cooking
-            </button>
+            {isAuthenticated ? (
+              <button
+                className="flex items-center gap-2.5 border-t border-surface-border pt-3 pb-2.5 text-sm font-semibold w-full text-text-muted hover:text-danger transition-colors"
+                onClick={() => { setMobileOpen(false); logout(); }}
+              >
+                <LogOut size={14} />
+                Log out
+              </button>
+            ) : (
+              <button className="btn-primary px-5 py-2.5 rounded-xl text-sm w-full" onClick={() => { setMobileOpen(false); openAuthModal(); }}>
+                Start Cooking
+              </button>
+            )}
           </div>
         </div>
       </div>

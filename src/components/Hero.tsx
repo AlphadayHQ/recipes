@@ -1,8 +1,10 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ArrowRight, TrendingUp, Activity, Zap } from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Hero() {
+  const { openAuthModal } = useAuth();
   const comp = useRef<HTMLElement>(null);
   const nodesRef = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -314,7 +316,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <button className="hero-anim pointer-events-auto btn-primary mt-4 px-8 py-4 rounded-xl text-lg flex items-center justify-center gap-3 w-full md:w-auto">
+        <button className="hero-anim pointer-events-auto btn-primary mt-4 px-8 py-4 rounded-xl text-lg flex items-center justify-center gap-3 w-full md:w-auto" onClick={openAuthModal}>
           Start Cooking
           <ArrowRight size={20} />
         </button>
