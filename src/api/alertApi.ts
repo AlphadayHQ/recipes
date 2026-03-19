@@ -388,7 +388,8 @@ export async function fetchFrequencies(): Promise<Frequency[]> {
 }
 
 export async function fetchPresets(token: string): Promise<Preset[]> {
-  return get<Preset[]>(ALERT_ROUTES.CRYPTO_BRIEFING_PRESETS, token);
+  const data = await get<PaginatedResponse<Preset>>(ALERT_ROUTES.CRYPTO_BRIEFING_PRESETS, token);
+  return data.results;
 }
 
 // --- Subscriptions ---
