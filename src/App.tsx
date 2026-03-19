@@ -1,8 +1,8 @@
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Problem from "./components/Problem";
-import Features from "./components/Features";
-import Manifesto from "./components/Manifesto";
+// import Features from "./components/Features";
+// import Manifesto from "./components/Manifesto";
 import HowItWorks from "./components/HowItWorks";
 import Metrics from "./components/Metrics";
 import CTABlock from "./components/CTABlock";
@@ -15,8 +15,8 @@ function App() {
       <div className="flex-1 w-full flex flex-col">
         <Hero />
         <Problem />
-        <Features />
-        <Manifesto />
+        {/* <Features /> */}
+        {/* <Manifesto /> */}
         <HowItWorks />
         <Metrics />
         <CTABlock />
