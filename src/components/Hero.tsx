@@ -1,6 +1,6 @@
-import { useLayoutEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ArrowRight, TrendingUp, Activity, Zap } from 'lucide-react';
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
+import { ArrowRight, TrendingUp, Activity, Zap } from "lucide-react";
 
 export default function Hero() {
   const comp = useRef<HTMLElement>(null);
@@ -17,15 +17,15 @@ export default function Hero() {
         duration: 1.2,
         stagger: 0.08,
         ease: "power3.out",
-        delay: 0.1
+        delay: 0.1,
       });
-      
+
       gsap.to(".pulse-dot", {
         opacity: 0.2,
         duration: 1,
         yoyo: true,
         repeat: -1,
-        ease: "power2.inOut"
+        ease: "power2.inOut",
       });
 
       // 2. Ambient Floating for Nodes Containers
@@ -38,7 +38,7 @@ export default function Hero() {
           yoyo: true,
           repeat: -1,
           ease: "sine.inOut",
-          delay: i * 0.2
+          delay: i * 0.2,
         });
       });
 
@@ -48,7 +48,7 @@ export default function Hero() {
           if (!comp.current) return;
           const { clientX, clientY } = e;
           const rect = comp.current.getBoundingClientRect();
-          
+
           const xPos = clientX - rect.left;
           const yPos = clientY - rect.top;
           const xRatio = (xPos / rect.width - 0.5) * 2; // -1 to 1
@@ -60,15 +60,15 @@ export default function Hero() {
             y: yRatio * 60,
             duration: 1.5,
             ease: "power2.out",
-            overwrite: "auto"
+            overwrite: "auto",
           });
-          
+
           gsap.to(".ambient-orb-2", {
             x: xRatio * -40,
             y: yRatio * -40,
             duration: 2,
             ease: "power2.out",
-            overwrite: "auto"
+            overwrite: "auto",
           });
 
           // Magnetic Nodes Logic
@@ -81,18 +81,18 @@ export default function Hero() {
             const distX = clientX - nodeCenterX;
             const distY = clientY - nodeCenterY;
             const dist = Math.sqrt(distX * distX + distY * distY);
-            
+
             const magnetRadius = 300; // Activation distance
-            
+
             if (dist < magnetRadius) {
               // Magnet pull (weighted by distance)
-              const pullFactor = 1 - (dist / magnetRadius); // 1 at center, 0 at edge
+              const pullFactor = 1 - dist / magnetRadius; // 1 at center, 0 at edge
               const pullX = distX * 0.3 * pullFactor;
               const pullY = distY * 0.3 * pullFactor;
-              
+
               // Tilt logic (3D rotational physics)
-              const tiltX = -(distY / (nodeRect.height/2)) * 10 * pullFactor;
-              const tiltY = (distX / (nodeRect.width/2)) * 10 * pullFactor;
+              const tiltX = -(distY / (nodeRect.height / 2)) * 10 * pullFactor;
+              const tiltY = (distX / (nodeRect.width / 2)) * 10 * pullFactor;
 
               gsap.to(node, {
                 x: pullX,
@@ -102,7 +102,7 @@ export default function Hero() {
                 scale: 1.05,
                 duration: 0.6,
                 ease: "power3.out",
-                overwrite: "auto"
+                overwrite: "auto",
               });
             } else {
               // Return to center of its container
@@ -114,7 +114,7 @@ export default function Hero() {
                 scale: 1,
                 duration: 1.2,
                 ease: "elastic.out(1, 0.4)",
-                overwrite: "auto"
+                overwrite: "auto",
               });
             }
           });
@@ -126,9 +126,9 @@ export default function Hero() {
             y: 0,
             duration: 2,
             ease: "power2.out",
-            overwrite: "auto"
+            overwrite: "auto",
           });
-          
+
           nodesRef.current.forEach((node) => {
             if (!node) return;
             gsap.to(node, {
@@ -139,7 +139,7 @@ export default function Hero() {
               scale: 1,
               duration: 1.5,
               ease: "elastic.out(1, 0.3)",
-              overwrite: "auto"
+              overwrite: "auto",
             });
           });
         };
@@ -147,12 +147,12 @@ export default function Hero() {
         const el = comp.current;
         if (!el) return;
 
-        el.addEventListener('mousemove', handleMouseMove);
-        el.addEventListener('mouseleave', handleMouseLeave);
+        el.addEventListener("mousemove", handleMouseMove);
+        el.addEventListener("mouseleave", handleMouseLeave);
 
         return () => {
-          el.removeEventListener('mousemove', handleMouseMove);
-          el.removeEventListener('mouseleave', handleMouseLeave);
+          el.removeEventListener("mousemove", handleMouseMove);
+          el.removeEventListener("mouseleave", handleMouseLeave);
         };
       });
     }, comp);
@@ -259,8 +259,8 @@ export default function Hero() {
         </div>
 
         <p className="hero-anim font-sans text-lg md:text-xl text-text-muted max-w-xl font-medium mt-3 drop-shadow-md">
-          Custom crypto alerts and intelligent briefings, the alpha that matters
-          to you, delivered your way. Trusted by power users.
+          The crypto alpha that matters to you — sourced, filtered, and served
+          your way.
         </p>
 
         {/* Mobile Auto-Scroll Ticker */}
@@ -315,7 +315,7 @@ export default function Hero() {
         </div>
 
         <button className="hero-anim pointer-events-auto btn-primary mt-4 px-8 py-4 rounded-xl text-lg flex items-center justify-center gap-3 w-full md:w-auto">
-          Start cooking
+          Start Cooking
           <ArrowRight size={20} />
         </button>
       </div>

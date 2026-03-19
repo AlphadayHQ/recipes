@@ -41,7 +41,7 @@ export default function Navbar() {
         </div>
 
         <button className="btn-primary px-5 py-2.5 rounded-xl text-sm hidden md:block">
-          Start cooking
+          Start Cooking
         </button>
 
         <button
@@ -80,7 +80,7 @@ export default function Navbar() {
               </a>
             </div>
             <button className="btn-primary px-5 py-2.5 rounded-xl text-sm w-full" onClick={() => setMobileOpen(false)}>
-              Start cooking
+              Start Cooking
             </button>
           </div>
         </div>
