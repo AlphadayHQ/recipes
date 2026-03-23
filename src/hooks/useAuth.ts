@@ -8,7 +8,7 @@ declare global {
   interface Window {
     AppleID?: {
       auth: {
-        init: (config: Record<string, string>) => void;
+        init: (config: Record<string, string | boolean>) => void;
         signIn: () => Promise<{
           authorization: { id_token: string };
         }>;
@@ -89,7 +89,7 @@ export function useAuth() {
       clientId: OAUTH.APPLE_CLIENT_ID,
       scope: 'email',
       redirectURI: `${window.location.origin}/auth/apple_callback/`,
-      usePopup: 'true',
+      usePopup: true,
     });
     window.AppleID.auth
       .signIn()
