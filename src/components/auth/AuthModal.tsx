@@ -9,13 +9,13 @@ export function AuthModal() {
   const {
     authStatus,
     authEmail,
-    resetAuthState,
     requestCode,
     verifyToken,
     ssoLogin,
     setAuthStatus,
     setAuthMethod,
   } = useAuth();
+  const authToken = useStore((s) => s.authToken);
   const addToast = useStore((s) => s.addToast);
 
   const [email, setEmail] = useState("");
@@ -23,11 +23,11 @@ export function AuthModal() {
   const [isSignIn, setIsSignIn] = useState(false);
 
   const handleClose = useCallback(() => {
-    resetAuthState();
+    setAuthStatus(authToken ? 'verified' : 'guest');
     setEmail("");
     setVerifyingOTP(false);
     setIsSignIn(false);
-  }, [resetAuthState]);
+  }, [setAuthStatus, authToken]);
 
   const handleEmailSubmit = useCallback(() => {
     if (!EMAIL_REGEX.test(email.toLowerCase())) return;
