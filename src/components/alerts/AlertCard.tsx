@@ -14,7 +14,8 @@ export function AlertCard({ alert, onEdit }: AlertCardProps) {
   const deleteAlert = useStore((s) => s.deleteAlert);
   const addToast = useStore((s) => s.addToast);
   const authToken = useStore((s) => s.authToken);
-  const [busy, setBusy] = useState(false);  
+  const [busy, setBusy] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   const handleToggle = async () => {
     if (busy) return;
@@ -38,6 +39,7 @@ export function AlertCard({ alert, onEdit }: AlertCardProps) {
     if (!authToken || !alert.endpoint) {
       deleteAlert(alert.id);
       addToast("Alert deleted", "info");
+      setConfirmingDelete(false);
       return;
     }
     setBusy(true);
@@ -49,6 +51,7 @@ export function AlertCard({ alert, onEdit }: AlertCardProps) {
       addToast(e instanceof Error ? e.message : "Failed to delete alert", "error");
     } finally {
       setBusy(false);
+      setConfirmingDelete(false);
     }
   };
 
@@ -114,26 +117,47 @@ export function AlertCard({ alert, onEdit }: AlertCardProps) {
       )}
 
       {/* Delete */}
-      <button
-        type="button"
-        onClick={handleDelete}
-        className="p-1.5 text-text-muted hover:text-danger transition-colors bg-transparent border-none cursor-pointer"
-        title="Delete alert"
-      >
-        <svg
-          className="w-4 h-4"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+      {confirmingDelete ? (
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs text-danger font-medium whitespace-nowrap">Delete?</span>
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={busy}
+            className="px-2 py-1 text-xs font-medium rounded bg-danger/15 text-danger hover:bg-danger/25 transition-colors border-none cursor-pointer disabled:opacity-50"
+          >
+            {busy ? "..." : "Yes"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setConfirmingDelete(false)}
+            className="px-2 py-1 text-xs font-medium rounded bg-surface-light text-text-muted hover:text-text transition-colors border-none cursor-pointer"
+          >
+            No
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setConfirmingDelete(true)}
+          className="p-1.5 text-text-muted hover:text-danger transition-colors bg-transparent border-none cursor-pointer"
+          title="Delete alert"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-          />
-        </svg>
-      </button>
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            />
+          </svg>
+        </button>
+      )}
     </div>
   );
 }

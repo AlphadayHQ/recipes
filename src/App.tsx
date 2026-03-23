@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { AuthModal } from "./components/auth/AuthModal";
+import { ToastContainer } from "./components/ui/Toast";
 import { HomePage } from "./pages/HomePage";
 import { Dashboard } from "./pages/Dashboard";
 import { ManageRecipes } from "./pages/ManageRecipes";
@@ -19,6 +20,7 @@ function App() {
         </Routes>
       </div>
       <Footer />
+      <ToastContainer />
     </div>
   );
 }
