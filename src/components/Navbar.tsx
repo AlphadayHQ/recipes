@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { Menu, X, LogOut } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { UserMenu } from "./ui/UserMenu";
@@ -31,7 +31,7 @@ export default function Navbar() {
           </span>
         </a>
 
-        {isLanding && (
+        {isLanding ? (
           <div className="hidden md:flex items-center gap-8 font-sans text-sm font-semibold text-text-muted">
             <a href="#features" className="hover:text-text transition-colors">
               Features
@@ -42,6 +42,15 @@ export default function Navbar() {
             <a href="#metrics" className="hover:text-text transition-colors">
               Metrics
             </a>
+          </div>
+        ) : isAuthenticated && (
+          <div className="hidden md:flex items-center gap-8 font-sans text-sm font-semibold text-text-muted">
+            <Link to="/dashboard" className={`hover:text-text transition-colors ${pathname === "/dashboard" ? "text-primary" : ""}`}>
+              Kitchen
+            </Link>
+            <Link to="/dashboard/manage-recipes" className={`hover:text-text transition-colors ${pathname === "/dashboard/manage-recipes" ? "text-primary" : ""}`}>
+              Manage Recipes
+            </Link>
           </div>
         )}
 
@@ -76,7 +85,7 @@ export default function Navbar() {
       >
         <div className="overflow-hidden">
           <div className="border-t border-surface-border px-6 py-4 flex flex-col gap-4">
-            {isLanding && (
+            {isLanding ? (
               <div className="flex flex-col gap-3 font-sans text-sm font-semibold text-text-muted">
                 <a href="#features" className="hover:text-text transition-colors" onClick={() => setMobileOpen(false)}>
                   Features
@@ -87,6 +96,15 @@ export default function Navbar() {
                 <a href="#metrics" className="hover:text-text transition-colors" onClick={() => setMobileOpen(false)}>
                   Metrics
                 </a>
+              </div>
+            ) : isAuthenticated && (
+              <div className="flex flex-col gap-3 font-sans text-sm font-semibold text-text-muted">
+                <Link to="/dashboard" className={`hover:text-text transition-colors ${pathname === "/dashboard" ? "text-primary" : ""}`} onClick={() => setMobileOpen(false)}>
+                  Kitchen
+                </Link>
+                <Link to="/dashboard/manage-recipes" className={`hover:text-text transition-colors ${pathname === "/dashboard/manage-recipes" ? "text-primary" : ""}`} onClick={() => setMobileOpen(false)}>
+                  Manage Recipes
+                </Link>
               </div>
             )}
             {isAuthenticated ? (

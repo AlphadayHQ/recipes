@@ -4,6 +4,7 @@ import Footer from "./components/Footer";
 import { AuthModal } from "./components/auth/AuthModal";
 import { HomePage } from "./pages/HomePage";
 import { Dashboard } from "./pages/Dashboard";
+import { ManageRecipes } from "./pages/ManageRecipes";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/manage-recipes" element={<ManageRecipes />} />
         </Routes>
       </div>
       <Footer />
