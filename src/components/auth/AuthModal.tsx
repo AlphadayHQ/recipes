@@ -1,4 +1,5 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { useStore, type AuthMethod } from "../../store/useStore";
 import { OTPInput } from "./OtpInput";
@@ -18,9 +19,19 @@ export function AuthModal() {
   const authToken = useStore((s) => s.authToken);
   const addToast = useStore((s) => s.addToast);
 
+  const navigate = useNavigate();
+  const prevAuthStatus = useRef(authStatus);
+
   const [email, setEmail] = useState("");
   const [verifyingOTP, setVerifyingOTP] = useState(false);
   const [isSignIn, setIsSignIn] = useState(false);
+
+  useEffect(() => {
+    if (prevAuthStatus.current !== "verified" && authStatus === "verified") {
+      navigate("/dashboard");
+    }
+    prevAuthStatus.current = authStatus;
+  }, [authStatus, navigate]);
 
   const handleClose = useCallback(() => {
     setAuthStatus(authToken ? 'verified' : 'guest');
