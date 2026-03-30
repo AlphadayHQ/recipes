@@ -209,7 +209,8 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
   const [cooldown, setCooldown] = useState("");
   const [note, setNote] = useState("");
   const [oneTime, setOneTime] = useState(false);
-  const [frequency, setFrequency] = useState(prefill?.frequency ?? "");
+  const [selectedFrequency, setSelectedFrequency] = useState(prefill?.frequency ?? "");
+  const frequency = selectedFrequency || frequencies[0]?.name || "";
   const [timeWindow, setTimeWindow] = useState("24h");
   const [accountUsernames, setAccountUsernames] = useState(
     prefill?.accountUsernames ?? "",
@@ -467,7 +468,7 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
             <select
               title="Select Frequency"
               value={frequency}
-              onChange={(e) => setFrequency(e.target.value)}
+              onChange={(e) => setSelectedFrequency(e.target.value)}
               className={inlineSelectClass}
             >
               {frequencies.map((f) => (
@@ -532,7 +533,7 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
               <select
                 title="Select Frequency"
                 value={frequency}
-                onChange={(e) => setFrequency(e.target.value)}
+                onChange={(e) => setSelectedFrequency(e.target.value)}
                 className={inlineSelectClass}
               >
                 {frequencies.map((f) => (
@@ -748,7 +749,7 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
               <select
                 title="Select Frequency"
                 value={frequency}
-                onChange={(e) => setFrequency(e.target.value)}
+                onChange={(e) => setSelectedFrequency(e.target.value)}
                 className={inlineSelectClass}
               >
                 {frequencies.map((f) => (
