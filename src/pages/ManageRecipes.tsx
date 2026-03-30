@@ -11,7 +11,7 @@ import type { Alert, AlertType } from "../store/useStore";
 const ALERT_TYPE_LABELS: Partial<Record<AlertType, string>> = {
   price: "Price",
   percent: "Percent",
-  periodic: "Periodic",
+  // periodic: "Periodic",
   volume: "Volume",
   "funding-rate": "Funding Rate",
   "market-cap": "Market Cap",
@@ -32,7 +32,7 @@ const ALERT_TYPE_LABELS: Partial<Record<AlertType, string>> = {
 const NEW_ALERT_OPTIONS = [
   { label: "Price Alert", type: "price" },
   { label: "Percent Alert", type: "percent" },
-  { label: "Periodic Alert", type: "periodic" },
+  // { label: "Periodic Alert", type: "periodic" },
   { label: "Crypto Briefing", type: "crypto-briefing" },
   { label: "Twitter Digest", type: "twitter-digest" },
   { label: "Custom Alert", type: "custom" },

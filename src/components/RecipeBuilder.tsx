@@ -5,7 +5,7 @@ import type { AlertFormConfig } from "./alerts/AlertForm";
 import {
   priceAlertConfig,
   percentAlertConfig,
-  periodicAlertConfig,
+  // periodicAlertConfig,
   // volumeAlertConfig,
   // marketCapAlertConfig,
   cryptoBriefingAlertConfig,
@@ -17,7 +17,7 @@ import { useStore, type RecipePrefill } from "../store/useStore";
 const marketTabs = [
   "Price",
   "Percent",
-  "Periodic",
+  // "Periodic",
   // "Volume",
   // "Market Cap",
   "Crypto Briefing",
@@ -28,7 +28,7 @@ const marketTabs = [
 const marketConfigs: Record<string, AlertFormConfig> = {
   Price: priceAlertConfig,
   Percent: percentAlertConfig,
-  Periodic: periodicAlertConfig,
+  // Periodic: periodicAlertConfig,
   // Volume: volumeAlertConfig,
   // "Market Cap": marketCapAlertConfig,
   "Crypto Briefing": cryptoBriefingAlertConfig,

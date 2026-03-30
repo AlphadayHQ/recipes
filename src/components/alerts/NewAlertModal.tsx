@@ -3,7 +3,7 @@ import { AlertForm } from './AlertForm';
 import {
   priceAlertConfig,
   percentAlertConfig,
-  periodicAlertConfig,
+  // periodicAlertConfig,
   cryptoBriefingAlertConfig,
   twitterDigestAlertConfig,
   customAlertConfig,
@@ -12,7 +12,7 @@ import {
 const ALERT_CONFIGS: Record<string, { label: string; config: AlertFormConfig }> = {
   price: { label: 'Price Alert', config: priceAlertConfig },
   percent: { label: 'Percent Alert', config: percentAlertConfig },
-  periodic: { label: 'Periodic Alert', config: periodicAlertConfig },
+  // periodic: { label: 'Periodic Alert', config: periodicAlertConfig },
   'crypto-briefing': { label: 'Crypto Briefing', config: cryptoBriefingAlertConfig },
   'twitter-digest': { label: 'Twitter Digest', config: twitterDigestAlertConfig },
   custom: { label: 'Custom Alert', config: customAlertConfig },
