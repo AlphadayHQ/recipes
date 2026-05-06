@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import type { Alert } from '../../store/useStore';
-import { useStore } from '../../store/useStore';
-import { updateSubscription } from '../../api/alertApi';
+import { useState } from "react";
+import type { Alert } from "../../store/useStore";
+import { useStore } from "../../store/useStore";
+import { updateSubscription } from "../../api/alertApi";
 
 interface EditAlertModalProps {
   alert: Alert;
@@ -9,17 +9,17 @@ interface EditAlertModalProps {
 }
 
 const cooldownOptions = [
-  { value: '', label: 'None' },
-  { value: '15m', label: '15 minutes' },
-  { value: '30m', label: '30 minutes' },
-  { value: '1h', label: '1 hour' },
-  { value: '2h', label: '2 hours' },
-  { value: '4h', label: '4 hours' },
-  { value: '8h', label: '8 hours' },
-  { value: '12h', label: '12 hours' },
-  { value: '24h', label: '24 hours' },
-  { value: '48h', label: '48 hours' },
-  { value: '1w', label: '1 week' },
+  { value: "", label: "None" },
+  { value: "15m", label: "15 minutes" },
+  { value: "30m", label: "30 minutes" },
+  { value: "1h", label: "1 hour" },
+  { value: "2h", label: "2 hours" },
+  { value: "4h", label: "4 hours" },
+  { value: "8h", label: "8 hours" },
+  { value: "12h", label: "12 hours" },
+  { value: "24h", label: "24 hours" },
+  { value: "48h", label: "48 hours" },
+  { value: "1w", label: "1 week" },
 ];
 
 export function EditAlertModal({ alert, onClose }: EditAlertModalProps) {
@@ -27,9 +27,9 @@ export function EditAlertModal({ alert, onClose }: EditAlertModalProps) {
   const addToast = useStore((s) => s.addToast);
   const authToken = useStore((s) => s.authToken);
 
-  const [threshold, setThreshold] = useState(alert.threshold?.toString() ?? '');
-  const [note, setNote] = useState(alert.note ?? '');
-  const [cooldown, setCooldown] = useState(alert.cooldown ?? '');
+  const [threshold, setThreshold] = useState(alert.threshold?.toString() ?? "");
+  const [note, setNote] = useState(alert.note ?? "");
+  const [cooldown, setCooldown] = useState(alert.cooldown ?? "");
   const [oneTime, setOneTime] = useState(alert.oneTime ?? false);
   const [saving, setSaving] = useState(false);
 
@@ -42,15 +42,20 @@ export function EditAlertModal({ alert, onClose }: EditAlertModalProps) {
       setSaving(true);
       try {
         // coin_ticker is read-only on the API; strip it before sending
-        const mutablePayload = { ...(alert.rawPayload as Record<string, unknown>) };
-        delete mutablePayload['coin_ticker'];
+        const mutablePayload = {
+          ...(alert.rawPayload as Record<string, unknown>),
+        };
+        delete mutablePayload["coin_ticker"];
         await updateSubscription(authToken.value, alert.endpoint, alert.id, {
           ...mutablePayload,
           ...(parsedThreshold !== undefined && { threshold: parsedThreshold }),
           cooldown: cooldown || null,
         });
       } catch (e) {
-        addToast(e instanceof Error ? e.message : 'Failed to update alert', 'error');
+        addToast(
+          e instanceof Error ? e.message : "Failed to update alert",
+          "error",
+        );
         setSaving(false);
         return;
       }
@@ -63,21 +68,23 @@ export function EditAlertModal({ alert, onClose }: EditAlertModalProps) {
       cooldown: cooldown || undefined,
       oneTime,
     });
-    addToast('Alert updated');
+    addToast("Alert updated");
     onClose();
   };
 
   const typeLabel = alert.type
-    .split('-')
+    .split("-")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
+    .join(" ");
 
   const thresholdSuffix =
-    alert.type === 'percent' || alert.type === 'funding-rate' || alert.type === 'dominance'
-      ? '%'
-      : alert.currency
-        ? alert.currency
-        : '';
+    alert.type === "percent" ||
+    alert.type === "funding-rate" ||
+    alert.type === "dominance"
+      ? "%"
+      : alert.type === "price"
+        ? alert.currency || "USD"
+        : "";
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center">
@@ -91,21 +98,31 @@ export function EditAlertModal({ alert, onClose }: EditAlertModalProps) {
           onClick={onClose}
           className="absolute top-4 right-4 text-text-muted hover:text-text transition-colors bg-transparent border-none cursor-pointer"
         >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
 
         <h2 className="text-xl font-semibold mb-1">Edit Alert</h2>
         <p className="text-sm text-text-muted mb-6">
-          {typeLabel} alert{alert.coin ? ` · ${alert.coin}` : ''}
+          {typeLabel} alert{alert.coin ? ` · ${alert.coin}` : ""}
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {alert.threshold !== undefined && (
             <div>
               <label className="block text-sm text-text-muted mb-1">
-                Threshold{thresholdSuffix ? ` (${thresholdSuffix})` : ''}
+                Threshold{thresholdSuffix ? ` (${thresholdSuffix})` : ""}
               </label>
               <input
                 title="Threshold"
@@ -119,7 +136,9 @@ export function EditAlertModal({ alert, onClose }: EditAlertModalProps) {
           )}
 
           <div>
-            <label className="block text-sm text-text-muted mb-1">Cooldown</label>
+            <label className="block text-sm text-text-muted mb-1">
+              Cooldown
+            </label>
             <select
               title="Cooldown period after alert triggers"
               value={cooldown}
@@ -168,7 +187,7 @@ export function EditAlertModal({ alert, onClose }: EditAlertModalProps) {
               disabled={saving}
               className="flex-1 py-2.5 rounded-lg bg-primary hover:bg-primary-hover text-white font-medium transition-colors border-none cursor-pointer text-sm disabled:opacity-60"
             >
-              {saving ? 'Saving…' : 'Save Changes'}
+              {saving ? "Saving…" : "Save Changes"}
             </button>
           </div>
         </form>

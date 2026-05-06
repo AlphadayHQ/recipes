@@ -18,9 +18,9 @@ export const MARKET_ROUTES = {
 } as const;
 
 export const ALERT_ROUTES = {
-  PRICE: "recipes/price-alerts/",
-  PERCENTAGE: "recipes/percentage-alerts/",
-  PERIODIC: "recipes/periodic-alerts/",
+  PRICE: "recipes/price-alerts/?type=price",
+  PERCENTAGE: "recipes/price-alerts/?type=percentage",
+  PERIODIC: "recipes/price-alerts/?type=periodic",
   TWITTER_DIGEST: "recipes/twitter-digests/",
   CUSTOM_ALERT: "recipes/web-search-alerts/",
   CRYPTO_BRIEFING: "recipes/crypto-briefings/",

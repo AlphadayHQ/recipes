@@ -28,7 +28,10 @@ export function AlertCard({ alert, onEdit }: AlertCardProps) {
       await toggleSubscription(authToken.value, alert.endpoint, alert.id);
       toggleAlert(alert.id);
     } catch (e) {
-      addToast(e instanceof Error ? e.message : "Failed to toggle alert", "error");
+      addToast(
+        e instanceof Error ? e.message : "Failed to toggle alert",
+        "error",
+      );
     } finally {
       setBusy(false);
     }
@@ -48,7 +51,10 @@ export function AlertCard({ alert, onEdit }: AlertCardProps) {
       deleteAlert(alert.id);
       addToast("Alert deleted", "info");
     } catch (e) {
-      addToast(e instanceof Error ? e.message : "Failed to delete alert", "error");
+      addToast(
+        e instanceof Error ? e.message : "Failed to delete alert",
+        "error",
+      );
     } finally {
       setBusy(false);
       setConfirmingDelete(false);
@@ -110,8 +116,18 @@ export function AlertCard({ alert, onEdit }: AlertCardProps) {
           className="p-1.5 text-text-muted hover:text-primary transition-colors bg-transparent border-none cursor-pointer"
           title="Edit alert"
         >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+            />
           </svg>
         </button>
       )}
@@ -119,7 +135,9 @@ export function AlertCard({ alert, onEdit }: AlertCardProps) {
       {/* Delete */}
       {confirmingDelete ? (
         <div className="flex items-center gap-1.5">
-          <span className="text-xs text-danger font-medium whitespace-nowrap">Delete?</span>
+          <span className="text-xs text-danger font-medium whitespace-nowrap">
+            Delete?
+          </span>
           <button
             type="button"
             onClick={handleDelete}
@@ -167,13 +185,15 @@ function buildDescription(alert: Alert): string {
 
   if (alert.type === "price") {
     parts.push(
-      `Price ${alert.condition} ${alert.threshold} ${alert.currency ?? "USD"}`,
+      `Price goes ${alert.condition} ${alert.currency ?? "$"}${alert.threshold && formatNumber(alert.threshold)} `,
     );
-  } else if (alert.type === "percent") {
+  } else
+    if (alert.type === "percent") {
+    const isAbove = alert.condition?.endsWith("_above");
+    const period = alert.condition?.includes("_7d_") ? "7d" : "24h";
     parts.push(
-      `${alert.condition === "rises" ? "Rises" : "Drops"} by ${alert.threshold}%`,
+      `${isAbove ? "Rises" : "Drops"} by ${alert.threshold}% in ${period}`,
     );
-    if (alert.timeWindow) parts.push(`in ${alert.timeWindow}`);
   } else if (alert.type === "periodic") {
     parts.push(`${alert.frequency} price update`);
   } else if (alert.type === "volume") {
@@ -192,6 +212,12 @@ function buildDescription(alert: Alert): string {
     parts.push(
       `Price ${alert.condition} ${alert.threshold} ${alert.currency ?? "USD"}`,
     );
+  } else if (alert.type === "crypto-briefing") {
+    const frequency = capitalize(alert.frequency);
+    parts.push(frequency ? `${frequency} crypto briefing` : "Crypto briefing");
+  } else if (alert.type === "twitter-digest") {
+    const frequency = capitalize(alert.frequency);
+    parts.push(frequency ? `${frequency} twitter digest` : "Twitter digest");
   } else if (alert.type === "custom") {
     if (alert.query) parts.push(`Custom alert: "${alert.query}"`);
     if (alert.frequency) parts.push(`· ${alert.frequency}`);
@@ -203,6 +229,12 @@ function buildDescription(alert: Alert): string {
   if (alert.cooldown) parts.push(`(${alert.cooldown} cooldown)`);
 
   return parts.join(" ");
+}
+
+function capitalize(s: string | undefined): string | undefined {
+  if (!s) return s;
+  const lower = s.toLowerCase();
+  return lower.charAt(0).toUpperCase() + lower.slice(1);
 }
 
 function formatNumber(n: number): string {
