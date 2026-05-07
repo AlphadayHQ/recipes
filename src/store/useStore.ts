@@ -37,7 +37,16 @@ export interface Alert {
   type: AlertType;
   coin?: string;
   exchange?: string;
-  condition?: 'above' | 'below' | 'rises' | 'drops' | 'change';
+  condition?:
+    | 'above'
+    | 'below'
+    | 'rises'
+    | 'drops'
+    | 'change'
+    | 'pct_24h_above'
+    | 'pct_24h_below'
+    | 'pct_7d_above'
+    | 'pct_7d_below';
   threshold?: number;
   currency?: string;
   notificationMethods: NotificationMethod[];

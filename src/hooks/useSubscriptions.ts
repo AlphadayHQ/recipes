@@ -5,8 +5,6 @@ import type { Alert, AlertType, NotificationMethod } from '../store/useStore';
 
 const RECIPE_TYPE_MAP: Record<string, AlertType> = {
   price_alert: 'price',
-  percentage_alert: 'percent',
-  periodic_alert: 'periodic',
   twitter_digest: 'twitter-digest',
   web_search_alert: 'custom',
   crypto_briefing: 'crypto-briefing',
@@ -14,10 +12,9 @@ const RECIPE_TYPE_MAP: Record<string, AlertType> = {
 
 function parseCondition(apiCondition: string | undefined): Alert['condition'] {
   if (!apiCondition) return undefined;
-  if (apiCondition.endsWith('_above') && apiCondition.startsWith('price')) return 'above';
-  if (apiCondition.endsWith('_below') && apiCondition.startsWith('price')) return 'below';
-  if (apiCondition.includes('above')) return 'rises';
-  if (apiCondition.includes('below')) return 'drops';
+  if (apiCondition === 'price_above') return 'above';
+  if (apiCondition === 'price_below') return 'below';
+  if (apiCondition.startsWith('pct_')) return apiCondition as Alert['condition'];
   return undefined;
 }
 
@@ -31,8 +28,13 @@ function parseNotificationMethods(
 }
 
 function subscriptionToAlert(sub: Subscription): Alert {
-  const type = RECIPE_TYPE_MAP[sub.recipe_type] ?? (sub.recipe_type as AlertType);
   const { payload } = sub;
+  // Unified price-alert recipe carries the actual sub-type ("price" | "percent" | "periodic")
+  // in payload.type. Fall back to recipe_type mapping for everything else.
+  const type =
+    sub.recipe_type === 'price_alert' && payload.type
+      ? (payload.type as AlertType)
+      : RECIPE_TYPE_MAP[sub.recipe_type] ?? (sub.recipe_type as AlertType);
 
   return {
     id: String(sub.id),

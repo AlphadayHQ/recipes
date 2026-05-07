@@ -395,6 +395,8 @@ export async function fetchPresets(token: string): Promise<Preset[]> {
 // --- Subscriptions ---
 
 export interface SubscriptionPayload {
+  /** Discriminator for unified price-alert recipe: "price" | "percent" | "periodic" */
+  type?: string;
   coin_slug?: string;
   coin_ticker?: string;
   condition?: string;
