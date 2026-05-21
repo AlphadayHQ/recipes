@@ -642,6 +642,18 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
                 />
               </>
             )}
+            {config.showFocusTags && (
+              <>
+                <span>focused on</span>
+                <input
+                  type="text"
+                  value={focusTags}
+                  onChange={(e) => setFocusTags(e.target.value)}
+                  placeholder="bitcoin, defi, ethereum"
+                  className={inlineInputClass + " w-64"}
+                />
+              </>
+            )}
             <span>.</span>
           </>
         )}
@@ -851,8 +863,7 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
         config.showOneTime ||
         config.showNote ||
         config.showTimezone ||
-        config.showMaxTweets ||
-        config.showFocusTags) && (
+        config.showMaxTweets) && (
         <div className="mt-8 pt-6 border-t border-surface-border">
           <h3 className="text-sm font-semibold text-text mb-4">
             Other Options
@@ -935,24 +946,6 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
                     </option>
                   ))}
                 </select>
-              </div>
-            )}
-
-            {config.showFocusTags && (
-              <div className="flex-1 min-w-48 flex flex-col h-full">
-                <label className="block text-sm font-medium text-text mb-1.5 whitespace-nowrap">
-                  Focus tags{" "}
-                  <span className="text-text-muted font-normal ">
-                    (comma-separated)
-                  </span>
-                </label>
-                <input
-                  type="text"
-                  value={focusTags}
-                  onChange={(e) => setFocusTags(e.target.value)}
-                  placeholder="bitcoin, defi, ethereum"
-                  className="w-full px-3 py-2 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
-                />
               </div>
             )}
 
