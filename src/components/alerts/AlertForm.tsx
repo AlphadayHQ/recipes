@@ -418,42 +418,10 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
       className="bg-surface border border-surface-border rounded-xl p-6 sm:p-8"
     >
       <div className="text-lg leading-loose text-text flex flex-wrap items-baseline gap-x-1.5 gap-y-3">
-        {/* --- Web Search style: "Search the web for [query] related to [coin] and send me a [Daily] [Email]." --- */}
+        {/* --- Web Search style: "Send me a [Email] [Daily] when [query] related to [coin]." --- */}
         {isWebSearchStyle && (
           <>
-            <span>Alert me when</span>
-            <span className="inline-grid items-baseline max-w-full">
-              <span
-                className="invisible whitespace-pre col-start-1 row-start-1 px-1 text-lg overflow-hidden"
-                aria-hidden="true"
-              >
-                {query || "e.g. Genius act is passed"}
-              </span>
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="e.g. Bitcoin ETF"
-                className={twMerge(
-                  inlineInputClass,
-                  " col-start-1 row-start-1 min-w-[3ch] w-full px-2",
-                )}
-                required
-              />
-            </span>
-            {config.showCoin && (
-              <>
-                <span>related to</span>
-                <CoinSelector
-                  value={coin}
-                  onChange={setCoin}
-                  coins={coins}
-                  variant="inline"
-                  allowNone
-                />
-              </>
-            )}
-            <span>and send me a</span>
+            <span>Send me a</span>
             <select
               title="Select Notification Method"
               value={notificationMethod}
@@ -480,6 +448,38 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
                 </option>
               ))}
             </select>
+            <span>when</span>
+            <span className="inline-grid items-baseline max-w-full">
+              <span
+                className="invisible whitespace-pre col-start-1 row-start-1 px-1 text-lg overflow-hidden"
+                aria-hidden="true"
+              >
+                {query || "e.g. Genius act is passed"}
+              </span>
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="e.g. Vitalik tweets"
+                className={twMerge(
+                  inlineInputClass,
+                  " col-start-1 row-start-1 min-w-[3ch] w-full px-2",
+                )}
+                required
+              />
+            </span>
+            {config.showCoin && (
+              <>
+                <span>related to</span>
+                <CoinSelector
+                  value={coin}
+                  onChange={setCoin}
+                  coins={coins}
+                  variant="inline"
+                  allowNone
+                />
+              </>
+            )}
             <span>.</span>
           </>
         )}
@@ -761,7 +761,7 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
                 </option>
               ))}
             </select>
-            {config.showFrequency && (
+            {/* {config.showFrequency && (
               <select
                 title="Select Frequency"
                 value={frequency}
@@ -774,7 +774,7 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
                   </option>
                 ))}
               </select>
-            )}
+            )} */}
             {config.showFrequency ? <span>when</span> : <span>as soon as</span>}
             {config.showCoin && (
               <CoinSelector
