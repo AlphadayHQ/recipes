@@ -7,7 +7,7 @@ export const priceAlertConfig: AlertFormConfig = {
   directionOptions: ['above', 'below'],
   showThreshold: true,
   thresholdLabel: 'Target Price',
-  thresholdPlaceholder: 'e.g. 70000',
+  thresholdPlaceholder: 'e.g. 70,000',
   showCooldown: true,
 };
 
@@ -30,7 +30,7 @@ export const periodicAlertConfig: AlertFormConfig = {
   directionOptions: ['above', 'below'],
   showThreshold: true,
   thresholdLabel: 'Target Price',
-  thresholdPlaceholder: 'e.g. 70000',
+  thresholdPlaceholder: 'e.g. 70,000',
   showCooldown: true,
   showFrequency: true,
 };
@@ -43,7 +43,7 @@ export const volumeAlertConfig: AlertFormConfig = {
   directionOptions: ['above', 'below'],
   showThreshold: true,
   thresholdLabel: 'Volume Threshold',
-  thresholdPlaceholder: 'e.g. 5000000000',
+  thresholdPlaceholder: 'e.g. 5,000,000,000',
   showCurrency: true,
   showCooldown: true,
 };
@@ -55,7 +55,7 @@ export const marketCapAlertConfig: AlertFormConfig = {
   directionOptions: ['above', 'below'],
   showThreshold: true,
   thresholdLabel: 'Market Cap ($)',
-  thresholdPlaceholder: 'e.g. 1000000000000',
+  thresholdPlaceholder: 'e.g. 100,000,000,000',
   showCurrency: true,
   showCooldown: true,
 };

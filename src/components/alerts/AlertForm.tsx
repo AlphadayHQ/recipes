@@ -139,7 +139,7 @@ const inlineSelectClass =
   "bg-transparent border-0 border-b-2 border-primary text-primary font-semibold cursor-pointer text-lg px-px py-0.5 focus:outline-none focus-visible:bg-primary/10 hover:border-primary/80 transition-colors";
 
 const inlineInputClass =
-  "bg-transparent border-0 border-b-2 border-primary text-primary font-semibold text-lg px-px py-0.5 focus:outline-none focus-visible:bg-primary/10 hover:border-primary/80 transition-colors w-28 text-center";
+  "bg-transparent border-0 border-b-2 border-primary text-primary font-semibold text-lg px-px py-0.5 focus:outline-none focus-visible:bg-primary/10 hover:border-primary/80 transition-colors w-32 text-center";
 
 interface AlertFormProps {
   config: AlertFormConfig;
@@ -798,7 +798,8 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
                   className={inlineInputClass}
                   required
                   step="any"
-                />
+                />{" "}
+                <span>USD</span>
               </>
             )}
             {config.showCurrency && (
