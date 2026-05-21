@@ -209,7 +209,9 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
   const [cooldown, setCooldown] = useState("");
   const [note, setNote] = useState("");
   const [oneTime, setOneTime] = useState(false);
-  const [selectedFrequency, setSelectedFrequency] = useState(prefill?.frequency ?? "");
+  const [selectedFrequency, setSelectedFrequency] = useState(
+    prefill?.frequency ?? "",
+  );
   const frequency = selectedFrequency || frequencies[0]?.name || "";
   const [timeWindow, setTimeWindow] = useState("24h");
   const [accountUsernames, setAccountUsernames] = useState(
@@ -857,7 +859,10 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
             {config.showCooldown && (
               <div className="flex flex-col h-full">
                 <label className="block text-sm font-medium text-text mb-1.5">
-                  Cooldown
+                  Cooldown{" "}
+                  <span className="text-xs text-text-muted ">
+                    (Min. time between notifications)
+                  </span>
                 </label>
                 <select
                   title="Select Cooldown"
@@ -875,9 +880,6 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
                     </option>
                   ))}
                 </select>
-                <p className="text-xs text-text-muted mt-1.5 whitespace-nowrap">
-                  Min. time between notifications
-                </p>
               </div>
             )}
 
