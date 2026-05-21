@@ -218,7 +218,7 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
     prefill?.accountUsernames ?? "",
   );
   const [timezone, setTimezone] = useState("UTC");
-  const [maxTweets, setMaxTweets] = useState(prefill?.maxTweets ?? "10");
+  // const [maxTweets, setMaxTweets] = useState(prefill?.maxTweets ?? "10");
   const [query, setQuery] = useState(prefill?.query ?? "");
   const cronToTime = (cron: string) => {
     const [minute, hour] = cron.split(" ");
@@ -351,7 +351,8 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
             frequency,
             timezone,
             query: query || undefined,
-            maxTweets: Number(maxTweets) || 10,
+            // maxTweets: Number(maxTweets) || 10,
+            maxTweets: 7,
             notificationMethod,
             accountUsernames: accountUsernames
               .split(",")
@@ -420,13 +421,13 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
         {/* --- Web Search style: "Search the web for [query] related to [coin] and send me a [Daily] [Email]." --- */}
         {isWebSearchStyle && (
           <>
-            <span>Alert me</span>
+            <span>Alert me when</span>
             <span className="inline-grid items-baseline max-w-full">
               <span
                 className="invisible whitespace-pre col-start-1 row-start-1 px-1 text-lg overflow-hidden"
                 aria-hidden="true"
               >
-                {query || "e.g. Bitcoin ETF"}
+                {query || "e.g. Genius act is passed"}
               </span>
               <input
                 type="text"
@@ -559,7 +560,8 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
             )}
             {config.showAccountUsernames && (
               <>
-                <span>or from these twitter accounts</span>
+                <span>or from</span>
+                <span> these twitter</span> <span>accounts</span>
                 <input
                   type="text"
                   value={accountUsernames}
@@ -949,7 +951,7 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
               </div>
             )}
 
-            {config.showMaxTweets && (
+            {/* {config.showMaxTweets && (
               <div className="flex flex-col h-full">
                 <label className="block text-sm font-medium text-text mb-1.5">
                   Max tweets
@@ -964,7 +966,7 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
                   className="w-full sm:w-24 px-3 py-2 bg-surface-light border border-surface-border rounded-lg text-sm text-text placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
                 />
               </div>
-            )}
+            )} */}
           </div>
         </div>
       )}
