@@ -835,12 +835,13 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
         <p className="text-sm text-text-muted mt-6 inline-flex items-center gap-2 px-3 py-2 bg-surface-light rounded-md">
           The price of {coin} is currently{" "}
           <span className="font-semibold text-text">
+            {currency === "USD" ? "$" : ""}
             {selectedCoin.price.toLocaleString("en-US", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
           </span>{" "}
-          {currency}.
+          {currency === "USD" ? "" : currency}.
         </p>
       )}
 
