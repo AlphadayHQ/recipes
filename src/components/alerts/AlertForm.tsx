@@ -920,7 +920,7 @@ export function AlertForm({ config, prefill, onSuccess }: AlertFormProps) {
             {config.showTimezone && (
               <div className="flex flex-col h-full">
                 <label className="block text-sm font-medium text-text mb-1.5">
-                  Timezone
+                  My Timezone
                 </label>
                 <select
                   title="Select Timezone"
